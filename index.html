@@ -8,17 +8,21 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #f5f5f5;
-    --surface:   #ffffff;
-    --border:    #e0e0e0;
-    --text:      #1a1a1a;
-    --muted:     #6b6b6b;
-    --accent:    #1a56db;
-    --accent-bg: #eef2ff;
-    --danger:    #c0392b;
-    --success:   #1a7a4a;
-    --warn:      #b45309;
-    --sidebar-w: 200px;
+    --bg:            #f5f2ec;
+    --surface:       #fbf8f1;
+    --border:        #d9d3c5;
+    --text:          #0a1220;
+    --muted:         #6b5f52;
+    --accent:        #d7263d;
+    --accent-hover:  #ef3b52;
+    --accent-bg:     #fdf0f1;
+    --success:       #1a7a4a;
+    --warn:          #b45309;
+    --sidebar-bg:    #0f2747;
+    --sidebar-deep:  #0a1b33;
+    --sidebar-text:  #ffffff;
+    --sidebar-muted: rgba(255,255,255,0.52);
+    --sidebar-w:     200px;
   }
 
   body {
@@ -34,8 +38,8 @@
   /* ── Sidebar ── */
   #sidebar {
     width: var(--sidebar-w);
-    background: var(--surface);
-    border-right: 1px solid var(--border);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-deep);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -46,7 +50,8 @@
 
   #sidebar header {
     padding: 18px 16px 14px;
-    border-bottom: 1px solid var(--border);
+    background: var(--sidebar-deep);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
 
   #sidebar header .brand {
@@ -54,12 +59,12 @@
     font-size: 13px;
     letter-spacing: .05em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--sidebar-text);
   }
 
   #sidebar header .subtitle {
     font-size: 11px;
-    color: var(--muted);
+    color: var(--sidebar-muted);
     margin-top: 2px;
   }
 
@@ -73,18 +78,18 @@
     border: none;
     padding: 9px 16px;
     font-size: 13px;
-    color: var(--muted);
+    color: var(--sidebar-muted);
     cursor: pointer;
     border-left: 3px solid transparent;
     line-height: 1.4;
   }
 
-  .nav-item:hover { background: var(--bg); color: var(--text); }
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: var(--sidebar-text); }
 
   .nav-item.active {
-    color: var(--accent);
+    color: var(--sidebar-text);
     border-left-color: var(--accent);
-    background: var(--accent-bg);
+    background: rgba(215,38,61,0.18);
     font-weight: 600;
   }
 
@@ -93,7 +98,7 @@
 
   .nav-divider {
     height: 1px;
-    background: var(--border);
+    background: rgba(255,255,255,0.1);
     margin: 6px 0;
   }
 
@@ -133,7 +138,7 @@
     min-width: 110px;
   }
 
-  .mode-btn:hover { border-color: var(--accent); color: var(--text); }
+  .mode-btn:hover { border-color: var(--accent-hover); color: var(--text); }
 
   .mode-btn.active {
     border-color: var(--accent);
@@ -164,7 +169,7 @@
 
   /* ── Learn mode ── */
   .mindset-box {
-    background: #fafafa;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-left: 3px solid var(--accent);
     padding: 12px 16px;
@@ -219,6 +224,9 @@
     color: #92400e;
     border: 1px solid #fcd34d;
   }
+
+  .script-line p { margin: 0; }
+  .script-line p + p { margin-top: 10px; }
 
   .badge-memorize {
     background: #fee2e2;
@@ -671,22 +679,33 @@ function renderSection(id, mode) {
 function renderLearn(sec) {
   let html = `<div class="mindset-box"><strong>Rep mindset:</strong> ${sec.mindset}</div>`;
 
-  sec.script.forEach(block => {
+  let i = 0;
+  while (i < sec.script.length) {
+    const block = sec.script[i];
     if (block.type === "stage") {
       html += `<div class="script-block"><div class="stage-dir">${block.text}</div></div>`;
+      i++;
     } else {
-      const badges = (block.techniques || []).map(t =>
-        `<span class="badge badge-technique">${t}</span>`
-      ).join("");
+      const lines = [];
+      while (i < sec.script.length && sec.script[i].type !== "stage") {
+        lines.push(sec.script[i]);
+        i++;
+      }
+      const linesHtml = lines.map(line => {
+        const badges = (line.techniques || []).map(t =>
+          `<span class="badge badge-technique">${t}</span>`
+        ).join("");
+        return `<p>${line.text}${badges}</p>`;
+      }).join("");
       html += `
         <div class="script-block">
           <div class="script-line">
-            <div class="script-speaker">${block.speaker}${badges}</div>
-            ${block.text}
+            <div class="script-speaker">${lines[0].speaker}</div>
+            ${linesHtml}
           </div>
         </div>`;
     }
-  });
+  }
 
   return html;
 }
