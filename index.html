@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealerKey Sales Training</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #f5f5f5;
+    --surface:   #ffffff;
+    --border:    #e0e0e0;
+    --text:      #1a1a1a;
+    --muted:     #6b6b6b;
+    --accent:    #1a56db;
+    --accent-bg: #eef2ff;
+    --danger:    #c0392b;
+    --success:   #1a7a4a;
+    --warn:      #b45309;
+    --sidebar-w: 200px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  #sidebar header {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #sidebar header .brand {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  #sidebar header .subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  nav { padding: 8px 0; flex: 1; }
+
+  .nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 9px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    line-height: 1.4;
+  }
+
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+
+  .nav-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: var(--accent-bg);
+    font-weight: 600;
+  }
+
+  .nav-item .nav-label { display: block; }
+  .nav-item .nav-sub   { display: block; font-size: 11px; margin-top: 1px; opacity: .7; }
+
+  .nav-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 0;
+  }
+
+  /* ── Main ── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── Mode bar ── */
+  #mode-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 28px;
+    display: flex;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  #mode-bar.hidden { display: none; }
+
+  .mode-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 16px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.3;
+    min-width: 110px;
+  }
+
+  .mode-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  .mode-btn.active {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+
+  .mode-btn .mode-name { font-weight: 600; display: block; }
+  .mode-btn .mode-desc { font-size: 11px; display: block; margin-top: 2px; opacity: .75; }
+
+  /* ── Content area ── */
+  #content {
+    padding: 32px 40px;
+    max-width: 820px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  /* ── Learn mode ── */
+  .mindset-box {
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .mindset-box strong { color: var(--text); }
+
+  .script-block { margin-bottom: 6px; }
+
+  .stage-dir {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 4px 0;
+  }
+
+  .script-line {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    background: var(--surface);
+    font-size: 14px;
+    position: relative;
+  }
+
+  .script-speaker {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    vertical-align: middle;
+    margin-left: 8px;
+    letter-spacing: .03em;
+  }
+
+  .badge-technique {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+  }
+
+  .badge-memorize {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+  }
+
+  /* ── Outline mode ── */
+  .outline-list {
+    list-style: none;
+    counter-reset: beat;
+  }
+
+  .outline-list li {
+    counter-increment: beat;
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    align-items: baseline;
+  }
+
+  .outline-list li::before {
+    content: counter(beat);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 20px;
+    text-align: right;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  /* ── Objections quiz ── */
+  .quiz-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .obj-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .obj-card.done { opacity: .55; }
+
+  .obj-scenario {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .obj-prompt {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .reveal-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .reveal-btn:hover { border-color: var(--text); color: var(--text); }
+
+  .obj-answer {
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    display: none;
+  }
+
+  .obj-answer.visible { display: block; }
+
+  .answer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .answer-text {
+    font-size: 14px;
+    margin-bottom: 14px;
+    line-height: 1.7;
+  }
+
+  .rating-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .rating-btn {
+    border: 1px solid var(--border);
+    background: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .rating-btn:hover { border-color: var(--text); color: var(--text); }
+  .rating-btn.selected-nailed  { background: #d1fae5; border-color: #6ee7b7; color: var(--success); font-weight: 600; }
+  .rating-btn.selected-almost  { background: #fef3c7; border-color: #fcd34d; color: var(--warn); font-weight: 600; }
+  .rating-btn.selected-missed  { background: #fee2e2; border-color: #fca5a5; color: var(--danger); font-weight: 600; }
+
+  /* ── Session summary ── */
+  #quiz-summary {
+    margin-top: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    display: none;
+  }
+
+  #quiz-summary.visible { display: block; }
+
+  .summary-title {
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    gap: 16px;
+  }
+
+  .summary-row:last-child { border-bottom: none; }
+
+  .summary-pills { display: flex; gap: 6px; }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+
+  .pill-nailed { background: #d1fae5; color: var(--success); }
+  .pill-almost { background: #fef3c7; color: var(--warn); }
+  .pill-missed { background: #fee2e2; color: var(--danger); }
+  .pill-none   { background: var(--bg); color: var(--muted); }
+
+  .needs-work { color: var(--danger); font-weight: 600; font-size: 11px; }
+
+  .reset-btn {
+    margin-top: 16px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .reset-btn:hover { border-color: var(--text); color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar">
+  <header>
+    <div class="brand">DealerKey</div>
+    <div class="subtitle">Sales Training</div>
+  </header>
+  <nav id="nav"></nav>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+  <div id="mode-bar">
+    <button class="mode-btn active" data-mode="learn" onclick="setMode('learn')">
+      <span class="mode-name">Learn</span>
+      <span class="mode-desc">Full script + directions</span>
+    </button>
+    <button class="mode-btn" data-mode="outline" onclick="setMode('outline')">
+      <span class="mode-name">Outline</span>
+      <span class="mode-desc">Key beats only</span>
+    </button>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════
+
+const SECTIONS = [
+  {
+    id: "s1",
+    label: "Section 1",
+    sublabel: "What DealerKey Auto Is",
+    mindset: "You are an advisor, not a salesman. They came for a consultation. Confidence matters more than perfect wording. Don't rush.",
+    script: [
+      { type: "line",  speaker: "Rep", text: "Tell me about the car you're looking for. I see here you wrote [X] — is that still what you're thinking?" },
+      { type: "stage", text: "Listen. Make a genuine comment. Let them talk." },
+      { type: "line",  speaker: "Rep", text: "So you may have noticed we're not a traditional dealership — no lot, no inventory sitting around. What we do is work directly with you to find your specific car, and we don't charge you a thing unless we actually save you money. At least $3,000 worth, usually more." },
+      { type: "stage", text: "Pause. Let that land." },
+      { type: "line",  speaker: "Rep", text: "Here's how that's possible. You know how dealerships always seem to have endless inventory? There's a reason for that. Most of them aren't out hunting for individual cars — they're buying in bulk from a wholesale auction called Manheim. It's the largest vehicle auction in the world. Over 150,000 cars are available at any given moment, with over 8 million moving through every year. That's where their inventory comes from." },
+      { type: "line",  speaker: "Rep", text: "They buy a car at auction, mark it up $4,000 to $6,000, put it on the lot, and sell it to you. That markup is how they pay for their building, the salespeople, the financing department — all of it." },
+      { type: "line",  speaker: "Rep", text: "We have access to that same auction. So instead of going through a dealership and paying that markup, we go straight to the source and find your car there. We do everything for a flat advisory fee of $1,500 — and we only collect it if we save you at least $3,000, usually more." },
+      { type: "line",  speaker: "Rep", text: "Today I'm just going to show you what that actually looks like. At the end, you tell me if it makes sense for you." },
+    ],
+    outline: [
+      "Open with their specific car — reference what they wrote",
+      "Introduce DealerKey: no lot, flat fee, only collect if we save $3k+",
+      "Explain Manheim and the dealership markup model ($4k–$6k)",
+      "Anchor the $1,500 fee and savings guarantee",
+      "Frame today as show-don't-tell — no pressure",
+    ],
+  },
+  {
+    id: "s2",
+    label: "Section 2",
+    sublabel: "Framing & Expectations",
+    mindset: "This section is short on purpose. You've already planted the seed. Now you're just making sure they feel zero pressure before you show them the data. Say this slowly and genuinely — it does a lot of work.",
+    script: [
+      { type: "line",  speaker: "Rep", text: "Now, my job today isn't to sell you on a specific car or push you toward any decision. I just want to show you what the market actually looks like — both what you can see as a regular buyer, and what's actually happening behind the scenes." },
+      { type: "line",  speaker: "Rep", text: "We'll look at real numbers together. If at the end you feel like you'd rather keep searching on your own, totally fine. If it looks like we can save you real money, we'll talk about what that looks like." },
+    ],
+    outline: [
+      "No pressure framing — not here to push a decision",
+      "We'll look at real numbers together",
+      "Their choice at the end — keep searching solo or move with us",
+    ],
+  },
+  {
+    id: "s3",
+    label: "Section 3",
+    sublabel: "The Website Search",
+    mindset: "This part is where you can build a ton of credibility if you present it well. Don't be afraid to spend several minutes here. The goal is to give them a frame of reference so they can see the difference in value between the public market and buying through DealerKey Auto.",
+    script: [
+      { type: "line",  speaker: "Rep", text: "Rather than me telling you why this works, I'd rather just show you." },
+      { type: "line",  speaker: "Rep", text: "Let's start with our website. There are some fantastic tools on here that anyone can use, but not everyone knows about." },
+      { type: "stage", text: "Pull up the car the client is looking for. Include their budget." },
+      { type: "line",  speaker: "Rep", text: "Now if you've been looking at local dealerships, right away you can see that the average prices are significantly lower. These results are filtered to include only top condition cars, 4.0 or higher, all of them with clean titles and condition reports." },
+      { type: "stage", text: "Point out a few of the better ones." },
+      { type: "line",  speaker: "Rep", text: "We're an extremely data-driven company. Our AI has processed information from thousands of listings across the retail market — comparing across year, mileage, trim, title status, everything — and it's constantly updating. So every single car you see here is already being compared to what that exact car is selling for on the retail market right now." },
+      { type: "stage", text: "Point to the arbitrage number." },
+      { type: "line",  speaker: "Rep", text: "That number right there — that's the arbitrage. That's the gap between what this car would cost you at a dealership and what we can actually get it for. And if you bought it at auction today and sold it retail tomorrow, that's how much you would pocket." },
+      { type: "stage", text: "Let that land." },
+      { type: "line",  speaker: "Rep", text: "And we haven't even gone into Manheim yet. This is just the surface layer." },
+    ],
+    outline: [
+      "Lead with 'show don't tell' — pull up the website live",
+      "Search their exact car and budget",
+      "Highlight: filtered to 4.0+ condition, clean title only",
+      "Explain the AI and real-time retail comparison",
+      "Point to the arbitrage number — name what it means",
+      "Tease Manheim as the next layer",
+    ],
+  },
+  {
+    id: "s4",
+    label: "Section 4",
+    sublabel: "Tour of Manheim",
+    mindset: "Your familiarity with the platform is the point. Move confidently and narrate as you go. Full Manheim platform training is covered separately — this section is about how to present it to a client.",
+    script: [
+      { type: "stage", text: "Set parameters — make, model, year, mileage. Talk through it as you go." },
+      { type: "line",  speaker: "Rep", text: "I'm going to set the parameters based on exactly what you told me — make, model, year, mileage range. You can see right away how much inventory we're working with. This is live." },
+      { type: "stage", text: "Select a listing with a solid condition grade. Open the full listing." },
+      { type: "line",  speaker: "Rep", text: "Here's what I look at first — year, trim, mileage confirmed, condition grade right here. We typically stay at 4.0 or above." },
+      { type: "line",  speaker: "Rep", text: "Now here's the MMR — Manheim Market Report. No fixed price since it's an auction, but the MMR tells us what this car is most likely to sell for based on recent sales data. I always work in out-the-door numbers, so I'm taking the MMR, adding our $1,500 fee, plus Manheim's usage fee of $500–700 — so roughly $2,000 total on top. All in, you're looking at about [X]." },
+      { type: "stage", text: "Pull up the condition report. Point out a minor damage item." },
+      { type: "line",  speaker: "Rep", text: "See this dent? Probably barely noticeable in person, but it's still on the report. That's the standard they hold to, because dealerships buying these cars demand it. Works in your favor for the same reason." },
+      { type: "stage", text: "Show one or two more listings, then transition naturally into Section 5." },
+    ],
+    outline: [
+      "Set parameters live with client — narrate as you go",
+      "Open a strong listing: confirm year, trim, mileage, grade (4.0+)",
+      "Explain MMR and build the all-in number (MMR + $1,500 + $500–700)",
+      "Open condition report — point to a minor item to show thoroughness",
+      "Show one or two more, then transition to closing",
+    ],
+  },
+  {
+    id: "s5",
+    label: "Section 5",
+    sublabel: "Logistics & Closing",
+    mindset: "Don't let them leave thinking they've found just another resource. The goal is for them to voluntarily hand the search over to you completely. You're not hard closing — you're making it so obvious and easy that they'd feel silly not to.",
+    script: [
+      { type: "line",  speaker: "Rep", text: "So here's how this typically works. We'll take the next 2–3 weeks and handle the entire search for you. You'll hear from me at least twice a week. Every time a new batch comes in, I'll send you the top two or three options based on your parameters. If there's one I feel particularly strong about, I'll make sure to highlight it." },
+      { type: "line",  speaker: "Rep", text: "Does email or text work better for you?", techniques: ["Soft Close #1"] },
+      { type: "stage", text: "Wait for answer." },
+      { type: "line",  speaker: "Rep", text: "Now when a car comes along that you're seriously considering, we'll jump on a call together for a deeper look. We'll build our bidding strategy and set your ceiling bid ahead of time so we always stay within budget. You'll contribute 25% of the bid upfront and we cover the other 75%. If we win the bid, you pay the rest and we hand over the keys. If we don't win, your 25% comes straight back and we keep looking. Sometimes it takes a try or two — that's completely normal. And you'll have all of this in writing before any money moves." },
+      { type: "line",  speaker: "Rep", text: "One question for you — how much notice do you need before making a move? Let's say I find the perfect car and the auction runs two days from now, can you move within 48 hours? Or do you need more time than that?", techniques: ["Solidifying Close"] },
+      { type: "stage", text: "Wait for answer." },
+      { type: "line",  speaker: "Rep", text: "Perfect, I'll make sure to give you as much notice as I can." },
+      { type: "line",  speaker: "Rep", text: "And if you'd ever like to watch the auction live, I'd love to show you — it's actually really cool to see in real time." },
+      { type: "line",  speaker: "Rep", text: "Well [name], thanks so much for giving us a shot. So here's what we'll do — for the next 2–3 weeks, just let me handle it completely. You don't have to do a thing. If I haven't found the right one by then, no worries — we'll keep looking on our end and you can jump back in too. Sound good?", techniques: ["Strongest Close"] },
+      { type: "stage", text: "Do not rush. Their response tells you exactly how bought in they are." },
+      { type: "line",  speaker: "Rep", text: "Perfect. You can expect to hear from me in a day or two with a few of the best current options — just to start giving you a feel for what we're working with." },
+      { type: "stage", text: "Confirm all car details before ending the call." },
+    ],
+    outline: [
+      "Describe the 2–3 week search process: twice-a-week updates, top options",
+      "Ask email or text preference to get first micro-commitment",
+      "Explain 25% bid structure, ceiling bid, written agreement",
+      "Urgency check: can they move within 48 hours?",
+      "Offer live auction viewing — builds excitement",
+      "Hand-off close: 'just let me handle it completely'",
+      "Confirm car details before hanging up",
+    ],
+  },
+];
+
+const OBJECTIONS = [
+  {
+    id: "o1",
+    scenario: "You've explained the 25% bid deposit. Client hesitates.",
+    prompt: "\"I'm not sure I'm comfortable putting money down before we've actually found anything.\"",
+    answer: "That's fair, and I get it — it feels a little different than what most people are used to. The reason we do it that way is because we're putting our own money in right alongside yours. We're just as motivated as you are to get the right car at the right price. The 25% just makes sure we're both committed before we pull the trigger. And if we don't win, it comes straight back to you. You'll have all of this in writing before ANY money moves, so there's no guesswork.",
+    memorize: true,
+  },
+  {
+    id: "o2",
+    scenario: "Client heard the 25% structure but wants it clarified.",
+    prompt: "\"Can you walk me through how the 25% deposit actually works?\"",
+    answer: "Sure — so once we find a car you're serious about, you contribute 25% of the bid upfront and we cover the other 75%. Win the bid, you pay us the rest and we hand over the keys. Don't win, your money comes right back. Simple as that.",
+    memorize: false,
+  },
+  {
+    id: "o3",
+    scenario: "Client shares their frustration partway through the consultation.",
+    prompt: "\"Honestly, I've been searching for months and haven't found anything.\"",
+    answer: "I completely get that — and honestly, that's exactly the kind of situation we are here for. When you're searching on your own you're constantly trying to weigh price against mileage against condition against history, and every car is a different combination of all those variables. It's exhausting to compare objectively. That's where we really shine. First, Manheim gives us an unreal amount of data on each car — way more than anything you'd find on a public listing. And on top of that, our AI processes all of those variables simultaneously across hundreds of cars and gives you an ordered list of which options are actually saving you the most money. It takes the guesswork out completely.",
+    memorize: false,
+  },
+  {
+    id: "o4",
+    scenario: "You're describing the auction process and client raises this.",
+    prompt: "\"Wait — I can't test drive the car before we buy it?\"",
+    answer: "Great question, and that's exactly why Manheim is so incredibly thorough with their condition reports. Because you can't go in and test drive the cars, they are extensive with their condition reports. Dealerships are very particular and want to know every little detail about each car, because their livelihood depends on it. Every vehicle is inspected by a third party, and they include absolutely everything they find in their report. If for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back.",
+    memorize: false,
+  },
+  {
+    id: "o5",
+    scenario: "After you've described the condition report process, client pushes back.",
+    prompt: "\"What if we get the car and find something that wasn't in the report?\"",
+    answer: "Absolutely — I would be concerned about that too. Thankfully, every vehicle is inspected by a third party, not by Manheim itself, and they include absolutely everything they find in their report. That certainly limits the risk, but if for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back. That rarely happens, but on the occasion that we have had an issue with the vehicle we were able to successfully arbitrate.",
+    memorize: true,
+  },
+  {
+    id: "o6",
+    scenario: "Client is skeptical about inventory quality at auction.",
+    prompt: "\"Isn't most of what's available at Manheim salvage or branded title cars?\"",
+    answer: "Almost everything we work with is clean title — that's the standard for the vast majority of what moves through Manheim. Occasionally a client specifically wants a cheap work truck and we'll look at branded titles for that, but typically for a car like what you're looking for, we'd be staying firmly in clean title territory.",
+    memorize: false,
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+
+let currentSection = "s1";
+let currentMode    = "learn";
+const ratings      = {}; // objId -> 'nailed'|'almost'|'missed'
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+
+function init() {
+  buildNav();
+  navigateTo("s1");
+}
+
+function buildNav() {
+  const nav = document.getElementById("nav");
+  nav.innerHTML = "";
+
+  SECTIONS.forEach(s => {
+    const btn = document.createElement("button");
+    btn.className = "nav-item";
+    btn.dataset.id = s.id;
+    btn.innerHTML = `<span class="nav-label">${s.label}</span><span class="nav-sub">${s.sublabel}</span>`;
+    btn.onclick = () => navigateTo(s.id);
+    nav.appendChild(btn);
+  });
+
+  const divider = document.createElement("div");
+  divider.className = "nav-divider";
+  nav.appendChild(divider);
+
+  const obj = document.createElement("button");
+  obj.className = "nav-item";
+  obj.dataset.id = "objections";
+  obj.innerHTML = `<span class="nav-label">Objections</span><span class="nav-sub">Quiz mode</span>`;
+  obj.onclick = () => navigateTo("objections");
+  nav.appendChild(obj);
+}
+
+function navigateTo(id) {
+  currentSection = id;
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+
+  const modeBar = document.getElementById("mode-bar");
+
+  if (id === "objections") {
+    modeBar.classList.add("hidden");
+    renderObjections();
+  } else {
+    modeBar.classList.remove("hidden");
+    renderSection(id, currentMode);
+  }
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+  renderSection(currentSection, mode);
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER: SECTION
+// ═══════════════════════════════════════════════════════
+
+function renderSection(id, mode) {
+  const sec = SECTIONS.find(s => s.id === id);
+  const content = document.getElementById("content");
+
+  content.innerHTML = `
+    <div class="section-title">${sec.label}: ${sec.sublabel}</div>
+    <div class="section-subtitle">${mode === "learn" ? "Full script with stage directions" : "Key beats — for reps who know the material"}</div>
+    ${mode === "learn" ? renderLearn(sec) : renderOutline(sec)}
+  `;
+}
+
+function renderLearn(sec) {
+  let html = `<div class="mindset-box"><strong>Rep mindset:</strong> ${sec.mindset}</div>`;
+
+  sec.script.forEach(block => {
+    if (block.type === "stage") {
+      html += `<div class="script-block"><div class="stage-dir">${block.text}</div></div>`;
+    } else {
+      const badges = (block.techniques || []).map(t =>
+        `<span class="badge badge-technique">${t}</span>`
+      ).join("");
+      html += `
+        <div class="script-block">
+          <div class="script-line">
+            <div class="script-speaker">${block.speaker}${badges}</div>
+            ${block.text}
+          </div>
+        </div>`;
+    }
+  });
+
+  return html;
+}
+
+function renderOutline(sec) {
+  const items = sec.outline.map(beat => `<li>${beat}</li>`).join("");
+  return `<ul class="outline-list">${items}</ul>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER: OBJECTIONS
+// ═══════════════════════════════════════════════════════
+
+function renderObjections() {
+  const content = document.getElementById("content");
+
+  const ratedCount = Object.keys(ratings).length;
+  const total = OBJECTIONS.length;
+
+  let cards = OBJECTIONS.map(obj => buildObjCard(obj)).join("");
+
+  content.innerHTML = `
+    <div class="section-title">Objections</div>
+    <div class="quiz-meta">Read each objection, recall your response, then reveal the ideal answer and rate yourself.</div>
+    ${cards}
+    ${buildSummary()}
+  `;
+}
+
+function buildObjCard(obj) {
+  const rated = ratings[obj.id];
+  const memorizeTag = obj.memorize
+    ? `<span class="badge badge-memorize">Memorize closely</span>`
+    : "";
+
+  return `
+    <div class="obj-card${rated ? " done" : ""}" id="card-${obj.id}">
+      <div class="obj-scenario">${obj.scenario}</div>
+      <div class="obj-prompt">${obj.prompt} ${memorizeTag}</div>
+      <button class="reveal-btn" onclick="revealAnswer('${obj.id}')" id="reveal-${obj.id}"
+        ${rated ? "style='display:none'" : ""}>
+        Reveal ideal response
+      </button>
+      <div class="obj-answer${rated ? " visible" : ""}" id="answer-${obj.id}">
+        <div class="answer-label">Ideal Response</div>
+        <div class="answer-text">${obj.answer}</div>
+        <div class="rating-row" id="rating-${obj.id}">
+          ${buildRatingBtns(obj.id, rated)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function buildRatingBtns(id, selected) {
+  const ratings_map = [
+    { key: "nailed", label: "Nailed it", cls: "selected-nailed" },
+    { key: "almost", label: "Almost",    cls: "selected-almost" },
+    { key: "missed", label: "Missed it", cls: "selected-missed" },
+  ];
+
+  return ratings_map.map(r => {
+    const active = selected === r.key ? ` ${r.cls}` : "";
+    return `<button class="rating-btn${active}" onclick="rate('${id}','${r.key}')">${r.label}</button>`;
+  }).join("");
+}
+
+function buildSummary() {
+  const total  = OBJECTIONS.length;
+  const rated  = Object.keys(ratings).length;
+  if (rated === 0) return `<div id="quiz-summary"></div>`;
+
+  const rows = OBJECTIONS.map(obj => {
+    const r = ratings[obj.id];
+    const pill = r
+      ? `<span class="pill pill-${r === "nailed" ? "nailed" : r === "almost" ? "almost" : "missed"}">${r === "nailed" ? "Nailed it" : r === "almost" ? "Almost" : "Missed it"}</span>`
+      : `<span class="pill pill-none">Not rated</span>`;
+
+    const flag = (r === "almost" || r === "missed")
+      ? `<span class="needs-work">Review</span>` : "";
+
+    return `
+      <div class="summary-row">
+        <span>${obj.prompt.replace(/"/g, "")}</span>
+        <div class="summary-pills">${flag}${pill}</div>
+      </div>
+    `;
+  }).join("");
+
+  const needsWork = OBJECTIONS.filter(o => ratings[o.id] === "almost" || ratings[o.id] === "missed");
+
+  return `
+    <div id="quiz-summary visible" style="display:block;margin-top:32px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;">
+      <div class="summary-title">Session Summary — ${rated}/${total} rated</div>
+      ${rows}
+      ${needsWork.length > 0 ? `<p style="margin-top:14px;font-size:13px;color:var(--danger);">Focus: ${needsWork.map(o => o.id.replace("o","Handler ")).join(", ")}</p>` : `<p style="margin-top:14px;font-size:13px;color:var(--success);">All rated — solid session.</p>`}
+      <button class="reset-btn" onclick="resetQuiz()">Reset session</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════
+//  ACTIONS
+// ═══════════════════════════════════════════════════════
+
+function revealAnswer(id) {
+  document.getElementById("reveal-" + id).style.display = "none";
+  document.getElementById("answer-" + id).classList.add("visible");
+}
+
+function rate(id, value) {
+  ratings[id] = value;
+  const row = document.getElementById("rating-" + id);
+  const obj = OBJECTIONS.find(o => o.id === id);
+  row.innerHTML = buildRatingBtns(id, value);
+  document.getElementById("card-" + id).classList.add("done");
+
+  const summaryEl = document.getElementById("quiz-summary");
+  if (summaryEl) summaryEl.outerHTML = buildSummary();
+}
+
+function resetQuiz() {
+  Object.keys(ratings).forEach(k => delete ratings[k]);
+  renderObjections();
+}
+
+// ═══════════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
