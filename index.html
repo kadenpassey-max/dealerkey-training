@@ -401,9 +401,110 @@
   }
 
   .reset-btn:hover { border-color: var(--text); color: var(--text); }
+
+  /* ── Mobile top bar ── */
+  #mobile-bar {
+    display: none;
+    background: var(--sidebar-deep);
+    padding: 0 16px;
+    height: 52px;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    flex-shrink: 0;
+  }
+
+  #mobile-bar .brand {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--sidebar-text);
+  }
+
+  #hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--sidebar-text);
+    border-radius: 2px;
+    transition: opacity 0.15s;
+  }
+
+  /* ── Overlay backdrop ── */
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 15;
+  }
+
+  #overlay.visible { display: block; }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    body { flex-direction: column; }
+
+    #mobile-bar { display: flex; }
+
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.22s ease;
+      top: 0;
+      z-index: 20;
+    }
+
+    #sidebar.open { transform: translateX(0); }
+
+    #main {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    #mode-bar {
+      padding: 10px 16px;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn { min-width: 0; flex: 1; }
+
+    #content {
+      padding: 20px 16px;
+    }
+
+    .summary-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
 </style>
 </head>
 <body>
+
+<!-- ═══ MOBILE TOP BAR ═══ -->
+<div id="mobile-bar">
+  <div class="brand">DealerKey</div>
+  <button id="hamburger" onclick="toggleSidebar()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- ═══ OVERLAY ═══ -->
+<div id="overlay" onclick="toggleSidebar()"></div>
 
 <!-- ═══ SIDEBAR ═══ -->
 <div id="sidebar">
@@ -599,6 +700,20 @@ const OBJECTIONS = [
 ];
 
 // ═══════════════════════════════════════════════════════
+//  MOBILE
+// ═══════════════════════════════════════════════════════
+
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("overlay").classList.toggle("visible");
+}
+
+function closeSidebar() {
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("overlay").classList.remove("visible");
+}
+
+// ═══════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════
 
@@ -624,7 +739,7 @@ function buildNav() {
     btn.className = "nav-item";
     btn.dataset.id = s.id;
     btn.innerHTML = `<span class="nav-label">${s.label}</span><span class="nav-sub">${s.sublabel}</span>`;
-    btn.onclick = () => navigateTo(s.id);
+    btn.onclick = () => { navigateTo(s.id); closeSidebar(); };
     nav.appendChild(btn);
   });
 
@@ -636,7 +751,7 @@ function buildNav() {
   obj.className = "nav-item";
   obj.dataset.id = "objections";
   obj.innerHTML = `<span class="nav-label">Objections</span><span class="nav-sub">Quiz mode</span>`;
-  obj.onclick = () => navigateTo("objections");
+  obj.onclick = () => { navigateTo("objections"); closeSidebar(); };
   nav.appendChild(obj);
 }
 
