@@ -798,7 +798,7 @@ function buildSummary() {
   const needsWork = OBJECTIONS.filter(o => ratings[o.id] === "almost" || ratings[o.id] === "missed");
 
   return `
-    <div id="quiz-summary visible" style="display:block;margin-top:32px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;">
+    <div id="quiz-summary" style="display:block;margin-top:32px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;">
       <div class="summary-title">Session Summary — ${rated}/${total} rated</div>
       ${rows}
       ${needsWork.length > 0 ? `<p style="margin-top:14px;font-size:13px;color:var(--danger);">Focus: ${needsWork.map(o => o.id.replace("o","Handler ")).join(", ")}</p>` : `<p style="margin-top:14px;font-size:13px;color:var(--success);">All rated — solid session.</p>`}
