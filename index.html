@@ -276,7 +276,10 @@
     margin-bottom: 16px;
   }
 
-  .obj-card.done { opacity: .55; }
+  .obj-card.done { opacity: .7; }
+  .obj-card.nailed { border-left: 4px solid #6ee7b7; background: #f0fdf6; }
+  .obj-card.almost { border-left: 4px solid #fcd34d; background: #fffbeb; }
+  .obj-card.missed { border-left: 4px solid #fca5a5; background: #fff5f5; }
 
   .obj-scenario {
     font-size: 13px;
@@ -858,7 +861,7 @@ function buildObjCard(obj) {
     : "";
 
   return `
-    <div class="obj-card${rated ? " done" : ""}" id="card-${obj.id}">
+    <div class="obj-card${rated ? ` done ${rated}` : ""}" id="card-${obj.id}">
       <div class="obj-scenario">${obj.scenario}</div>
       <div class="obj-prompt">${obj.prompt} ${memorizeTag}</div>
       <button class="reveal-btn" onclick="revealAnswer('${obj.id}')" id="reveal-${obj.id}"
@@ -937,7 +940,10 @@ function rate(id, value) {
   const row = document.getElementById("rating-" + id);
   const obj = OBJECTIONS.find(o => o.id === id);
   row.innerHTML = buildRatingBtns(id, value);
-  document.getElementById("card-" + id).classList.add("done");
+  const card = document.getElementById("card-" + id);
+  card.classList.add("done");
+  card.classList.remove("nailed", "almost", "missed");
+  card.classList.add(value);
 
   const summaryEl = document.getElementById("quiz-summary");
   if (summaryEl) summaryEl.outerHTML = buildSummary();
