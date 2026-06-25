@@ -1,961 +1,2668 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DealerKey Sales Training</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DealerKey — Rep Onboarding</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap');
 
   :root {
-    --bg:            #f5f2ec;
-    --surface:       #fbf8f1;
-    --border:        #d9d3c5;
-    --text:          #0a1220;
-    --muted:         #6b5f52;
-    --accent:        #d7263d;
-    --accent-hover:  #ef3b52;
-    --accent-bg:     #fdf0f1;
-    --success:       #1a7a4a;
-    --warn:          #b45309;
-    --sidebar-bg:    #0f2747;
-    --sidebar-deep:  #0a1b33;
-    --sidebar-text:  #ffffff;
-    --sidebar-muted: rgba(255,255,255,0.52);
-    --sidebar-w:     200px;
+    --navy:    #0f2747;
+    --navy-mid:#162f56;
+    --navy-light:#1e3d6e;
+    --red:     #d7263d;
+    --red-dim: #a81e30;
+    --gold:    #c9a84c;
+    --gold-dim:#a8883a;
+    --white:   #f5f7fa;
+    --muted:   #8a99b3;
+    --border:  #1e3050;
+    --text:    #dce6f5;
+    --text-dim:#7a8fa8;
+    --green:   #2ecc8a;
+    --track-gap: 2rem;
+
+    /* Light content surface */
+    --content-bg:     #f7f8fa;
+    --content-card:   #ffffff;
+    --content-border: #e1e5ec;
+    --content-text:       #1a2740;
+    --content-text-dim:   #5b6b85;
+    --content-text-faint: #93a1b8;
   }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
     color: var(--text);
-    font-size: 15px;
-    line-height: 1.6;
-    display: flex;
     min-height: 100vh;
-  }
-
-  /* ── Sidebar ── */
-  #sidebar {
-    width: var(--sidebar-w);
-    background: var(--sidebar-bg);
-    border-right: 1px solid var(--sidebar-deep);
     display: flex;
     flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    overflow-y: auto;
-    z-index: 10;
   }
 
-  #sidebar header {
-    padding: 18px 16px 14px;
-    background: var(--sidebar-deep);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-
-  #sidebar header .brand {
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    color: var(--sidebar-text);
-  }
-
-  #sidebar header .subtitle {
-    font-size: 11px;
-    color: var(--sidebar-muted);
-    margin-top: 2px;
-  }
-
-  nav { padding: 8px 0; flex: 1; }
-
-  .nav-item {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    padding: 9px 16px;
-    font-size: 13px;
-    color: var(--sidebar-muted);
-    cursor: pointer;
-    border-left: 3px solid transparent;
-    line-height: 1.4;
-  }
-
-  .nav-item:hover { background: rgba(255,255,255,0.07); color: var(--sidebar-text); }
-
-  .nav-item.active {
-    color: var(--sidebar-text);
-    border-left-color: var(--accent);
-    background: rgba(215,38,61,0.18);
-    font-weight: 600;
-  }
-
-  .nav-item .nav-label { display: block; }
-  .nav-item .nav-sub   { display: block; font-size: 11px; margin-top: 1px; opacity: .7; }
-
-  .nav-divider {
-    height: 1px;
-    background: rgba(255,255,255,0.1);
-    margin: 6px 0;
-  }
-
-  /* ── Main ── */
-  #main {
-    margin-left: var(--sidebar-w);
-    flex: 1;
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--navy-mid);
+    border-bottom: 2px solid var(--red);
+    padding: 0 2rem;
+    height: 58px;
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
-  /* ── Mode bar ── */
-  #mode-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 28px;
-    display: flex;
-    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 5;
+    z-index: 100;
   }
-
-  #mode-bar.hidden { display: none; }
-
-  .mode-btn {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 16px;
-    cursor: pointer;
-    text-align: left;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.3;
-    min-width: 110px;
-  }
-
-  .mode-btn:hover { border-color: var(--accent-hover); color: var(--text); }
-
-  .mode-btn.active {
-    border-color: var(--accent);
-    background: var(--accent-bg);
-    color: var(--accent);
-  }
-
-  .mode-btn .mode-name { font-weight: 600; display: block; }
-  .mode-btn .mode-desc { font-size: 11px; display: block; margin-top: 2px; opacity: .75; }
-
-  /* ── Content area ── */
-  #content {
-    padding: 32px 40px;
-    max-width: 820px;
-  }
-
-  .section-title {
-    font-size: 20px;
+  .topbar-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem;
     font-weight: 700;
-    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+    color: var(--white);
   }
-
-  .section-subtitle {
-    font-size: 13px;
+  .topbar-brand span { color: var(--red); }
+  .topbar-nav {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+  }
+  .topbar-nav a {
     color: var(--muted);
-    margin-bottom: 28px;
-  }
-
-  /* ── Learn mode ── */
-  .mindset-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.35rem 0.65rem;
     border-radius: 4px;
-    margin-bottom: 24px;
-    font-size: 13px;
-    color: var(--muted);
+    transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .topbar-nav a:hover { color: var(--white); background: var(--navy-light); }
+  .topbar-nav a.bonus { color: var(--gold); }
+  .topbar-nav a.bonus:hover { background: rgba(201,168,76,0.12); color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 3rem 2rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    max-width: 860px;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.6rem;
+  }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .hero p {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+    max-width: 580px;
   }
 
-  .mindset-box strong { color: var(--text); }
-
-  .script-block { margin-bottom: 6px; }
-
-  .stage-dir {
-    font-style: italic;
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .progress-label {
+    font-size: 0.78rem;
+    font-weight: 600;
     color: var(--muted);
-    font-size: 13px;
-    padding: 4px 0;
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-pct {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--white);
+    min-width: 2.5rem;
+    text-align: right;
   }
 
-  .script-line {
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: flex;
+    flex: 1;
+  }
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 58px;
+    height: calc(100vh - 58px);
+    overflow-y: auto;
+  }
+  .sidebar-section-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0 1.25rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .sidebar-section-label:first-child { margin-top: 0; }
+  .sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar nav a:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .sidebar nav a.active { color: var(--white); border-left-color: var(--red); background: rgba(215,38,61,0.08); }
+  .sidebar nav a.bonus-link { color: var(--gold-dim); }
+  .sidebar nav a.bonus-link:hover { color: var(--gold); }
+  .sidebar nav a.bonus-link.active { border-left-color: var(--gold); background: rgba(201,168,76,0.08); }
+  .track-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+  .track-dot.complete { background: var(--green); }
+  .track-dot.bonus { background: var(--gold-dim); }
+
+  /* ── CONTENT ── */
+  .content {
+    flex: 1;
+    padding: 2rem 2.5rem;
+    max-width: 780px;
+  }
+
+  /* ── TRACK SECTION ── */
+  .track {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 80px;
+  }
+  .track-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .track-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--border);
+    min-width: 2.5rem;
+  }
+  .track-number.red { color: rgba(215,38,61,0.4); }
+  .track-number.gold { color: rgba(201,168,76,0.5); }
+  .track-title-wrap {}
+  .track-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.25rem;
+  }
+  .track-eyebrow.gold { color: var(--gold); }
+  .track-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .track-desc {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist {
+    list-style: none;
+    margin-bottom: 1.5rem;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li input[type="checkbox"] {
+    margin-top: 2px;
+    width: 15px;
+    height: 15px;
+    accent-color: var(--red);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .checklist li.checked span { color: var(--text-dim); text-decoration: line-through; }
+
+  /* ── RESOURCES ── */
+  .resources {
+    background: var(--navy-mid);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 12px 16px;
-    background: var(--surface);
-    font-size: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .resources-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+  }
+  .resource-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    margin: 0.2rem 0.2rem 0.2rem 0;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .resource-link:hover { color: var(--white); border-color: var(--navy-light); }
+  .resource-link.placeholder { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+  .resource-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  /* ── QUIZ BLOCK ── */
+  .quiz-block {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .quiz-header.open { border-bottom-color: var(--border); }
+  .quiz-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .quiz-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--red);
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+  }
+  .quiz-badge.gold { background: var(--gold); color: var(--navy); }
+  .quiz-badge.complete { background: var(--green); color: var(--navy); }
+  .quiz-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .quiz-chevron {
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    font-size: 0.9rem;
+  }
+  .quiz-chevron.open { transform: rotate(180deg); }
+  .quiz-body {
+    display: none;
+    padding: 1.25rem;
+  }
+  .quiz-body.open { display: block; }
+  .quiz-q {
+    margin-bottom: 1.25rem;
+  }
+  .quiz-q-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+  .quiz-options {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .quiz-options li label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.83rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .quiz-options li label:hover { border-color: var(--navy-light); color: var(--text); }
+  .quiz-options li input[type="radio"] { accent-color: var(--red); cursor: pointer; }
+  .quiz-options li label.correct { border-color: var(--green); color: var(--green); background: rgba(46,204,138,0.06); }
+  .quiz-options li label.wrong { border-color: var(--red); color: var(--red); background: rgba(215,38,61,0.06); }
+  .quiz-submit-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .quiz-submit {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .quiz-submit:hover { background: var(--red-dim); }
+  .quiz-submit.gold-btn { background: var(--gold); color: var(--navy); }
+  .quiz-submit.gold-btn:hover { background: var(--gold-dim); }
+  .quiz-result {
+    font-size: 0.83rem;
+    font-weight: 600;
+  }
+  .quiz-result.pass { color: var(--green); }
+  .quiz-result.fail { color: var(--red); }
+
+  /* ── BONUS TRACK ── */
+  .track.bonus {
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: rgba(201,168,76,0.04);
+  }
+  .bonus-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── CONTENT BLOCKS ── */
+  .content-block {
+    margin-bottom: 1.75rem;
+  }
+  .block-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+    padding-left: 0.7rem;
+    border-left: 3px solid var(--red);
+  }
+  .block-text {
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 0.6rem;
+  }
+  .block-text strong { color: var(--white); }
+  .block-text em { color: var(--gold); font-style: normal; }
+
+  .info-list {
+    list-style: none;
+    margin: 0.5rem 0 0.75rem;
+    padding-left: 0;
+  }
+  .info-list li {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0.3rem 0 0.3rem 1.1rem;
     position: relative;
   }
+  .info-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+  }
+  .info-list li strong { color: var(--white); }
 
-  .script-speaker {
-    font-size: 10px;
+  /* ── LIFECYCLE STAGES ── */
+  .stage {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .stage:last-child { border-bottom: none; }
+  .stage-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
+    color: var(--red);
+    background: rgba(215,38,61,0.1);
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
-
-  .badge {
-    display: inline-block;
-    font-size: 10px;
+  .stage-content { flex: 1; }
+  .stage-title {
+    font-size: 0.92rem;
     font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 99px;
-    vertical-align: middle;
-    margin-left: 8px;
-    letter-spacing: .03em;
+    color: var(--white);
+    margin-bottom: 0.4rem;
   }
-
-  .badge-technique {
-    background: #fef3c7;
-    color: #92400e;
-    border: 1px solid #fcd34d;
+  .stage-content p {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
   }
+  .stage-content p:last-child { margin-bottom: 0; }
+  .stage-content .info-list { margin: 0.4rem 0 0.5rem; }
 
-  .script-line p { margin: 0; }
-  .script-line p + p { margin-top: 10px; }
-
-  .badge-memorize {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fca5a5;
+  /* ── MAKE GRID ── */
+  .make-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
   }
-
-  /* ── Outline mode ── */
-  .outline-list {
+  .make-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+  }
+  .make-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .model-list {
     list-style: none;
-    counter-reset: beat;
   }
-
-  .outline-list li {
-    counter-increment: beat;
-    display: flex;
-    gap: 14px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    align-items: baseline;
+  .model-list li {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    padding: 0.18rem 0;
   }
-
-  .outline-list li::before {
-    content: counter(beat);
-    font-size: 11px;
+  .ev-tag {
+    display: inline-block;
+    font-size: 0.6rem;
     font-weight: 700;
-    color: var(--accent);
-    min-width: 20px;
-    text-align: right;
-    flex-shrink: 0;
-    padding-top: 1px;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    padding: 0 0.3rem;
+    margin-left: 0.35rem;
+    vertical-align: middle;
   }
 
-  /* ── Objections quiz ── */
-  .quiz-meta {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 24px;
+  /* ── MATCH TABLE ── */
+  .match-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.5rem;
   }
-
-  .obj-card {
-    background: var(--surface);
+  .match-table td {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .match-table td.model-name { font-weight: 600; color: var(--white); white-space: nowrap; }
+  .match-table select {
+    width: 100%;
+    background: var(--navy);
+    color: var(--text);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 16px;
+    border-radius: 4px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.83rem;
+    font-family: inherit;
   }
+  .match-table select.correct { border-color: var(--green); color: var(--green); }
+  .match-table select.wrong { border-color: var(--red); color: var(--red); }
+  .match-table tr.correct-row td.model-name::after { content: ' ✓'; color: var(--green); }
 
-  .obj-card.done { opacity: .7; }
-  .obj-card.nailed { border-left: 4px solid #6ee7b7; background: #f0fdf6; }
-  .obj-card.almost { border-left: 4px solid #fcd34d; background: #fffbeb; }
-  .obj-card.missed { border-left: 4px solid #fca5a5; background: #fff5f5; }
-
-  .obj-scenario {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 6px;
+  /* ── SCRIPT BLOCK ── */
+  .script-block {
+    background: var(--navy-mid);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin-top: 0.75rem;
+  }
+  .script-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .script-text {
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.65;
     font-style: italic;
+    margin-bottom: 0.6rem;
   }
+  .script-text:last-child { margin-bottom: 0; }
 
-  .obj-prompt {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 14px;
-  }
-
-  .reveal-btn {
-    background: none;
-    border: 1px solid var(--border);
+  /* ── PLACEHOLDER NOTICE ── */
+  .placeholder-notice {
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed var(--border);
     border-radius: 6px;
-    padding: 7px 16px;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--muted);
+    padding: 1rem 1.25rem;
+    font-size: 0.83rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 1rem;
   }
 
-  .reveal-btn:hover { border-color: var(--text); color: var(--text); }
-
-  .obj-answer {
-    margin-top: 14px;
-    border-top: 1px solid var(--border);
-    padding-top: 14px;
-    display: none;
+  /* ── DATA TABLE (display tables) ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1rem;
+    font-size: 0.82rem;
   }
-
-  .obj-answer.visible { display: block; }
-
-  .answer-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .answer-text {
-    font-size: 14px;
-    margin-bottom: 14px;
-    line-height: 1.7;
-  }
-
-  .rating-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .rating-btn {
-    border: 1px solid var(--border);
-    background: none;
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--muted);
-  }
-
-  .rating-btn:hover { border-color: var(--text); color: var(--text); }
-  .rating-btn.selected-nailed  { background: #d1fae5; border-color: #6ee7b7; color: var(--success); font-weight: 600; }
-  .rating-btn.selected-almost  { background: #fef3c7; border-color: #fcd34d; color: var(--warn); font-weight: 600; }
-  .rating-btn.selected-missed  { background: #fee2e2; border-color: #fca5a5; color: var(--danger); font-weight: 600; }
-
-  /* ── Session summary ── */
-  #quiz-summary {
-    margin-top: 32px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    display: none;
-  }
-
-  #quiz-summary.visible { display: block; }
-
-  .summary-title {
-    font-weight: 700;
-    margin-bottom: 14px;
-  }
-
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    gap: 16px;
-  }
-
-  .summary-row:last-child { border-bottom: none; }
-
-  .summary-pills { display: flex; gap: 6px; }
-
-  .pill {
-    font-size: 11px;
+  .data-table th {
+    background: rgba(255,255,255,0.06);
     font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 99px;
+    color: var(--white);
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 0.5rem 0.75rem;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { font-weight: 500; }
+  .content .data-table th { background: rgba(0,0,0,0.04); color: var(--content-text); border-bottom-color: var(--content-border); }
+  .content .data-table td { color: var(--content-text-dim); border-bottom-color: var(--content-border); }
+  .content .data-table td:first-child { color: var(--content-text); }
+
+  /* ── SCENARIO CARDS ── */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .scenario-card { border-radius: 8px; padding: 1.25rem; }
+  .scenario-card.floor { background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
+  .scenario-card.engaged { background: rgba(46,204,138,0.07); border: 1px solid rgba(46,204,138,0.25); }
+  .scenario-card.elite { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.4); }
+  .content .scenario-card.floor { background: #f4f5f7; border-color: var(--content-border); }
+  .content .scenario-card.engaged { background: rgba(46,204,138,0.06); border-color: rgba(46,204,138,0.25); }
+  .content .scenario-card.elite { background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.35); }
+  .scenario-eyebrow { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .scenario-eyebrow.floor { color: var(--muted); }
+  .scenario-eyebrow.engaged { color: var(--green); }
+  .scenario-eyebrow.elite { color: var(--gold); }
+  .scenario-title { font-weight: 700; font-size: 0.93rem; color: var(--white); margin-bottom: 0.6rem; padding-bottom: 0.45rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .content .scenario-title { color: var(--content-text); border-bottom-color: var(--content-border); }
+  .scenario-line { font-size: 0.81rem; color: var(--text-dim); margin: 0.2rem 0; }
+  .content .scenario-line { color: var(--content-text-dim); }
+  .scenario-total { margin-top: 0.65rem; padding-top: 0.45rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
+  .content .scenario-total { border-top-color: var(--content-border); color: var(--content-text-dim); }
+  .scenario-amount { display: block; font-size: 1.3rem; font-weight: 700; margin-top: 0.15rem; }
+  .scenario-amount.floor { color: var(--muted); }
+  .scenario-amount.engaged { color: var(--green); }
+  .scenario-amount.elite { color: var(--gold); }
+
+  /* ── CALLOUT BLOCK ── */
+  .callout-block {
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+    background: rgba(215,38,61,0.06);
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.7;
+    font-weight: 500;
+  }
+  .content .callout-block { background: rgba(215,38,61,0.04); color: var(--content-text); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .sidebar { display: none; }
+    .topbar-nav { display: none; }
+    .content { padding: 1.5rem 1rem; }
+  }
+  /* ── LIGHT CONTENT AREA (Option 3) ── */
+  .content {
+    background: var(--content-bg);
+    color: var(--content-text);
+  }
+  .hero { border-bottom-color: var(--content-border); }
+  .hero p { color: var(--content-text-dim); }
+  .hero h1 { color: var(--content-text); }
+  .hero-eyebrow { color: var(--red); }
+
+  .content .track-header { border-bottom-color: var(--content-border); }
+  .content .track-title { color: var(--content-text); }
+  .content .track-desc { color: var(--content-text-dim); }
+  .content .track-number { color: #e3e7ee; }
+  .content .track-number.red { color: rgba(215,38,61,0.25); }
+  .content .track-number.gold { color: rgba(201,168,76,0.35); }
+
+  .content .block-title { color: var(--content-text); }
+  .content .block-text { color: var(--content-text); }
+  .content .block-text strong { color: var(--content-text); }
+
+  .content .info-list li { color: var(--content-text); }
+  .content .info-list li strong { color: var(--content-text); }
+
+  .content .stage { border-bottom-color: var(--content-border); }
+  .content .stage-number { background: rgba(215,38,61,0.08); }
+  .content .stage-title { color: var(--content-text); }
+  .content .stage-content p { color: var(--content-text-dim); }
+
+  .content .resources {
+    background: var(--content-card);
+    border-color: var(--content-border);
+  }
+  .content .resources-label { color: var(--content-text-faint); }
+  .content .resource-link {
+    color: var(--content-text-dim);
+    border-color: var(--content-border);
+  }
+  .content .resource-link:hover { color: var(--content-text); border-color: var(--muted); }
+
+  .content .checklist li {
+    border-bottom-color: var(--content-border);
+    color: var(--content-text);
+  }
+  .content .checklist li.checked span { color: var(--content-text-faint); }
+
+  .content .quiz-block {
+    background: var(--content-card);
+    border-color: var(--content-border);
+  }
+  .content .quiz-header.open { border-bottom-color: var(--content-border); }
+  .content .quiz-title { color: var(--content-text); }
+  .content .quiz-chevron { color: var(--content-text-faint); }
+  .content .quiz-q-text { color: var(--content-text); }
+  .content .quiz-options li label {
+    color: var(--content-text-dim);
+    border-color: var(--content-border);
+  }
+  .content .quiz-options li label:hover { border-color: var(--muted); color: var(--content-text); }
+
+  .content .placeholder-notice {
+    background: var(--content-card);
+    border-color: var(--content-border);
+    color: var(--content-text-faint);
   }
 
-  .pill-nailed { background: #d1fae5; color: var(--success); }
-  .pill-almost { background: #fef3c7; color: var(--warn); }
-  .pill-missed { background: #fee2e2; color: var(--danger); }
-  .pill-none   { background: var(--bg); color: var(--muted); }
+  .content .make-card {
+    background: var(--content-card);
+    border-color: var(--content-border);
+  }
+  .content .make-name { color: var(--content-text); border-bottom-color: var(--content-border); }
+  .content .model-list li { color: var(--content-text-dim); }
 
-  .needs-work { color: var(--danger); font-weight: 600; font-size: 11px; }
-
-  .reset-btn {
-    margin-top: 16px;
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 16px;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--muted);
+  .content .match-table td { color: var(--content-text); border-bottom-color: var(--content-border); }
+  .content .match-table select {
+    background: var(--content-card);
+    color: var(--content-text);
+    border-color: var(--content-border);
   }
 
-  .reset-btn:hover { border-color: var(--text); color: var(--text); }
+  .content .script-block {
+    background: var(--content-card);
+    border-left-color: var(--gold);
+  }
+  .content .script-text { color: var(--content-text); }
 
-  /* ── Mobile top bar ── */
-  #mobile-bar {
-    display: none;
-    background: var(--sidebar-deep);
-    padding: 0 16px;
-    height: 52px;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    flex-shrink: 0;
+  .content .track.bonus {
+    background: rgba(201,168,76,0.06);
+    border-color: rgba(201,168,76,0.3);
   }
 
-  #mobile-bar .brand {
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    color: var(--sidebar-text);
-  }
-
-  #hamburger {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  #hamburger span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: var(--sidebar-text);
-    border-radius: 2px;
-    transition: opacity 0.15s;
-  }
-
-  /* ── Overlay backdrop ── */
-  #overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 15;
-  }
-
-  #overlay.visible { display: block; }
-
-  /* ── Responsive ── */
-  @media (max-width: 680px) {
-    body { flex-direction: column; }
-
-    #mobile-bar { display: flex; }
-
-    #sidebar {
-      transform: translateX(-100%);
-      transition: transform 0.22s ease;
-      top: 0;
-      z-index: 20;
-    }
-
-    #sidebar.open { transform: translateX(0); }
-
-    #main {
-      margin-left: 0;
-      width: 100%;
-    }
-
-    #mode-bar {
-      padding: 10px 16px;
-      flex-wrap: wrap;
-      top: 52px;
-    }
-
-    .mode-btn { min-width: 0; flex: 1; }
-
-    #content {
-      padding: 20px 16px;
-    }
-
-    .summary-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-    }
-  }
 </style>
 </head>
 <body>
 
-<!-- ═══ MOBILE TOP BAR ═══ -->
-<div id="mobile-bar">
-  <div class="brand">DealerKey</div>
-  <button id="hamburger" onclick="toggleSidebar()" aria-label="Open menu">
-    <span></span><span></span><span></span>
-  </button>
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-brand">DEALER<span>KEY</span></div>
+  <ul class="topbar-nav">
+    <li><a href="#track-business">Business</a></li>
+    <li><a href="#track-product">Products</a></li>
+    <li><a href="#track-sales">Sales</a></li>
+    <li><a href="#track-systems">Systems</a></li>
+    <li><a href="#track-commissions">My Commissions</a></li>
+    <li><a href="#track-bonus" class="bonus">⚡ Bonus</a></li>
+  </ul>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <span class="progress-label">ONBOARDING PROGRESS</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-pct" id="progressPct">0%</span>
 </div>
 
-<!-- ═══ OVERLAY ═══ -->
-<div id="overlay" onclick="toggleSidebar()"></div>
+<div class="main">
 
-<!-- ═══ SIDEBAR ═══ -->
-<div id="sidebar">
-  <header>
-    <div class="brand">DealerKey</div>
-    <div class="subtitle">Sales Training</div>
-  </header>
-  <nav id="nav"></nav>
-</div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section-label">Tracks</div>
+    <nav>
+      <a href="#track-business" class="active">
+        <span class="track-dot" id="dot-business"></span> Business
+      </a>
+      <a href="#track-product">
+        <span class="track-dot" id="dot-product"></span> Products
+      </a>
+      <a href="#track-sales">
+        <span class="track-dot" id="dot-sales"></span> Sales
+      </a>
+      <a href="#track-systems">
+        <span class="track-dot" id="dot-systems"></span> Systems
+      </a>
+      <a href="#track-commissions">
+        <span class="track-dot" id="dot-commissions"></span> My Commissions
+      </a>
+    </nav>
+    <div class="sidebar-section-label">Optional</div>
+    <nav>
+      <a href="#track-bonus" class="bonus-link">
+        <span class="track-dot bonus" id="dot-bonus"></span> ⚡ Bonus
+      </a>
+    </nav>
+  </aside>
 
-<!-- ═══ MAIN ═══ -->
-<div id="main">
-  <div id="mode-bar">
-    <button class="mode-btn active" data-mode="learn" onclick="setMode('learn')">
-      <span class="mode-name">Learn</span>
-      <span class="mode-desc">Full script + directions</span>
-    </button>
-    <button class="mode-btn" data-mode="outline" onclick="setMode('outline')">
-      <span class="mode-name">Outline</span>
-      <span class="mode-desc">Key beats only</span>
-    </button>
-  </div>
-  <div id="content"></div>
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">Rep Onboarding</div>
+      <h1>Get certified.<br>Start closing.</h1>
+      <p>Work through the four tracks below at your own pace. Complete the quiz at the end of each track before moving on. The Bonus track is optional — but the reps who set it up close more deals.</p>
+    </div>
+
+    <!-- ── TRACK 1: BUSINESS ── -->
+    <section class="track" id="track-business">
+      <div class="track-header">
+        <div class="track-number red">01</div>
+        <div class="track-title-wrap">
+          <div class="track-eyebrow">Track One</div>
+          <div class="track-title">Business</div>
+        </div>
+      </div>
+      <p class="track-desc">Understand what DealerKey is, how the model works, how we make money, and what clients are agreeing to before we ever bid on their behalf.</p>
+
+      <!-- WHAT IS DEALERKEY -->
+      <div class="content-block">
+        <h3 class="block-title">What DealerKey Is</h3>
+        <p class="block-text">DealerKey is a licensed buyer's agent that gets everyday people access to dealer-only wholesale auctions — so they can buy the same cars dealers buy, at the same prices, without needing a dealer license.</p>
+      </div>
+
+      <!-- FEE STRUCTURE -->
+      <div class="content-block">
+        <h3 class="block-title">How We Get Paid — The Total Purchase Obligation</h3>
+        <p class="block-text">When a client wins a bid, they owe the full <strong>Total Purchase Obligation</strong>. This is not just "the car price" — it's everything stacked together:</p>
+        <ul class="info-list">
+          <li><strong>Hammer price</strong> — the winning auction bid</li>
+          <li><strong>Auction buyer's fee</strong> — set by the auction, not us</li>
+          <li><strong>DealerKey flat service fee</strong> — our cut, $1,500</li>
+          <li><strong>Transport fee</strong> — if delivery is outside our local service area</li>
+          <li><strong>Utah sales/use tax</strong> — at the rate when title transfers</li>
+          <li><strong>DMV registration and title fees</strong></li>
+          <li><strong>Optional post-sale inspection</strong> — if the client requests one (and we strongly recommend they do)</li>
+        </ul>
+        <p class="block-text">Reps should always frame the $1,500 flat fee as <em>our</em> cost — the rest are pass-through costs the client would pay no matter who sourced the car.</p>
+      </div>
+
+      <!-- THE DEPOSIT -->
+      <div class="content-block">
+        <h3 class="block-title">The 25% Deposit</h3>
+        <p class="block-text">Before we bid on anything, the client pays a deposit equal to <strong>25% of their max approved bid</strong>. This is the single most important policy point reps need to communicate clearly and early.</p>
+        <ul class="info-list">
+          <li><strong>If we don't win a bid</strong> — fully refunded within 5 business days of the BAF (Bid Authorization Form) expiring. No fees, no deductions.</li>
+          <li><strong>If we win a bid</strong> — the deposit becomes non-refundable and applies toward the Total Purchase Obligation. The client's commitment is locked in the moment the hammer falls.</li>
+          <li><strong>If the client backs out before a bid is placed</strong> — non-refundable. Same if they gave us specs that made sourcing impossible.</li>
+        </ul>
+        <p class="block-text">This is why the BAM (Bid Authorization Meeting) matters so much — it's the moment a client moves from "interested" to "committed."</p>
+      </div>
+
+      <!-- CLIENT LIFECYCLE -->
+      <div class="content-block">
+        <h3 class="block-title">The Client Lifecycle</h3>
+
+        <div class="stage">
+          <div class="stage-number">1</div>
+          <div class="stage-content">
+            <div class="stage-title">Initial Contact → IAM (Initial Advisory Meeting)</div>
+            <p>Every new lead's first goal is getting them on a brief Google Meet — the IAM. Their willingness to show up for this call is itself a signal of how serious and committed they are.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">2</div>
+          <div class="stage-content">
+            <div class="stage-title">CRM Sort — Searching vs. Qualifying/Needs Time</div>
+            <p>After the IAM, the client gets sorted:</p>
+            <ul class="info-list">
+              <li><strong>Searching</strong> — ready to actively look now</li>
+              <li><strong>Qualifying / Needs Time</strong> — waiting on financing or other life stuff before committing</li>
+            </ul>
+            <p>For "Needs Time" clients: customize check-in cadence to their situation, stay on their radar without pressure, and periodically confirm where they're at.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">3</div>
+          <div class="stage-content">
+            <div class="stage-title">The Search</div>
+            <p>For "Searching" clients, the rep sends example listings a minimum of 2-3 times per week — more for most clients. Every listing update includes the rep's opinion on the best option that week, while leaving the decision completely up to the client.</p>
+            <p>Non-listing contact includes answering questions, checking preferences, and following up. The goal: involved, communicative, consistent — never overbearing. Match cadence to the client's demeanor.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">4</div>
+          <div class="stage-content">
+            <div class="stage-title">BAM (Bid Authorization Meeting)</div>
+            <p>Once a client picks a car, immediately schedule the BAM. On this call:</p>
+            <ul class="info-list">
+              <li>Review photos, condition reports, and auction details together</li>
+              <li>Agree on a max bid number</li>
+              <li>Send the Vehicle Purchase Agreement to the client's email</li>
+              <li>Walk through the document together (screen share or in person) — cover the main points, answer questions</li>
+              <li>Ideally, the client signs on the call. If they need more time, that's completely fine.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">5</div>
+          <div class="stage-content">
+            <div class="stage-title">Submit to Dallin</div>
+            <p>Immediately after the agreement is signed, send Dallin the <strong>VIN, max bid, and auction date</strong>.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">6</div>
+          <div class="stage-content">
+            <div class="stage-title">Bidding Window</div>
+            <p>Give frequent updates as the auction approaches. Help ensure the client's portion of the payment is submitted on time.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">7</div>
+          <div class="stage-content">
+            <div class="stage-title">Post-Bid → Delivery</div>
+            <p>Stay in close contact through shipping, post-sale inspection, and delivery updates until the client has their car in hand.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AS-IS / RISK -->
+      <div class="content-block">
+        <h3 class="block-title">As-Is Purchase — What Reps Need to Know</h3>
+        <p class="block-text">Every vehicle is purchased <strong>as-is, where-is</strong>. Clients can't physically inspect or test-drive before the auction run. Condition reports come from third-party graders, not us. This is a real risk the client is accepting — reps shouldn't downplay it, but also shouldn't make it scary.</p>
+        <p class="block-text">The best move: recommend the post-sale inspection on every transaction. It's a small pass-through cost that gives the client real peace of mind, and it's the honest answer when someone asks "what if something's wrong with the car?"</p>
+      </div>
+
+      <!-- THE AGREEMENT -->
+      <div class="content-block">
+        <h3 class="block-title">The Vehicle Purchase Agreement — Key Points</h3>
+        <p class="block-text">This is the document sent and reviewed during the BAM. Reps don't need to memorize every clause, but should be able to clearly explain:</p>
+        <ul class="info-list">
+          <li><strong>We're the buyer's agent</strong> — we don't own the car, don't mark it up, don't take kickbacks</li>
+          <li><strong>The BAF (Bid Authorization Form)</strong> — separate from the agreement, specifies the car, max bid, delivery ZIP, and expires in 30 days</li>
+          <li><strong>25% deposit</strong> — refundable if no bid is won, non-refundable once we win</li>
+          <li><strong>Balance due</strong> — within 3 business days of a winning bid, by wire/ACH/cashier's check (no personal checks)</li>
+          <li><strong>As-is purchase</strong> — no warranties from DealerKey; post-sale inspection strongly recommended</li>
+          <li><strong>Financing is the client's responsibility</strong> — must be secured before the BAF is signed</li>
+          <li><strong>Transport damage</strong> — claims go to the carrier, not DealerKey; client must note damage on the bill of lading at delivery</li>
+        </ul>
+      </div>
+
+      <ul class="checklist" id="checklist-business">
+        <li><input type="checkbox" onchange="updateProgress()"> <span>What DealerKey is and what problem it solves</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>The Total Purchase Obligation — all costs that stack on top of the hammer price</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>The 25% deposit — when it's refundable and when it's not</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>The full client lifecycle — IAM → Search → BAM → Bidding → Delivery</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>As-is purchase policy and how to explain it to clients</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>The Vehicle Purchase Agreement — key points covered in the BAM</span></li>
+      </ul>
+
+      <div class="resources">
+        <div class="resources-label">Resources</div>
+        <a href="#" class="resource-link placeholder">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h6l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg>
+          Advisory Deck (link TBD)
+        </a>
+        <a href="#" class="resource-link placeholder">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm1 10H7V7h2v4zm0-5H7V4h2v2z"/></svg>
+          Vehicle Purchase Agreement (link TBD)
+        </a>
+      </div>
+
+      <!-- QUIZ -->
+      <div class="quiz-block" id="quiz-business">
+        <div class="quiz-header" onclick="toggleQuiz('business')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-business">Quiz</span>
+            <span class="quiz-title">Business Track Quiz</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-business">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-business">
+          <div class="quiz-q" id="bq1">
+            <div class="quiz-q-text">1. What is DealerKey's flat fee per vehicle sourced?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq1" value="a"> $750</label></li>
+              <li><label><input type="radio" name="bq1" value="b"> $1,500</label></li>
+              <li><label><input type="radio" name="bq1" value="c"> $2,250</label></li>
+              <li><label><input type="radio" name="bq1" value="d"> It depends on the vehicle</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq2">
+            <div class="quiz-q-text">2. In addition to DealerKey's flat fee, what other costs does the client typically incur?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq2" value="a"> Only transport</label></li>
+              <li><label><input type="radio" name="bq2" value="b"> $750 Manheim fee only</label></li>
+              <li><label><input type="radio" name="bq2" value="c"> $750 Manheim fee + transport</label></li>
+              <li><label><input type="radio" name="bq2" value="d"> No additional costs</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq3">
+            <div class="quiz-q-text">3. When does a client sign the required documentation?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq3" value="a"> After we win the auction bid</label></li>
+              <li><label><input type="radio" name="bq3" value="b"> Before we bid on their behalf</label></li>
+              <li><label><input type="radio" name="bq3" value="c"> At vehicle delivery</label></li>
+              <li><label><input type="radio" name="bq3" value="d"> It's optional</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq4">
+            <div class="quiz-q-text">4. A client pays their 25% deposit, and DealerKey does not win a bid before the BAF expires. What happens to the deposit?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq4" value="a"> It's forfeited</label></li>
+              <li><label><input type="radio" name="bq4" value="b"> It's applied to next month's search</label></li>
+              <li><label><input type="radio" name="bq4" value="c"> Fully refunded within 5 business days of BAF expiration</label></li>
+              <li><label><input type="radio" name="bq4" value="d"> Half refunded</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq5">
+            <div class="quiz-q-text">5. What happens to the deposit the moment DealerKey wins a bid?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq5" value="a"> It becomes non-refundable and applies to the Total Purchase Obligation</label></li>
+              <li><label><input type="radio" name="bq5" value="b"> It's returned and a new deposit is required</label></li>
+              <li><label><input type="radio" name="bq5" value="c"> It's split between DealerKey and the client</label></li>
+              <li><label><input type="radio" name="bq5" value="d"> Nothing changes until delivery</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq6">
+            <div class="quiz-q-text">6. What is the correct order of the client lifecycle?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq6" value="a"> BAM → IAM → Search → Bidding</label></li>
+              <li><label><input type="radio" name="bq6" value="b"> IAM → Search → BAM → Bidding → Delivery</label></li>
+              <li><label><input type="radio" name="bq6" value="c"> Search → IAM → Bidding → BAM</label></li>
+              <li><label><input type="radio" name="bq6" value="d"> Bidding → BAM → IAM → Search</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq7">
+            <div class="quiz-q-text">7. A client asks "what if the car has a hidden problem the auction didn't catch?" What's the best response?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq7" value="a"> "That won't happen, our cars are always perfect."</label></li>
+              <li><label><input type="radio" name="bq7" value="b"> "DealerKey will cover any repairs if that happens."</label></li>
+              <li><label><input type="radio" name="bq7" value="c"> "These are as-is purchases, which is why we strongly recommend a post-sale inspection — it's a small cost that gives you real peace of mind."</label></li>
+              <li><label><input type="radio" name="bq7" value="d"> "You should ask the auction directly."</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq8">
+            <div class="quiz-q-text">8. Once a client signs the agreement and a max bid is agreed upon during the BAM, what should the rep do immediately?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq8" value="a"> Wait until the auction to notify Dallin</label></li>
+              <li><label><input type="radio" name="bq8" value="b"> Send Dallin the VIN, max bid, and auction date</label></li>
+              <li><label><input type="radio" name="bq8" value="c"> Schedule the IAM</label></li>
+              <li><label><input type="radio" name="bq8" value="d"> Refund the deposit</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq9">
+            <div class="quiz-q-text">9. A client wants to back out of the deal the day after signing the BAF, before any auction run has happened. Is the deposit refundable?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq9" value="a"> Yes, as long as it's within 5 business days</label></li>
+              <li><label><input type="radio" name="bq9" value="b"> No — cancellation before an auction run is non-refundable</label></li>
+              <li><label><input type="radio" name="bq9" value="c"> Yes, but only 50% is refunded</label></li>
+              <li><label><input type="radio" name="bq9" value="d"> Only if they haven't met with the rep yet</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq10">
+            <div class="quiz-q-text">10. What does the BAF (Bid Authorization Form) need to specify? (Select the option that is NOT actually required)</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq10" value="a"> Vehicle spec — year, make, model, trim, color, acceptable mileage range</label></li>
+              <li><label><input type="radio" name="bq10" value="b"> Maximum approved bid amount</label></li>
+              <li><label><input type="radio" name="bq10" value="c"> The client's preferred auction lane number</label></li>
+              <li><label><input type="radio" name="bq10" value="d"> Delivery ZIP code</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq11">
+            <div class="quiz-q-text">11. How long is a BAF valid before it expires by default?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq11" value="a"> 7 days</label></li>
+              <li><label><input type="radio" name="bq11" value="b"> 14 days</label></li>
+              <li><label><input type="radio" name="bq11" value="c"> 30 days</label></li>
+              <li><label><input type="radio" name="bq11" value="d"> 60 days</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq12">
+            <div class="quiz-q-text">12. DealerKey wins a bid for a client. How many business days does the client have to pay the remaining balance?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq12" value="a"> 1 business day</label></li>
+              <li><label><input type="radio" name="bq12" value="b"> 3 business days</label></li>
+              <li><label><input type="radio" name="bq12" value="c"> 5 business days</label></li>
+              <li><label><input type="radio" name="bq12" value="d"> 7 business days</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq13">
+            <div class="quiz-q-text">13. A client wants to pay their balance with a personal check. What's the correct response?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq13" value="a"> That's fine, personal checks are accepted</label></li>
+              <li><label><input type="radio" name="bq13" value="b"> Personal checks aren't accepted — payment must be wire, ACH, or cashier's check</label></li>
+              <li><label><input type="radio" name="bq13" value="c"> Only accepted if it's a cosigned check</label></li>
+              <li><label><input type="radio" name="bq13" value="d"> Personal checks are fine if under $5,000</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq14">
+            <div class="quiz-q-text">14. A client's financing falls through after DealerKey wins the bid. Does this release them from the Total Purchase Obligation?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq14" value="a"> Yes, financing issues are a valid reason to cancel</label></li>
+              <li><label><input type="radio" name="bq14" value="b"> No — the obligation is unconditional and not contingent on financing</label></li>
+              <li><label><input type="radio" name="bq14" value="c"> Only the deposit is forfeited, the rest is waived</label></li>
+              <li><label><input type="radio" name="bq14" value="d"> They get a 30-day extension automatically</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq15">
+            <div class="quiz-q-text">15. A vehicle arrives with visible transport damage. What should the client do, and who handles the claim?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq15" value="a"> Note the damage on the bill of lading at delivery — claims go to the carrier, not DealerKey</label></li>
+              <li><label><input type="radio" name="bq15" value="b"> Call DealerKey, who will file and resolve the claim on the client's behalf</label></li>
+              <li><label><input type="radio" name="bq15" value="c"> Refuse delivery and demand a refund from DealerKey</label></li>
+              <li><label><input type="radio" name="bq15" value="d"> Nothing — transport damage is covered by the flat fee</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="bq16">
+            <div class="quiz-q-text">16. If DealerKey materially breaches the agreement (e.g. bids above the approved max without written approval) and can't cure it within 10 business days, what happens to the deposit?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="bq16" value="a"> It's still non-refundable per the standard policy</label></li>
+              <li><label><input type="radio" name="bq16" value="b"> Refundable in full on the client's written demand</label></li>
+              <li><label><input type="radio" name="bq16" value="c"> Split 50/50 between client and DealerKey</label></li>
+              <li><label><input type="radio" name="bq16" value="d"> Converted to credit toward a future search</label></li>
+            </ul>
+          </div>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeQuiz('business')">Submit</button>
+            <span class="quiz-result" id="qresult-business"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRACK 2: PRODUCT ── -->
+    <section class="track" id="track-product">
+      <div class="track-header">
+        <div class="track-number red">02</div>
+        <div class="track-title-wrap">
+          <div class="track-eyebrow">Track Two</div>
+          <div class="track-title">Products</div>
+        </div>
+      </div>
+      <p class="track-desc">Know the cars. Know the auction. Know what to go after and what to walk away from.</p>
+
+      <!-- STUDY GUIDE -->
+      <div class="content-block">
+        <h3 class="block-title">Study Guide — Makes & Models We Source</h3>
+        <p class="block-text">These are the makes and models that show up most often in our sourcing. You don't need to know every trim detail yet — but you need to know which models belong to which make cold. The matching quiz below tests exactly that.</p>
+
+        <div class="make-grid">
+          <div class="make-card">
+            <div class="make-name">Honda</div>
+            <ul class="model-list">
+              <li>Civic</li><li>Accord</li><li>CR-V</li><li>Pilot</li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Toyota</div>
+            <ul class="model-list">
+              <li>Camry</li><li>Corolla</li><li>RAV4</li><li>Tacoma</li><li>Highlander</li><li>Tundra</li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Jeep</div>
+            <ul class="model-list">
+              <li>Grand Cherokee</li><li>Wrangler</li><li>Cherokee</li><li>Compass</li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Ford</div>
+            <ul class="model-list">
+              <li>F-150</li><li>Maverick</li><li>Ranger</li><li>Expedition</li><li>F-150 Lightning <span class="ev-tag">EV</span></li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Chevrolet</div>
+            <ul class="model-list">
+              <li>Silverado 1500</li><li>Colorado</li><li>Silverado EV <span class="ev-tag">EV</span></li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Kia</div>
+            <ul class="model-list">
+              <li>Sportage</li><li>Sorento</li><li>Telluride</li><li>Soul</li><li>EV6 <span class="ev-tag">EV</span></li><li>EV9 <span class="ev-tag">EV</span></li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Hyundai</div>
+            <ul class="model-list">
+              <li>Tucson</li><li>Santa Fe</li><li>Elantra</li><li>Palisade</li><li>Sonata</li>
+            </ul>
+          </div>
+          <div class="make-card">
+            <div class="make-name">Tesla</div>
+            <ul class="model-list">
+              <li>Model 3 <span class="ev-tag">EV</span></li><li>Model Y <span class="ev-tag">EV</span></li><li>Model S <span class="ev-tag">EV</span></li><li>Model X <span class="ev-tag">EV</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="block-text" style="margin-top: 1rem;">A quick way to group these mentally: <strong>sedans</strong> (Civic, Accord, Camry, Corolla, Elantra, Sonata), <strong>compact/midsize SUVs</strong> (CR-V, RAV4, Cherokee, Compass, Sportage, Tucson), <strong>3-row SUVs</strong> (Pilot, Highlander, Grand Cherokee, Telluride, Palisade, Expedition), <strong>trucks</strong> (F-150, Tacoma, Tundra, Silverado, Colorado, Maverick, Ranger), and <strong>EVs</strong> (Lightning, Silverado EV, EV6, EV9, all Tesla models).</p>
+      </div>
+
+      <!-- VEHICLE FUNDAMENTALS -->
+      <div class="content-block">
+        <h3 class="block-title">Vehicle Fundamentals</h3>
+        <p class="block-text">Reps need to speak fluently about drivetrain, powertrain type, and trim levels — these come up constantly in client conversations. The reference below has the full detail; the key logic is summarized here.</p>
+
+        <ul class="info-list">
+          <li><strong>Drivetrain</strong> — how power gets from the engine to the wheels. The main types: FWD, RWD, AWD, 4WD.</li>
+          <li><strong>AWD vs. 4WD</strong> — AWD is always-on, automatic, built for everyday traction in rain/snow (most crossovers and SUVs). 4WD is driver-engaged (or auto-engaging on newer trucks), built for low-traction off-road or towing situations — found on trucks and body-on-frame SUVs like the 4Runner, Tahoe, Wrangler.</li>
+          <li><strong>Hybrid vs. Plug-in Hybrid (PHEV)</strong> — a regular hybrid never plugs in; the gas engine and battery work together automatically and you fuel it like normal. A PHEV has a larger battery that <em>can</em> be charged from a wall outlet, giving a short all-electric range (often 20-40 miles) before it behaves like a regular hybrid.</li>
+          <li><strong>Trim levels</strong> — generally a ladder from base → mid → upper-mid → top, where each step typically adds: better interior materials, more tech/infotainment, more driver-assist safety features, upgraded wheels, and sometimes a different engine or drivetrain option. It's not exact across brands, but the logic holds.</li>
+        </ul>
+
+        <div class="quiz-block" id="ref-trims">
+          <div class="quiz-header" onclick="toggleQuiz('ref-trims')">
+            <div class="quiz-header-left">
+              <span class="quiz-badge gold">Reference</span>
+              <span class="quiz-title">Honda & Toyota Trim Ladders (detailed reference)</span>
+            </div>
+            <span class="quiz-chevron" id="qchev-ref-trims">▼</span>
+          </div>
+          <div class="quiz-body" id="qbody-ref-trims">
+            <p class="block-text"><strong>Honda Civic / Accord / CR-V — typical ladder:</strong></p>
+            <ul class="info-list">
+              <li><strong>LX</strong> — base. Cloth seats, basic infotainment, smaller wheels, Honda Sensing safety suite usually still included.</li>
+              <li><strong>EX</strong> — adds sunroof, larger touchscreen, heated seats, upgraded audio, alloy wheels.</li>
+              <li><strong>EX-L</strong> — adds leather seating, power driver's seat, sometimes power passenger seat, additional USB ports.</li>
+              <li><strong>Sport / Sport Touring / Touring</strong> — top trims. Adds larger wheels, premium audio (often higher-end brand), navigation, ventilated seats, more aggressive styling on Sport variants, often the only trims with AWD on CR-V.</li>
+            </ul>
+            <p class="block-text"><strong>Toyota Camry / RAV4 / Highlander — typical ladder:</strong></p>
+            <ul class="info-list">
+              <li><strong>LE</strong> — base. Cloth seats, smaller wheels, basic infotainment, Toyota Safety Sense included.</li>
+              <li><strong>SE / XSE</strong> — sport-styled trims. Sport-tuned suspension, larger wheels, sport seats, paddle shifters on some models. XSE often adds a sunroof and upgraded interior trim over SE.</li>
+              <li><strong>XLE</strong> — comfort-focused mid/upper trim. Adds leather-trimmed seats, power driver's seat, heated seats, upgraded infotainment, sunroof.</li>
+              <li><strong>Limited / Platinum</strong> — top trims. Adds premium leather, ventilated seats, JBL or premium audio, larger touchscreen, advanced driver-assist features, panoramic roof on some models.</li>
+            </ul>
+            <p class="block-text"><strong>Toyota Tacoma / Tundra — typical ladder:</strong></p>
+            <ul class="info-list">
+              <li><strong>SR</strong> — base work-truck trim. Vinyl/cloth seats, basic infotainment, steel wheels.</li>
+              <li><strong>SR5</strong> — adds cloth upgrades, alloy wheels, larger touchscreen.</li>
+              <li><strong>TRD Sport / TRD Off-Road</strong> — off-road focused. TRD Off-Road adds locking rear differential, off-road suspension tuning, skid plates, all-terrain tires.</li>
+              <li><strong>Limited / Platinum / TRD Pro</strong> — top trims. Leather, premium audio, advanced tech. TRD Pro adds the most aggressive off-road suspension and styling.</li>
+            </ul>
+            <p class="block-text" style="margin-bottom:0;"><strong>How to use this with clients:</strong> if a client says "I want heated seats and a sunroof but don't need leather," that's pointing toward an EX-level Honda or an SE/XSE-level Toyota — not the base trim, but not the top either. If they mention towing or off-road, steer toward TRD Off-Road or 4WD-equipped trims rather than assuming AWD covers it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANHEIM & AUCTION MECHANICS -->
+      <div class="content-block">
+        <h3 class="block-title">Manheim & Auction Mechanics</h3>
+
+        <p class="block-text"><strong>Arbitration light system</strong> — every Manheim listing carries a colored light/label that tells you the arbitration status of the vehicle:</p>
+        <ul class="info-list">
+          <li><strong>Green</strong> — full arbitration rights. This is our default. If something material is misrepresented (odometer, frame damage, undisclosed accidents, etc.), we can file for arbitration after the sale.</li>
+          <li><strong>Yellow</strong> — limited arbitration, usually tied to a specific announced issue (e.g. a known mechanical problem disclosed at sale). Arbitration rights apply to everything <em>except</em> what was announced.</li>
+          <li><strong>Red</strong> — sold "as-is," essentially zero arbitration rights. We only bid red for a client if they explicitly understand and accept that there is no recourse if something is wrong — no exceptions, no assumptions.</li>
+          <li><strong>Blue</strong> — typically indicates a vehicle sold with a specific certification or program backing (varies by sale), often with its own separate guarantee terms outside the standard arbitration policy. Always check the specific terms before treating it like a standard green light.</li>
+        </ul>
+        <p class="block-text">Default rule for reps: <strong>bid green</strong>. If a client is dead-set on a red-light vehicle, the conversation about zero arbitration rights has to happen clearly, out loud, before the BAM — not buried in the paperwork.</p>
+
+        <p class="block-text"><strong>Out-of-state vehicles and post-sale inspection</strong> — for any vehicle being shipped out of state, strongly encourage the post-sale inspection (~$150). The client can't see the car in person, transport adds its own risk, and $150 is cheap insurance against a much more expensive surprise.</p>
+
+        <p class="block-text"><strong>AutoCheck vs. CarFax</strong> — Manheim listings may show either or both. Reps should be able to explain both simply to clients:</p>
+        <ul class="info-list">
+          <li><strong>CarFax</strong> — the more widely recognized vehicle history report. Pulls from a broad network of DMVs, insurance companies, service shops, and auctions to show accident history, ownership changes, title issues, service records, and odometer readings over time.</li>
+          <li><strong>AutoCheck</strong> — Experian's version of the same idea. Slightly different data sources and network (heavily used in the auction/dealer world), gives a "score" summarizing the vehicle's history, and covers similar categories — accidents, title issues, odometer, ownership history.</li>
+        </ul>
+        <p class="block-text">Bottom line for clients: these are two different companies pulling from overlapping but not identical data sources. Neither is "better" — having both gives a fuller picture, and a clean report from one doesn't guarantee the other is clean too.</p>
+
+        <p class="block-text"><strong>Tire grades</strong> — auction condition reports usually list tire tread depth as a fraction or percentage (e.g. "7/32" or "70%"), sometimes per tire. New tires are roughly 10-11/32". Anything in the 2-3/32" range is near end-of-life and likely needs replacing soon — factor that into how a deal is presented (it's a real, near-term cost the client should know about).</p>
+
+        <p class="block-text"><strong>Transmission types</strong> — reps should recognize the basics when they show up in listings:</p>
+        <ul class="info-list">
+          <li><strong>Automatic (AT)</strong> — standard torque-converter automatic, the most common.</li>
+          <li><strong>CVT (Continuously Variable Transmission)</strong> — common on Honda/Toyota compact and midsize models for fuel efficiency; no fixed "gears," smooth and gradual power delivery.</li>
+          <li><strong>Manual (MT)</strong> — driver-operated clutch and gear selection; rare in modern listings but occasionally shows up, usually on trucks or sport trims.</li>
+          <li><strong>DCT (Dual-Clutch Transmission)</strong> — automated but uses two clutches for faster, sportier shifts; shows up on some performance trims.</li>
+        </ul>
+
+        <p class="block-text"><strong>How arbitration works with Manheim</strong> — if a green (or applicable yellow) vehicle has an issue that wasn't disclosed and falls within Manheim's arbitration policy (commonly things like undisclosed frame damage, odometer discrepancies, or a misrepresented title status), the buyer can file an arbitration claim within Manheim's specified window after the sale (often within a short number of days/mileage driven — always confirm current policy). Manheim reviews the claim against the original listing and condition report. Outcomes can include a price adjustment, the seller taking the vehicle back, or the claim being denied if the issue doesn't meet arbitration criteria. The key for reps: arbitration is a safety net for green/yellow vehicles, not a guarantee — and it's exactly why red-light vehicles are a different risk conversation entirely.</p>
+
+        <p class="block-text"><strong>Timed sales vs. Simulcast Live</strong> — Manheim runs vehicles through different sale formats, and reps should know the difference:</p>
+        <ul class="info-list">
+          <li><strong>Timed sale</strong> — a listing is open for bidding over a set window (often a day or more), and the highest bid at close wins — similar to an online auction-style listing. These often include a <strong>"Buy Now"</strong> button: a fixed price the seller will accept immediately, ending the auction on the spot for whoever clicks it first. Buy Now prices are typically set higher than where the vehicle would likely land in competitive bidding, since the seller is charging a premium for certainty and speed.</li>
+          <li><strong>Simulcast Live</strong> — a live auction event where vehicles run one at a time through a lane in real time, with bidders (in-person and online) competing live, the way a traditional auction works. Bidding moves fast and is driven by who's actually in the lane that day.</li>
+        </ul>
+        <p class="block-text">Why we favor Simulcast Live: timed sales — especially the Buy Now option — tend to run at a premium because the seller is pricing in convenience and the buyer is paying to skip the uncertainty of competitive bidding. Simulcast Live is where real market price discovery happens, and it's typically where we find the better spread between MMR and what we actually pay. Timed sales aren't off the table, but Simulcast Live is the default lane we're hunting in.</p>
+      </div>
+
+      <!-- MANHEIM PLATFORM -->
+      <div class="content-block">
+        <h3 class="block-title">Manheim Platform — Hands-On</h3>
+        <p class="block-text">Everything above covers the concepts — arbitration lights, MMR, condition reports, tire grades, transmission types, sale formats. This section is about the platform itself. <strong>Reps are responsible for knowing their way around the Manheim interface.</strong></p>
+        <p class="block-text">Watch the walkthrough video below, then spend time exploring the platform on your own — search filters, listing pages, condition reports, the bidding interface. <strong>Only mark this section complete once you've done both</strong> — watched the video AND explored independently. This isn't a box to check quickly; you'll be living in this platform.</p>
+        <div class="placeholder-notice">📋 Manheim training video coming soon — will be added here.</div>
+      </div>
+
+      <ul class="checklist" id="checklist-product">
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Drivetrain basics — AWD vs. 4WD, hybrid vs. plug-in hybrid, trim level logic</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Major makes/models we source — match every model to its make</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Arbitration light system — green, yellow, red, blue and what each means</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>When to encourage post-sale inspection (out-of-state vehicles, ~$150)</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>AutoCheck vs. CarFax — what each is and how to explain to clients</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Reading tire grades on condition reports</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Transmission types — AT, CVT, MT, DCT</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>How Manheim arbitration works</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Timed sales vs. Simulcast Live, and the "Buy Now" button</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Manheim platform — watched the training video AND explored the interface independently</span></li>
+      </ul>
+
+      <div class="resources">
+        <div class="resources-label">Resources</div>
+        <a href="#" class="resource-link placeholder">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h6l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg>
+          Vehicle Reference Guide (coming soon)
+        </a>
+        <a href="https://www.manheim.com/" class="resource-link" target="_blank">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          Manheim
+        </a>
+      </div>
+
+      <!-- MATCHING QUIZ -->
+      <div class="quiz-block" id="quiz-product">
+        <div class="quiz-header" onclick="toggleQuiz('product')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-product">Quiz</span>
+            <span class="quiz-title">Make & Model Matching Quiz</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-product">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-product">
+          <p class="block-text" style="margin-bottom: 1rem;">For each model, select the correct make. Some are easy — some are designed to make you think twice (shared platforms, EV sub-brands, lesser-known trims).</p>
+          <table class="match-table">
+            <tbody id="match-rows"></tbody>
+          </table>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeMatching()">Submit</button>
+            <span class="quiz-result" id="qresult-product"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FUNDAMENTALS SCENARIO QUIZ -->
+      <div class="quiz-block" id="quiz-fundamentals" style="margin-top: 1rem;">
+        <div class="quiz-header" onclick="toggleQuiz('fundamentals')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-fundamentals">Quiz</span>
+            <span class="quiz-title">Drivetrain, Powertrain & Trim Scenarios</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-fundamentals">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-fundamentals">
+          <div class="quiz-q" id="fq1">
+            <div class="quiz-q-text">1. A client says "I drive in heavy snow every winter, I just want something that handles it without thinking about it." What are they describing?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq1" value="a"> 4WD with a manual transfer case</label></li>
+              <li><label><input type="radio" name="fq1" value="b"> AWD — always-on traction, no driver input needed</label></li>
+              <li><label><input type="radio" name="fq1" value="c"> RWD with snow tires</label></li>
+              <li><label><input type="radio" name="fq1" value="d"> A PHEV</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="fq2">
+            <div class="quiz-q-text">2. A client wants to tow a small camper occasionally and also do some light trail driving on weekends. Which drivetrain are they actually asking for?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq2" value="a"> AWD</label></li>
+              <li><label><input type="radio" name="fq2" value="b"> FWD</label></li>
+              <li><label><input type="radio" name="fq2" value="c"> 4WD</label></li>
+              <li><label><input type="radio" name="fq2" value="d"> It doesn't matter, all drivetrains tow the same</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="fq3">
+            <div class="quiz-q-text">3. A client says "I want to plug it in at home and do most of my commute on electricity, but still be able to take long road trips without worrying about charging stations." What are they describing?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq3" value="a"> A full EV like a Model 3</label></li>
+              <li><label><input type="radio" name="fq3" value="b"> A regular hybrid</label></li>
+              <li><label><input type="radio" name="fq3" value="c"> A plug-in hybrid (PHEV)</label></li>
+              <li><label><input type="radio" name="fq3" value="d"> A diesel</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="fq4">
+            <div class="quiz-q-text">4. A client says "I don't need leather or fancy tech, but I really want heated seats and a sunroof for the winter." For a Honda CR-V, which trim logic applies?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq4" value="a"> LX — base trim covers this</label></li>
+              <li><label><input type="radio" name="fq4" value="b"> EX — adds sunroof and heated seats without jumping to leather</label></li>
+              <li><label><input type="radio" name="fq4" value="c"> Touring — it's the only trim with heated seats</label></li>
+              <li><label><input type="radio" name="fq4" value="d"> Any trim — heated seats are standard on all CR-Vs</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="fq5">
+            <div class="quiz-q-text">5. A client looking at a Toyota Tacoma says "I want something that can handle rough dirt roads to my cabin, and I don't mind a firmer ride." Which trim direction fits best?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq5" value="a"> SR — base trim is fine for this</label></li>
+              <li><label><input type="radio" name="fq5" value="b"> Limited — comfort-focused top trim</label></li>
+              <li><label><input type="radio" name="fq5" value="c"> TRD Off-Road — off-road suspension, locking diff, skid plates</label></li>
+              <li><label><input type="radio" name="fq5" value="d"> SR5 — it's identical to TRD trims, just cheaper</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="fq6">
+            <div class="quiz-q-text">6. What's the core difference between how AWD and 4WD typically operate?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq6" value="a"> AWD is only available on trucks, 4WD only on cars</label></li>
+              <li><label><input type="radio" name="fq6" value="b"> AWD is always-on and automatic; 4WD is driver-engaged (or auto-engaging) for low-traction/off-road situations</label></li>
+              <li><label><input type="radio" name="fq6" value="c"> They are the same thing, just different marketing names</label></li>
+              <li><label><input type="radio" name="fq6" value="d"> 4WD is only for electric vehicles</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="fq7">
+            <div class="quiz-q-text">7. A client test-driving a hybrid Camry asks "do I need to plug this in?" What's the correct answer?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="fq7" value="a"> Yes, every night, or the battery will die permanently</label></li>
+              <li><label><input type="radio" name="fq7" value="b"> No — a standard hybrid never plugs in, the gas engine and battery work together automatically</label></li>
+              <li><label><input type="radio" name="fq7" value="c"> Only on weekends</label></li>
+              <li><label><input type="radio" name="fq7" value="d"> Only if they want AWD</label></li>
+            </ul>
+          </div>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeQuiz('fundamentals')">Submit</button>
+            <span class="quiz-result" id="qresult-fundamentals"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANHEIM MECHANICS QUIZ -->
+      <div class="quiz-block" id="quiz-manheim" style="margin-top: 1rem;">
+        <div class="quiz-header" onclick="toggleQuiz('manheim')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-manheim">Quiz</span>
+            <span class="quiz-title">Manheim & Auction Mechanics Quiz</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-manheim">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-manheim">
+          <div class="quiz-q" id="mq1">
+            <div class="quiz-q-text">1. What's our default arbitration-light policy for bidding?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq1" value="a"> We bid any light as long as the price is right</label></li>
+              <li><label><input type="radio" name="mq1" value="b"> We bid green by default</label></li>
+              <li><label><input type="radio" name="mq1" value="c"> We bid red by default since it's usually cheaper</label></li>
+              <li><label><input type="radio" name="mq1" value="d"> We only bid blue-light vehicles</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq2">
+            <div class="quiz-q-text">2. A client is set on a red-light vehicle. What MUST happen before the BAM?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq2" value="a"> Nothing extra — red lights work the same as green</label></li>
+              <li><label><input type="radio" name="mq2" value="b"> The client must clearly understand and accept that they have zero arbitration rights</label></li>
+              <li><label><input type="radio" name="mq2" value="c"> DealerKey automatically upgrades it to a post-sale inspection at no cost</label></li>
+              <li><label><input type="radio" name="mq2" value="d"> Red-light vehicles are simply not allowed under any circumstance</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq3">
+            <div class="quiz-q-text">3. A yellow-light vehicle has an announced transmission issue. What does the yellow light mean in this case?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq3" value="a"> No arbitration rights at all, same as red</label></li>
+              <li><label><input type="radio" name="mq3" value="b"> Full arbitration rights on everything, including the transmission</label></li>
+              <li><label><input type="radio" name="mq3" value="c"> Arbitration rights apply to everything except the announced transmission issue</label></li>
+              <li><label><input type="radio" name="mq3" value="d"> The vehicle cannot be bid on at all</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq4">
+            <div class="quiz-q-text">4. A client is buying a vehicle that will be shipped out of state. What should the rep strongly encourage, and roughly what does it cost?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq4" value="a"> A post-sale inspection, roughly $150</label></li>
+              <li><label><input type="radio" name="mq4" value="b"> A second deposit, roughly $500</label></li>
+              <li><label><input type="radio" name="mq4" value="c"> An extended warranty, roughly $1,000</label></li>
+              <li><label><input type="radio" name="mq4" value="d"> Nothing extra is needed for out-of-state vehicles</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq5">
+            <div class="quiz-q-text">5. A client asks "is CarFax better than AutoCheck?" What's the most accurate answer?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq5" value="a"> Yes, AutoCheck is unreliable and should be ignored</label></li>
+              <li><label><input type="radio" name="mq5" value="b"> They're two different companies pulling from overlapping but not identical data — neither is strictly "better," and having both gives a fuller picture</label></li>
+              <li><label><input type="radio" name="mq5" value="c"> No, AutoCheck is always more accurate</label></li>
+              <li><label><input type="radio" name="mq5" value="d"> CarFax only covers trucks and AutoCheck only covers cars</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq6">
+            <div class="quiz-q-text">6. A condition report shows tire tread at 3/32" on all four tires. What should the rep do with that information?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq6" value="a"> Ignore it — tire wear doesn't matter for resale</label></li>
+              <li><label><input type="radio" name="mq6" value="b"> Mention it to the client as a near-term cost — those tires are close to end-of-life</label></li>
+              <li><label><input type="radio" name="mq6" value="c"> Assume the tires are brand new since 3/32" is the new-tire standard</label></li>
+              <li><label><input type="radio" name="mq6" value="d"> Automatically disqualify the vehicle from bidding</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq7">
+            <div class="quiz-q-text">7. A client says "I love how a manual feels but I want something that shifts gears on its own — fast and sporty." Which transmission type are they actually describing?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq7" value="a"> CVT</label></li>
+              <li><label><input type="radio" name="mq7" value="b"> Standard torque-converter automatic</label></li>
+              <li><label><input type="radio" name="mq7" value="c"> DCT — automated dual-clutch for faster, sportier shifts</label></li>
+              <li><label><input type="radio" name="mq7" value="d"> A true manual transmission</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq8">
+            <div class="quiz-q-text">8. Which of the following is the LEAST accurate description of how Manheim arbitration works?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq8" value="a"> Arbitration is a safety net for green/yellow vehicles when something undisclosed turns up</label></li>
+              <li><label><input type="radio" name="mq8" value="b"> Claims must typically be filed within a specific window after the sale</label></li>
+              <li><label><input type="radio" name="mq8" value="c"> Arbitration guarantees the buyer always gets a full refund regardless of the issue</label></li>
+              <li><label><input type="radio" name="mq8" value="d"> Possible outcomes include a price adjustment, the seller taking the vehicle back, or denial</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq9">
+            <div class="quiz-q-text">9. A listing has a "Buy Now" price of $24,500. What does clicking that actually do?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq9" value="a"> Places a starting bid of $24,500, bidding continues from there</label></li>
+              <li><label><input type="radio" name="mq9" value="b"> Immediately ends the auction — the seller accepts $24,500 on the spot for whoever clicks first</label></li>
+              <li><label><input type="radio" name="mq9" value="c"> Reserves the vehicle for 24 hours at that price</label></li>
+              <li><label><input type="radio" name="mq9" value="d"> Sets the reserve price but bidding continues below it</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq10">
+            <div class="quiz-q-text">10. Why does DealerKey favor Simulcast Live over timed sales as a default?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq10" value="a"> Timed sales aren't available to dealer-licensed buyers</label></li>
+              <li><label><input type="radio" name="mq10" value="b"> Simulcast Live vehicles always have green arbitration lights</label></li>
+              <li><label><input type="radio" name="mq10" value="c"> Timed sales (especially Buy Now) tend to run at a premium for convenience; Simulcast Live is where real competitive price discovery happens and the spread to MMR is usually better</label></li>
+              <li><label><input type="radio" name="mq10" value="d"> Simulcast Live sales have no auction fees</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="mq11">
+            <div class="quiz-q-text">11. What best describes a Simulcast Live sale?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="mq11" value="a"> A fixed-price listing open for 24 hours</label></li>
+              <li><label><input type="radio" name="mq11" value="b"> A live auction event where vehicles run one at a time through a lane in real time, with in-person and online bidders competing live</label></li>
+              <li><label><input type="radio" name="mq11" value="c"> An automated bidding system with no live component</label></li>
+              <li><label><input type="radio" name="mq11" value="d"> The same thing as a timed sale, just renamed</label></li>
+            </ul>
+          </div>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeQuiz('manheim')">Submit</button>
+            <span class="quiz-result" id="qresult-manheim"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GWC WARRANTY SUBSECTION -->
+      <div class="content-block" style="margin-top: 2rem;">
+        <h3 class="block-title">GWC Vehicle Service Contracts (Warranty)</h3>
+        <p class="block-text">DealerKey offers GWC Warranty vehicle service contracts (VSCs) as a paid add-on to every sourcing deal. This is not an optional conversation — every client gets a warranty presentation before their vehicle is finalized. GWC has been in business since 1995, has paid over $3.5 billion in claims, and covers more than 11 million drivers. It's a legitimate, recognized product — not a scare tactic. Your job is to present it well and let clients make an informed decision.</p>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">What Is a VSC?</h3>
+        <p class="block-text">A VSC (vehicle service contract) is not the same as insurance. It's a service agreement that covers the cost of parts and labor for mechanical breakdowns. GWC pays the repair facility directly — the client only pays their deductible. Coverage starts Day One, Mile One — the moment they drive off. Clients can take their vehicle to any licensed repair facility in the country, not just a dealer.</p>
+        <p class="block-text">All GWC plans include:</p>
+        <ul class="info-list">
+          <li>Towing reimbursement up to $100 per covered breakdown</li>
+          <li>24/7 emergency roadside assistance (jump starts, fuel delivery, flat tire, non-covered tows)</li>
+          <li>Substitute transportation: up to $50/day for 5 days while vehicle is in the shop for a covered repair</li>
+          <li>Trip interruption: up to $250/day for 3 days for meals and lodging if broken down 50+ miles from home</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">The Four Coverage Tiers</h3>
+
+        <div class="stage">
+          <div class="stage-number">1</div>
+          <div class="stage-content">
+            <div class="stage-title">Powertrain Plus — $1,195 retail &nbsp;|&nbsp; Commission: $125 / $150 / $175 (Base / Tier 2 / Elite)</div>
+            <p><strong>Covers:</strong> Engine, transmission, drive axle, traction motor (EV), EV gear reduction, basic electrical</p>
+            <p><strong>Eligibility:</strong> Vehicles up to 200,000 miles</p>
+            <p><strong>Does NOT include:</strong> A/C, brakes (calipers/lines covered, not pads/rotors), hi-tech electrical, fuel system, sensors, luxury components</p>
+            <p><strong>When to recommend:</strong> Vehicles over 120K miles, budget-conscious clients, or as a step-down option when a client pushes back on price. Focus is catastrophic coverage — engine and transmission.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">2</div>
+          <div class="stage-content">
+            <div class="stage-title">Essential — $1,595 retail &nbsp;|&nbsp; Commission: $175 / $225 / $275</div>
+            <p><strong>Covers everything in Powertrain Plus, plus:</strong> Air conditioning, brakes (hydraulic system — calipers, master cylinder, lines/hoses, NOT pads/rotors/shoes), fuel system, ABS, EV cooling system, EV braking system</p>
+            <p><strong>When to recommend:</strong> Reliable makes (Toyota, Honda, Mazda) with 90K–120K miles.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">3</div>
+          <div class="stage-content">
+            <div class="stage-title">Comprehensive — $1,995 retail &nbsp;|&nbsp; Commission: $250 / $265 / $375</div>
+            <p><strong>Covers everything in Essential, plus:</strong> Full electrical system, steering, hi-tech electrical, EV high-tech electrical components</p>
+            <p><strong>When to recommend:</strong> European or luxury vehicles at any mileage, or any vehicle 60K–90K miles. If the client drives a BMW, Mercedes, or Audi, this is the floor recommendation.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">4</div>
+          <div class="stage-content">
+            <div class="stage-title">Exclusionary (Recommended Default) — $2,495 retail &nbsp;|&nbsp; Commission: $350 / $425 / $500</div>
+            <p>The most comprehensive tier. Covers all parts listed under the manufacturer's basic factory warranty <strong>EXCEPT</strong> those specifically listed as excluded — wear items like tires, brake pads/rotors, wiper blades, and regular maintenance.</p>
+            <p><strong>Optional add-ons:</strong> Technology package (sensors, navigation), Luxury package, Zero-deductible upgrade</p>
+            <p><strong>Eligibility:</strong> Vehicles up to 150,000 miles starting mileage</p>
+            <p><strong>When to recommend:</strong> Default recommendation for any vehicle under 120K miles. Also the only appropriate recommendation for EVs and any luxury vehicle regardless of mileage.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Vehicle Tier Quick Guide</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Vehicle Profile</th><th>Recommended Tier</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Under 60K miles, under 5 years old</td><td>Exclusionary</td><td>Low claim risk, full peace of mind — easiest sell</td></tr>
+            <tr><td>60K–90K miles, any make</td><td>Comprehensive or Exclusionary</td><td>Prime breakdown window; broad coverage essential</td></tr>
+            <tr><td>90K–120K miles — Toyota / Honda / Mazda</td><td>Essential</td><td>Reliable makes; cover the big stuff</td></tr>
+            <tr><td>90K–120K miles — European / Luxury</td><td>Comprehensive</td><td>Electrical repairs alone justify it</td></tr>
+            <tr><td>120K+ miles</td><td>Powertrain Plus</td><td>Catastrophic coverage focus</td></tr>
+            <tr><td>Any EV</td><td>Exclusionary</td><td>Battery + high-tech electrical are non-negotiable</td></tr>
+            <tr><td>Any luxury vehicle</td><td>Exclusionary</td><td>Repair costs on luxury vehicles are brutal at any mileage</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Pricing Rules — Read This Carefully</h3>
+        <ul class="info-list">
+          <li>All four prices are fixed and non-negotiable</li>
+          <li>You are never authorized to discount within a tier</li>
+          <li>If a client says it's too expensive: step them down to the next tier — do not lower the price</li>
+          <li>Discounts of any kind require manager approval</li>
+          <li>The warranty must be attached at time of vehicle purchase — it cannot be added after the fact</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection Handling</h3>
+        <div class="placeholder-notice">⚠️ Coming soon — full objection scripts will be added here. In the meantime, refer to your manager for guidance on warranty objections.</div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">GWC Training Resources</h3>
+        <div class="resources" style="margin-top: 0.5rem;">
+          <div class="resources-label">Official Resources</div>
+          <a href="https://www.youtube.com/@GWCWarranty" class="resource-link" target="_blank">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+            GWC Warranty YouTube Channel
+          </a>
+          <a href="https://dealerportal.gwcwarranty.com/Profile/Login.aspx" class="resource-link" target="_blank">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h6l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg>
+            GWC Dealer Portal — Video Library (login required)
+          </a>
+          <a href="https://gwcwarranty.com/dealers/vehicle-service-contracts" class="resource-link" target="_blank">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h6l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg>
+            GWC VSC Coverage Overview
+          </a>
+          <a href="https://gwcwarranty.com/dealers/training" class="resource-link" target="_blank">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+            GWC University — Training Hub
+          </a>
+        </div>
+      </div>
+
+      <!-- GWC KNOWLEDGE CHECK -->
+      <div class="quiz-block" id="quiz-gwc" style="margin-top: 1rem;">
+        <div class="quiz-header" onclick="toggleQuiz('gwc')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-gwc">Quiz</span>
+            <span class="quiz-title">GWC Warranty Knowledge Check</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-gwc">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-gwc">
+          <div class="quiz-q" id="gwq1">
+            <div class="quiz-q-text">1. A client's vehicle has 95,000 miles and is a 2018 Toyota Camry. What's your default tier recommendation?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="gwq1" value="a"> Exclusionary</label></li>
+              <li><label><input type="radio" name="gwq1" value="b"> Comprehensive</label></li>
+              <li><label><input type="radio" name="gwq1" value="c"> Essential</label></li>
+              <li><label><input type="radio" name="gwq1" value="d"> Powertrain Plus</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="gwq2">
+            <div class="quiz-q-text">2. A client says the Exclusionary plan at $2,495 is too expensive. What do you do?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="gwq2" value="a"> Offer a discount to $2,000</label></li>
+              <li><label><input type="radio" name="gwq2" value="b"> Step them down to Comprehensive at $1,995</label></li>
+              <li><label><input type="radio" name="gwq2" value="c"> Tell them the price is firm and move on</label></li>
+              <li><label><input type="radio" name="gwq2" value="d"> Skip the warranty entirely</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="gwq3">
+            <div class="quiz-q-text">3. Which tier is always recommended for EVs?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="gwq3" value="a"> Essential</label></li>
+              <li><label><input type="radio" name="gwq3" value="b"> Comprehensive</label></li>
+              <li><label><input type="radio" name="gwq3" value="c"> Powertrain Plus</label></li>
+              <li><label><input type="radio" name="gwq3" value="d"> Exclusionary</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="gwq4">
+            <div class="quiz-q-text">4. When can a client add a GWC VSC after they've taken delivery of the vehicle?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="gwq4" value="a"> Within 30 days</label></li>
+              <li><label><input type="radio" name="gwq4" value="b"> Within 7 days</label></li>
+              <li><label><input type="radio" name="gwq4" value="c"> Any time before their first service appointment</label></li>
+              <li><label><input type="radio" name="gwq4" value="d"> They can't — it must be attached at time of purchase</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="gwq5">
+            <div class="quiz-q-text">5. A client wants the warranty but says "let me think about it and I'll call you back." What's the most important thing to communicate?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="gwq5" value="a"> That GWC is a trusted company with $3.5B in claims paid</label></li>
+              <li><label><input type="radio" name="gwq5" value="b"> That prices are fixed and won't go lower</label></li>
+              <li><label><input type="radio" name="gwq5" value="c"> That the VSC must be attached at purchase and can't be added after the deal closes</label></li>
+              <li><label><input type="radio" name="gwq5" value="d"> That you'll follow up in a week</label></li>
+            </ul>
+          </div>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeQuiz('gwc')">Submit</button>
+            <span class="quiz-result" id="qresult-gwc"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRACK 3: SALES ── -->
+    <section class="track" id="track-sales">
+      <div class="track-header">
+        <div class="track-number red">03</div>
+        <div class="track-title-wrap">
+          <div class="track-eyebrow">Track Three</div>
+          <div class="track-title">Sales</div>
+        </div>
+      </div>
+      <p class="track-desc">Learn the presentation flow, internalize the closes, and know how to handle the objections that come up every time.</p>
+
+      <!-- IAM RUBRIC -->
+      <div class="content-block">
+        <h3 class="block-title">Rep Mindset</h3>
+        <p class="block-text">You are an advisor, not a salesman. They came for a consultation. Confidence matters more than perfect wording. Don't rush.</p>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Consultation Flow — 5 Sections</h3>
+        <p class="block-text">This is the live script structure. The Advisory Slideshow is an optional visual aid if it helps you stay on track, especially early on.</p>
+
+        <div class="stage">
+          <div class="stage-number">1</div>
+          <div class="stage-content">
+            <div class="stage-title">What DealerKey Auto Is</div>
+            <p>Start by asking about the car they're looking for — confirm what they wrote down is still accurate. Listen, make a genuine comment, let them talk.</p>
+            <p>Then explain: DealerKey isn't a traditional dealership — no lot, no inventory. We work directly with the client to find their specific car, and we don't charge anything unless we actually save them money — at least $3,000, usually more.</p>
+            <p><strong>Pause and let that land.</strong></p>
+            <p>Then explain the "why": dealerships buy in bulk from Manheim — the largest vehicle auction in the world (150,000+ cars available at any moment, 8M+ moving through annually). They mark cars up $4,000-$6,000 to cover the lot, salespeople, and financing department. We have access to that same auction, so we go straight to the source. Flat $1,500 advisory fee, collected only if we save the client at least $3,000.</p>
+            <p>Close the section: "Today I'm just going to show you what that actually looks like. At the end, you tell me if it makes sense for you."</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">2</div>
+          <div class="stage-content">
+            <div class="stage-title">Framing & Expectations</div>
+            <p><strong>This section is short on purpose.</strong> The seed is already planted — now make sure the client feels zero pressure before seeing the data. Say it slowly and genuinely; it does a lot of work.</p>
+            <p>Core message: "My job today isn't to sell you on a specific car or push you toward any decision. I just want to show you what the market actually looks like — both what you can see as a regular buyer, and what's happening behind the scenes. We'll look at real numbers together. If at the end you'd rather keep searching on your own, totally fine."</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">3</div>
+          <div class="stage-content">
+            <div class="stage-title">The Website Search</div>
+            <p><strong>This is where you build the most credibility — don't be afraid to spend several minutes here.</strong> Goal: give the client a frame of reference so they can see the value gap between the public market and DealerKey.</p>
+            <p>Pull up the car they're looking for with their budget. Point out that results are filtered to top-condition cars (4.0+), all clean titles with condition reports — and prices are already noticeably lower than local dealership listings.</p>
+            <p>Explain the AI angle: it's processed thousands of listings across the retail market — year, mileage, trim, title status — constantly updating, comparing every auction car to what that exact car sells for retail right now.</p>
+            <p>Point to the arbitrage number: that's the gap between dealership price and what we can actually get it for — what you'd pocket if you bought at auction and sold retail tomorrow. Let it land. Then: "And we haven't even gone into Manheim yet. This is just the surface layer."</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">4</div>
+          <div class="stage-content">
+            <div class="stage-title">Tour of Manheim</div>
+            <p>Your familiarity with the platform is the point — move confidently, narrate as you go. (Full Manheim platform training is covered separately — this is about how to <em>present</em> it.)</p>
+            <p>Set parameters live based on what the client told you — make, model, year, mileage range. Point out how much live inventory is available.</p>
+            <p>Select a listing with a solid condition grade (4.0+) and open the full listing: year, trim, confirmed mileage, condition grade.</p>
+            <p>Explain MMR — no fixed price since it's an auction, but MMR tells us what the car most likely sells for based on recent sales data. Work in out-the-door numbers: MMR + $1,500 fee + Manheim's usage fee ($500-700) ≈ $2,000 on top, all-in total around [X].</p>
+            <p>Pull up the condition report and point out a minor item (e.g. a small dent) — this is the standard dealerships demand, and it works in the client's favor for the same reason. Show one or two more listings, then transition into Section 5.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">5</div>
+          <div class="stage-content">
+            <div class="stage-title">Logistics & Closing</div>
+            <p><strong>Don't let them leave thinking they found just another resource.</strong> The goal: they voluntarily hand the search over to you completely. Not a hard close — make it so obvious and easy they'd feel silly not to.</p>
+            <p>Explain the process: next 2-3 weeks, we handle the entire search. At least two check-ins per week, top 2-3 options from each new batch, with any standout highlighted clearly.</p>
+            <p><strong>Soft Close #1</strong> — "Does email or text work better for you?" Wait for the answer.</p>
+            <p>Explain the bid structure: when a car comes up, get on a call, build the bidding strategy together, set the ceiling bid ahead of time. Client contributes 25%, DealerKey covers 75%. Win the bid → client pays the rest, gets the keys. Don't win → 25% comes straight back, search continues. All of this in writing before any money moves.</p>
+            <p><strong>Solidifying Close</strong> — "How much notice do you need before making a move? If I find the perfect car and the auction runs two days from now, can you move within 48 hours?" Wait for the answer.</p>
+            <p>Mention the option to watch a live auction if they're interested — it's genuinely cool to see.</p>
+            <p><strong>Strongest Close</strong> — "For the next 2-3 weeks, let me handle it completely. You don't have to do a thing. If I haven't found the right one by then, no worries — we'll keep looking and you can jump back in too. Sound good?" <strong>Do not rush this.</strong> Their response tells you exactly how bought in they are.</p>
+            <p>Confirm all car details before ending the call.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOSES -->
+      <div class="content-block">
+        <h3 class="block-title">The Three Closes</h3>
+        <ul class="info-list">
+          <li><strong>Soft Close #1</strong> — "Does email or text work better for you?" Gets the client engaged and picturing the ongoing process. Wait for their answer before moving on.</li>
+          <li><strong>Solidifying Close</strong> — "Can you move within 48 hours if the right car comes up?" Gets a commitment to their own readiness, not just to the process.</li>
+          <li><strong>Strongest Close</strong> — "Let me handle it completely for the next 2-3 weeks, sound good?" Hands the search fully over to you. Don't rush this one — the response reveals how bought-in they really are.</li>
+        </ul>
+      </div>
+
+      <!-- OBJECTIONS -->
+      <div class="content-block">
+        <h3 class="block-title">Objection: "I'm not sure I'm comfortable putting money down before we've found anything." <span style="color: var(--gold); font-weight: 700; font-size: 0.75rem;">MEMORIZE CLOSELY</span></h3>
+        <p class="block-text">Comes up right after explaining the 25% bid deposit, when the client hesitates.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"That's fair, and I get it — it feels a little different than what most people are used to. The reason we do it that way is because we're putting our own money in right alongside yours. We're just as motivated as you are to get the right car at the right price. The 25% just makes sure we're both committed before we pull the trigger. And if we don't win, it comes straight back to you. You'll have all of this in writing before ANY money moves, so there's no guesswork."</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection: "Can you walk me through how the 25% deposit actually works?"</h3>
+        <p class="block-text">The client heard the structure but wants it spelled out clearly.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"Sure — so once we find a car you're serious about, you contribute 25% of the bid upfront and we cover the other 75%. Win the bid, you pay us the rest and we hand over the keys. Don't win, your money comes right back. Simple as that."</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection: "Honestly, I've been searching for months and haven't found anything."</h3>
+        <p class="block-text">A frustration the client shares partway through the consultation — a great opening, not a problem.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"I completely get that — and honestly, that's exactly the kind of situation we're here for. When you're searching on your own you're constantly trying to weigh price against mileage against condition against history, and every car is a different combination of all those variables. It's exhausting to compare objectively. That's where we really shine. First, Manheim gives us an unreal amount of data on each car — way more than anything you'd find on a public listing. And on top of that, our AI processes all of those variables simultaneously across hundreds of cars and gives you an ordered list of which options are actually saving you the most money. It takes the guesswork out completely."</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection: "Wait — I can't test drive the car before we buy it?"</h3>
+        <p class="block-text">Comes up naturally while describing the auction process.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"Great question, and that's exactly why Manheim is so incredibly thorough with their condition reports. Because you can't go in and test drive the cars, they are extensive with their condition reports. Dealerships are very particular and want to know every little detail about each car, because their livelihood depends on it. Every vehicle is inspected by a third party, and they include absolutely everything they find in their report. If for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back."</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection: "What if we get the car and find something that wasn't in the report?" <span style="color: var(--gold); font-weight: 700; font-size: 0.75rem;">MEMORIZE CLOSELY</span></h3>
+        <p class="block-text">A natural follow-up after describing the condition report process — the client pushes one step further.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"Absolutely — I would be concerned about that too. Thankfully, every vehicle is inspected by a third party, not by Manheim itself, and they include absolutely everything they find in their report. That certainly limits the risk, but if for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back. That rarely happens, but on the occasion that we have had an issue with the vehicle we were able to successfully arbitrate."</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection: "Isn't most of what's available at Manheim salvage or branded title cars?"</h3>
+        <p class="block-text">Client skepticism about inventory quality at auction.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"Almost everything we work with is clean title — that's the standard for the vast majority of what moves through Manheim. Occasionally a client specifically wants a cheap work truck and we'll look at branded titles for that, but typically for a car like what you're looking for, we'd be staying firmly in clean title territory."</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Objection: "How do I know this isn't a scam?"</h3>
+        <p class="block-text">Comes up often, especially before a client has paid anything. The structure: <strong>validate</strong> the concern as reasonable, <strong>reframe</strong> by explaining why this feels unfamiliar (Manheim access is genuinely new for the public), then <strong>offer proof</strong> on the client's own timeline.</p>
+        <div class="script-block">
+          <div class="script-label">Scripted response</div>
+          <p class="script-text">"Totally fair question, and honestly I'd be asking the same thing if I were in your shoes. Here's the thing — what we're doing is pretty new. Manheim's wholesale auctions have been dealer-only for decades, and DealerKey is one of the first ways for regular people to actually get access to that, through a licensed dealership. So it makes sense it doesn't feel like a 'normal' car-buying experience yet, because it isn't one.</p>
+          <p class="script-text">That said, we're a fully licensed Utah dealer, and I'm happy to send you our dealer license number and business registration right now so you can look us up on your own time — no rush, no pressure. A lot of our clients do exactly that before moving forward, and honestly, we'd rather you feel 100% solid about it than just take our word for it."</p>
+        </div>
+      </div>
+
+      <ul class="checklist" id="checklist-sales">
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Walk through all 5 sections of the consultation flow</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Understand the $3,000 savings threshold and the "only collect if we save you money" framing</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Memorize the three closes — Soft Close #1, Solidifying Close, Strongest Close</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Memorize the two "memorize closely" objections word-for-word</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Know all 7 objection responses cold</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Review the Advisory Slideshow as an optional visual aid for the consultation</span></li>
+      </ul>
+
+      <div class="resources">
+        <div class="resources-label">Resources</div>
+        <a href="https://docs.google.com/presentation/d/1Ys0K24B2zyGUWMrKaejg62cZy45N4asvwRuXwJiP9FI/edit?usp=sharing" class="resource-link" target="_blank">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h6l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg>
+          IAM Advisory Slideshow (optional visual aid)
+        </a>
+        <a href="https://kadenpassey-max.github.io/dealerkey-training/" class="resource-link" target="_blank">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          Script Training — Learn & Outline modes
+        </a>
+      </div>
+
+      <div class="quiz-block" id="quiz-sales">
+        <div class="quiz-header" onclick="toggleQuiz('sales')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-sales">Quiz</span>
+            <span class="quiz-title">Sales Track Quiz</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-sales">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-sales">
+          <div class="quiz-q" id="sq1">
+            <div class="quiz-q-text">1. What's the core fee framing reps should lead with in Section 1?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq1" value="a"> A flat $1,500 fee charged on every search regardless of outcome</label></li>
+              <li><label><input type="radio" name="sq1" value="b"> A flat $1,500 fee, collected only if we save the client at least $3,000, usually more</label></li>
+              <li><label><input type="radio" name="sq1" value="c"> A percentage of the vehicle's sale price</label></li>
+              <li><label><input type="radio" name="sq1" value="d"> A monthly subscription fee for search access</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq2">
+            <div class="quiz-q-text">2. What does MMR stand for, and what does it represent?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq2" value="a"> Manheim Member Rate — a discount for repeat dealers</label></li>
+              <li><label><input type="radio" name="sq2" value="b"> Manheim Market Report — the wholesale benchmark price from real transaction data</label></li>
+              <li><label><input type="radio" name="sq2" value="c"> Manheim Maximum Reserve — the highest price an auction will accept</label></li>
+              <li><label><input type="radio" name="sq2" value="d"> Manheim Monthly Rate — a subscription cost for dealers</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq3">
+            <div class="quiz-q-text">3. Why is Section 2 (Framing & Expectations) deliberately kept short?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq3" value="a"> Because clients get bored easily and need to move to numbers fast</label></li>
+              <li><label><input type="radio" name="sq3" value="b"> The seed is already planted — this section just removes pressure before showing the data, and saying it slowly does a lot of work</label></li>
+              <li><label><input type="radio" name="sq3" value="c"> Because it's the least important part of the consultation</label></li>
+              <li><label><input type="radio" name="sq3" value="d"> Because it's only used for clients who are already fully decided</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq4">
+            <div class="quiz-q-text">4. In Section 4 (Tour of Manheim), what's the out-the-door cost formula a rep should use when quoting an example price?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq4" value="a"> MMR only — fees are discussed separately later</label></li>
+              <li><label><input type="radio" name="sq4" value="b"> MMR + $1,500 fee + Manheim's usage fee ($500-700), roughly $2,000 on top of MMR</label></li>
+              <li><label><input type="radio" name="sq4" value="c"> Hammer price minus the arbitrage discount</label></li>
+              <li><label><input type="radio" name="sq4" value="d"> Sticker price as shown on the auction listing</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq5">
+            <div class="quiz-q-text">5. In Section 3 (Website Search), what does the "arbitrage number" represent when shown to a client?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq5" value="a"> The DealerKey flat fee for that vehicle</label></li>
+              <li><label><input type="radio" name="sq5" value="b"> The gap between dealership price and what we can get the car for — what you'd pocket buying at auction and selling retail tomorrow</label></li>
+              <li><label><input type="radio" name="sq5" value="c"> The estimated transport cost to the client's location</label></li>
+              <li><label><input type="radio" name="sq5" value="d"> The client's maximum approved bid</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq6">
+            <div class="quiz-q-text">6. A client says "this feels like it could be a scam — why would I send money before I have the car?" What's the FIRST thing the rep should do?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq6" value="a"> Immediately send the dealer license to prove legitimacy</label></li>
+              <li><label><input type="radio" name="sq6" value="b"> Validate the concern as reasonable before explaining anything</label></li>
+              <li><label><input type="radio" name="sq6" value="c"> Explain the BAF and arbitration policy in detail</label></li>
+              <li><label><input type="radio" name="sq6" value="d"> Tell them no one else has ever asked that</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq7">
+            <div class="quiz-q-text">7. According to the scam-concern script, WHY does this process feel unfamiliar to clients?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq7" value="a"> Because DealerKey is not actually a licensed dealer</label></li>
+              <li><label><input type="radio" name="sq7" value="b"> Because Manheim's wholesale auctions have been dealer-only for decades, and public access through a licensed dealership is new</label></li>
+              <li><label><input type="radio" name="sq7" value="c"> Because most car purchases require a deposit anyway, so this is no different</label></li>
+              <li><label><input type="radio" name="sq7" value="d"> Because the client hasn't met Dallin yet</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq8">
+            <div class="quiz-q-text">8. What is "Soft Close #1," and what is it actually testing?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq8" value="a"> "Can you move within 48 hours?" — testing the client's readiness to act fast</label></li>
+              <li><label><input type="radio" name="sq8" value="b"> "Does email or text work better for you?" — gets the client engaged and picturing the ongoing process</label></li>
+              <li><label><input type="radio" name="sq8" value="c"> "Sound good?" — the final handoff of the search</label></li>
+              <li><label><input type="radio" name="sq8" value="d"> "Would you like to watch a live auction?" — testing their interest level</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq9">
+            <div class="quiz-q-text">9. What's the correct order of the three closes as they appear in Section 5?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq9" value="a"> Strongest Close → Solidifying Close → Soft Close #1</label></li>
+              <li><label><input type="radio" name="sq9" value="b"> Soft Close #1 → Solidifying Close → Strongest Close</label></li>
+              <li><label><input type="radio" name="sq9" value="c"> Solidifying Close → Soft Close #1 → Strongest Close</label></li>
+              <li><label><input type="radio" name="sq9" value="d"> Strongest Close → Soft Close #1 → Solidifying Close</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq10">
+            <div class="quiz-q-text">10. A client hesitates after hearing about the 25% bid deposit. What's the key reason given in the "memorize closely" response for why DealerKey structures it this way?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq10" value="a"> It's required by Utah state law for all auction purchases</label></li>
+              <li><label><input type="radio" name="sq10" value="b"> DealerKey is putting its own money in alongside the client's — both sides are committed together, and it comes back if the bid isn't won</label></li>
+              <li><label><input type="radio" name="sq10" value="c"> It covers DealerKey's advisory fee upfront in case the client backs out</label></li>
+              <li><label><input type="radio" name="sq10" value="d"> It's a non-negotiable Manheim auction requirement</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq11">
+            <div class="quiz-q-text">11. A client asks "what if we find something wrong that wasn't in the condition report?" What does the script say happens in that case?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq11" value="a"> Nothing can be done — the as-is policy covers everything</label></li>
+              <li><label><input type="radio" name="sq11" value="b"> DealerKey replaces the vehicle at no cost</label></li>
+              <li><label><input type="radio" name="sq11" value="c"> If found within the first few weeks and not on the report, DealerKey can arbitrate and get the money back</label></li>
+              <li><label><input type="radio" name="sq11" value="d"> The client must file the claim directly with Manheim themselves</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="sq12">
+            <div class="quiz-q-text">12. A client asks if most Manheim inventory is salvage or branded title. What's the accurate response?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="sq12" value="a"> Yes, almost everything at Manheim is branded title</label></li>
+              <li><label><input type="radio" name="sq12" value="b"> Almost everything we work with is clean title — that's the standard for the vast majority of what moves through Manheim; branded titles only come up for specific cases like cheap work trucks</label></li>
+              <li><label><input type="radio" name="sq12" value="c"> Title status doesn't matter since everything is sold as-is anyway</label></li>
+              <li><label><input type="radio" name="sq12" value="d"> Only luxury vehicles at Manheim have clean titles</label></li>
+            </ul>
+          </div>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeQuiz('sales')">Submit</button>
+            <span class="quiz-result" id="qresult-sales"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRACK 4: SYSTEMS ── -->
+    <section class="track" id="track-systems">
+      <div class="track-header">
+        <div class="track-number red">04</div>
+        <div class="track-title-wrap">
+          <div class="track-eyebrow">Track Four</div>
+          <div class="track-title">Systems</div>
+        </div>
+      </div>
+      <p class="track-desc">Get comfortable in the tools you'll use every day — the CRM, Trello as backup, and the communication standards that keep everything consistent.</p>
+
+      <!-- CRM -->
+      <div class="content-block">
+        <h3 class="block-title">The CRM</h3>
+        <p class="block-text">Get familiar with the CRM — it's where all client notes live. Every client interaction should be logged. The level of detail matters less than whether it helps you (or another rep) find the client the right vehicle — don't over-engineer notes, just capture what's useful.</p>
+        <p class="block-text"><strong>Update the CRM whenever you learn new info</strong> about what a client is looking for — preferences, budget changes, timeline shifts. The CRM is only as useful as it is current.</p>
+        <p class="block-text"><strong>Login</strong> — use your DealerKey email, and only use that email for all client communication. Keeps everything traceable and professional.</p>
+      </div>
+
+      <!-- PIPELINE STAGES -->
+      <div class="content-block">
+        <h3 class="block-title">Pipeline Stages</h3>
+        <ul class="info-list">
+          <li><strong>New</strong> — a lead that hasn't been successfully contacted yet.</li>
+          <li><strong>Contacted</strong> — moved automatically by the CRM once a <em>successful</em> contact is logged. A contact <em>attempt</em> (unanswered call, unread message) doesn't move the stage — only an actual successful contact does.</li>
+          <li><strong>Searching</strong> — client is ready and actively being sent listings.</li>
+          <li><strong>Qualifying / Needs Time</strong> — client isn't ready to actively search yet (often waiting on financing).</li>
+          <li><strong>Closed</strong> — deal complete.</li>
+        </ul>
+        <p class="block-text"><strong>Automatic follow-ups</strong> — the CRM automatically assigns follow-up reminders at intervals based on pipeline stage. These are defaults, not rules — feel free to edit follow-up timing as appropriate for the client, especially for "Qualifying / Needs Time" clients where the right cadence varies a lot person to person.</p>
+      </div>
+
+      <!-- TRELLO -->
+      <div class="content-block">
+        <h3 class="block-title">Trello — Backup CRM</h3>
+        <p class="block-text">Trello is the backup. Day-to-day, leave it alone — the CRM is the primary system. Refer to Trello specifically when a client has <strong>incomplete contact information</strong> in the CRM, since Trello may have it logged separately.</p>
+        <p class="block-text">If the CRM ever fails or goes down, Trello is where client contact information is preserved as a fallback.</p>
+      </div>
+
+      <ul class="checklist" id="checklist-systems">
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Log into the CRM with your DealerKey email and explore the interface</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Understand all pipeline stages and what moves a contact between them</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Know how automatic follow-ups work and when to adjust them</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Understand when to use Trello — incomplete contact info or CRM downtime</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Only use your DealerKey email for all client communication</span></li>
+      </ul>
+
+      <div class="resources">
+        <div class="resources-label">Resources</div>
+        <a href="https://main.d25flik1gspid9.amplifyapp.com/" class="resource-link" target="_blank">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          DealerKey CRM
+        </a>
+        <a href="https://trello.com/b/gxWsu0vx/dealerkey-crm" class="resource-link" target="_blank">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          Trello Board (backup CRM)
+        </a>
+      </div>
+
+      <div class="quiz-block" id="quiz-systems">
+        <div class="quiz-header" onclick="toggleQuiz('systems')">
+          <div class="quiz-header-left">
+            <span class="quiz-badge" id="qbadge-systems">Quiz</span>
+            <span class="quiz-title">Systems Track Quiz</span>
+          </div>
+          <span class="quiz-chevron" id="qchev-systems">▼</span>
+        </div>
+        <div class="quiz-body" id="qbody-systems">
+          <div class="quiz-q" id="zq1">
+            <div class="quiz-q-text">1. A rep calls a new lead and leaves a voicemail — the lead doesn't pick up. What happens to the pipeline stage?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="zq1" value="a"> It automatically moves to "Contacted" since an attempt was made</label></li>
+              <li><label><input type="radio" name="zq1" value="b"> It stays in "New" — only a successful contact moves it to "Contacted"</label></li>
+              <li><label><input type="radio" name="zq1" value="c"> It moves to "Qualifying, Needs Time"</label></li>
+              <li><label><input type="radio" name="zq1" value="d"> The rep must manually move it regardless of outcome</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="zq2">
+            <div class="quiz-q-text">2. How much detail should go into CRM notes?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="zq2" value="a"> As much as possible — log every word of every conversation</label></li>
+              <li><label><input type="radio" name="zq2" value="b"> Enough to help find the client the right vehicle — detail matters insofar as it serves that goal</label></li>
+              <li><label><input type="radio" name="zq2" value="c"> Minimal — just a checkmark that contact occurred</label></li>
+              <li><label><input type="radio" name="zq2" value="d"> Notes are optional and only required for "Closed" clients</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="zq3">
+            <div class="quiz-q-text">3. A client mentions they're now open to a different trim than originally discussed. What should the rep do?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="zq3" value="a"> Nothing — this will come up again naturally in conversation</label></li>
+              <li><label><input type="radio" name="zq3" value="b"> Update the CRM with the new preference so the search reflects it</label></li>
+              <li><label><input type="radio" name="zq3" value="c"> Move the client to a new pipeline stage</label></li>
+              <li><label><input type="radio" name="zq3" value="d"> Log it in Trello instead of the CRM</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="zq4">
+            <div class="quiz-q-text">4. The CRM automatically assigns a follow-up reminder for a "Qualifying, Needs Time" client at a default interval. The rep knows this particular client won't be ready for another two months. What should they do?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="zq4" value="a"> Leave the default — follow-up intervals can never be changed</label></li>
+              <li><label><input type="radio" name="zq4" value="b"> Edit the follow-up timing to match what makes sense for this client</label></li>
+              <li><label><input type="radio" name="zq4" value="c"> Move the client to "Closed" until they're ready</label></li>
+              <li><label><input type="radio" name="zq4" value="d"> Delete the follow-up reminder entirely</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="zq5">
+            <div class="quiz-q-text">5. When should a rep check Trello instead of the CRM?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="zq5" value="a"> Every morning, as the primary daily tool</label></li>
+              <li><label><input type="radio" name="zq5" value="b"> When a client has incomplete contact information in the CRM, or if the CRM fails</label></li>
+              <li><label><input type="radio" name="zq5" value="c"> Only when a client is in the "Closed" stage</label></li>
+              <li><label><input type="radio" name="zq5" value="d"> Trello replaces the CRM entirely for "Searching" clients</label></li>
+            </ul>
+          </div>
+          <div class="quiz-q" id="zq6">
+            <div class="quiz-q-text">6. What email should a rep use for all client communication?</div>
+            <ul class="quiz-options">
+              <li><label><input type="radio" name="zq6" value="a"> Whichever email is most convenient at the time</label></li>
+              <li><label><input type="radio" name="zq6" value="b"> Their personal email, for a more personable touch</label></li>
+              <li><label><input type="radio" name="zq6" value="c"> Their DealerKey email, exclusively</label></li>
+              <li><label><input type="radio" name="zq6" value="d"> A shared team inbox</label></li>
+            </ul>
+          </div>
+          <div class="quiz-submit-row">
+            <button class="quiz-submit" onclick="gradeQuiz('systems')">Submit</button>
+            <span class="quiz-result" id="qresult-systems"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRACK 5: MY COMMISSIONS ── -->
+    <section class="track" id="track-commissions">
+      <div class="track-header">
+        <div class="track-number red">05</div>
+        <div class="track-title-wrap">
+          <div class="track-eyebrow">Track Five</div>
+          <div class="track-title">My Commissions</div>
+        </div>
+      </div>
+      <p class="track-desc">This section exists for one reason: to show you exactly what you can earn — and how fast it compounds when you work all the products on every deal. The difference between a rep who only closes the sourcing fee and a rep who closes the full stack isn't hustle — it's habit. Read this section, understand the numbers, and let them motivate you.</p>
+
+      <!-- BASE PRODUCTS -->
+      <div class="content-block">
+        <h3 class="block-title">Your Base Products &amp; Commissions</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Product</th><th>Commission (Base Tier)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Vehicle Acquisition Service Fee</td><td>$500 per vehicle</td></tr>
+            <tr><td>GWC Warranty – Powertrain Plus ($1,195)</td><td>$125</td></tr>
+            <tr><td>GWC Warranty – Essential ($1,595)</td><td>$175</td></tr>
+            <tr><td>GWC Warranty – Comprehensive ($1,995)</td><td>$250</td></tr>
+            <tr><td>GWC Warranty – Exclusionary ($2,495)</td><td>$350</td></tr>
+            <tr><td>Financing Participation</td><td>$100</td></tr>
+            <tr><td>GAP Insurance</td><td>$75</td></tr>
+            <tr><td>Auto Insurance (First Year Only)</td><td>$75</td></tr>
+          </tbody>
+        </table>
+        <p class="block-text"><strong>Max base deal</strong> (service fee + Exclusionary warranty + all products): <strong>$1,100</strong></p>
+      </div>
+
+      <!-- PERFORMANCE TIERS -->
+      <div class="content-block">
+        <h3 class="block-title">Performance Tiers — How Volume Unlocks Higher Pay</h3>
+        <p class="block-text">Your tier is determined by how many vehicles you close in a calendar month. Hit the number, unlock the rate — retroactively for that month.</p>
+        <table class="data-table">
+          <thead>
+            <tr><th>Product</th><th>Tier 1 — Standard (0–9/mo)</th><th>Tier 2 — Producer (10–16/mo)</th><th>Tier 3 — Elite (17+/mo)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Service Fee</td><td>$500</td><td>$550</td><td>$600</td></tr>
+            <tr><td>Warranty – Powertrain Plus</td><td>$125</td><td>$150</td><td>$175</td></tr>
+            <tr><td>Warranty – Essential</td><td>$175</td><td>$225</td><td>$275</td></tr>
+            <tr><td>Warranty – Comprehensive</td><td>$250</td><td>$265</td><td>$375</td></tr>
+            <tr><td>Warranty – Exclusionary</td><td>$350</td><td>$425</td><td>$500</td></tr>
+            <tr><td>Financing</td><td>$100</td><td>$125</td><td>$150</td></tr>
+            <tr><td>GAP Insurance</td><td>$75</td><td>$75</td><td>$100</td></tr>
+            <tr><td>Auto Insurance</td><td>$75</td><td>$75</td><td>$100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PERFORMANCE BONUSES -->
+      <div class="content-block">
+        <h3 class="block-title">Performance Bonuses</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Achievement</th><th>Bonus</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Warranty attach rate ≥ 50% for the month</td><td>+$50 per warranty sold that month (retroactive)</td></tr>
+            <tr><td>Finance attach rate ≥ 70% for the month</td><td>+$25 per finance deal that month</td></tr>
+            <tr><td>Insurance attach rate ≥ 40% for the month</td><td>+$25 per policy that month</td></tr>
+            <tr><td>Full-stack deal (all 4 products on one deal)</td><td>+$100 per deal</td></tr>
+          </tbody>
+        </table>
+        <p class="block-text">The warranty attach bonus is retroactive — once you cross 50% for the month, every warranty you already sold that month gets the extra $50.</p>
+      </div>
+
+      <!-- THREE SCENARIOS -->
+      <div class="content-block">
+        <h3 class="block-title">What a Deal Actually Looks Like — Three Rep Scenarios</h3>
+        <p class="block-text">The goal is to make the earnings gap feel visceral and real. Every number below is based on the commission structure above.</p>
+
+        <div class="scenario-grid">
+          <!-- Scenario A -->
+          <div class="scenario-card floor">
+            <div class="scenario-eyebrow floor">Scenario A</div>
+            <div class="scenario-title">The Floor Rep</div>
+            <p class="scenario-line">Tier 1. No add-ons. Just the service fee.</p>
+            <p class="scenario-line">— 7 vehicles/month</p>
+            <p class="scenario-line">— Service fee only</p>
+            <p class="scenario-line">— No warranty, no financing, no GAP, no insurance</p>
+            <p class="scenario-line">— No bonuses triggered</p>
+            <div class="scenario-total">
+              Per deal: $500
+              <span class="scenario-amount floor">$3,500 / mo</span>
+            </div>
+          </div>
+
+          <!-- Scenario B -->
+          <div class="scenario-card engaged">
+            <div class="scenario-eyebrow engaged">Scenario B</div>
+            <div class="scenario-title">The Engaged Rep</div>
+            <p class="scenario-line">Tier 2. Service fee + warranty + financing.</p>
+            <p class="scenario-line">— 12 vehicles/month (Tier 2 unlocked)</p>
+            <p class="scenario-line">— Comprehensive warranty on 8 of 12 deals</p>
+            <p class="scenario-line">— Financing on 9 of 12 deals</p>
+            <p class="scenario-line">— Warranty attach 67% → +$50 bonus on all 8</p>
+            <p class="scenario-line">— Finance attach 75% → +$25 bonus on all 9</p>
+            <p class="scenario-line" style="margin-top:0.4rem; font-style:italic; font-size:0.78rem;">Avg per deal: ~$873</p>
+            <div class="scenario-total">
+              <span class="scenario-amount engaged">~$10,475 / mo</span>
+            </div>
+          </div>
+
+          <!-- Scenario C -->
+          <div class="scenario-card elite">
+            <div class="scenario-eyebrow elite">Scenario C</div>
+            <div class="scenario-title">The Elite Rep</div>
+            <p class="scenario-line">Tier 3. Full stack. All bonuses firing.</p>
+            <p class="scenario-line">— 20 vehicles/month (Elite tier unlocked)</p>
+            <p class="scenario-line">— Exclusionary warranty on 14 deals</p>
+            <p class="scenario-line">— Financing on 16, GAP on 12, insurance on 10</p>
+            <p class="scenario-line">— 8 full-stack deals × $100 = $800</p>
+            <p class="scenario-line">— All three attach bonuses triggered</p>
+            <p class="scenario-line" style="margin-top:0.4rem; font-size:0.78rem;">$12,000 + $7,000 + $2,400 + $1,200 + $1,000 + $700 + $400 + $250 + $800</p>
+            <div class="scenario-total">
+              <span class="scenario-amount elite">$25,750 / mo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout-block">
+          The difference between Scenario A and Scenario C isn't working 7× harder. Scenario C rep closes 20 deals vs. 7 — about 3× more deals. But they earn more than 7× as much. That's what add-on products and performance tiers do. Every deal you close without offering the full stack is money you're leaving on the table.
+        </div>
+      </div>
+
+      <!-- WARRANTY MULTIPLIER -->
+      <div class="content-block">
+        <h3 class="block-title">The Warranty Multiplier — Why This Product Matters Most</h3>
+        <p class="block-text">Of all the add-on products, the GWC warranty has the highest commission ceiling and the widest spread between tiers. Here's why that matters:</p>
+        <p class="block-text">A rep at Elite who sells Exclusionary on every warranted deal earns $500 per contract. A rep at Base who sells Powertrain Plus earns $125. That's a <strong>4× difference</strong> on the same conversation — just by being in the right tier and recommending the right coverage for the vehicle.</p>
+        <p class="block-text">The attach rate bonus makes it even more powerful. Hit 50% attach for the month and every warranty you sold retroactively earns an extra $50. On 10 warranties, that's $500 in bonus income that didn't exist at 49% attach.</p>
+        <p class="block-text"><strong>Push for Exclusionary when the vehicle qualifies. Push for the attach rate bonus every month.</strong> These are the two highest-leverage habits in the compensation plan.</p>
+      </div>
+
+      <!-- PAYMENT TERMS -->
+      <div class="content-block">
+        <h3 class="block-title">Payment Terms</h3>
+        <ul class="info-list">
+          <li>Commissions are paid after funding and product confirmation</li>
+          <li>Chargebacks apply for product cancellations</li>
+          <li>Customers remain Company property</li>
+          <li>Warranty commission is earned at point of confirmed contract submission</li>
+        </ul>
+      </div>
+
+      <div class="callout-block">
+        You are not just a sourcing rep. You are a full-stack automotive advisor. Every client you talk to is a chance to protect their investment, save them money versus a dealership, and earn a commission that reflects the full value you bring. Learn the products. Work the stack. Hit the tiers.
+      </div>
+
+    </section>
+
+    <!-- ── TRACK 6: BONUS ── -->
+    <section class="track bonus" id="track-bonus">
+      <div class="bonus-tag">⚡ Optional — Highly Recommended</div>
+      <div class="track-header">
+        <div class="track-number gold">05</div>
+        <div class="track-title-wrap">
+          <div class="track-eyebrow gold">Bonus Track</div>
+          <div class="track-title">AI Tools</div>
+        </div>
+      </div>
+      <p class="track-desc">The reps who set this up manage more clients, move faster, and close more deals. Not required — but don't leave it on the table. Once Claude is set up on your computer, you can walk yourself through almost everything below — Claude is genuinely good at guiding you through its own setup.</p>
+
+      <!-- CLAUDE SETUP -->
+      <div class="content-block">
+        <h3 class="block-title">Step 1 — Get Claude Set Up</h3>
+        <div class="stage">
+          <div class="stage-number">1</div>
+          <div class="stage-content">
+            <div class="stage-title">Create a Claude account</div>
+            <p>Go to <a href="https://claude.ai" target="_blank" style="color: var(--red);">claude.ai</a> and sign up with your DealerKey email. The free tier works for basic chat, but for the tools in this track you'll want the <strong>Pro plan</strong> — it unlocks higher usage limits and Claude Code access.</p>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-number">2</div>
+          <div class="stage-content">
+            <div class="stage-title">Upgrade to Pro</div>
+            <p>From your account settings, upgrade to the Pro plan. This is what gives you the usage headroom for Claude Code and the arbitrage engine — both can involve a lot of back-and-forth, especially early on.</p>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-number">3</div>
+          <div class="stage-content">
+            <div class="stage-title">Install Claude Code</div>
+            <p>Claude Code runs in your computer's terminal. Once you're on Pro, follow Anthropic's setup instructions to install it — this gives Claude direct access to files and tools on your computer, which is what makes the arbitrage engine and OpenClaw possible.</p>
+            <p>If you've never used a terminal before, that's fine — Claude Code will walk you through each step. Just follow the instructions one at a time.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARBITRAGE ENGINE -->
+      <div class="content-block">
+        <h3 class="block-title">Step 2 — Arbitrage Engine</h3>
+        <p class="block-text">The arbitrage engine is a tool built specifically for DealerKey reps to compare large numbers of vehicles fast and flag things a manual review might miss. <strong>Ask your team lead for access</strong> — once set up, you run it in the terminal with:</p>
+        <div class="script-block">
+          <div class="script-label">Terminal command</div>
+          <p class="script-text">/arbitrage-engine</p>
+        </div>
+
+        <div class="stage">
+          <div class="stage-number">1</div>
+          <div class="stage-content">
+            <div class="stage-title">Set your filter</div>
+            <p>Set a filter on Manheim matching what a specific client is looking for — make, model, year, mileage range, etc.</p>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-number">2</div>
+          <div class="stage-content">
+            <div class="stage-title">Export the search results</div>
+            <p>Use the <strong>share button</strong> at the top of the Manheim search results page to export your filtered listings.</p>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-number">3</div>
+          <div class="stage-content">
+            <div class="stage-title">Let the engine pick the best options</div>
+            <p>Feed the export into the arbitrage engine — it'll go through every listing and surface the strongest options based on MMR spread, condition, and the other variables that matter.</p>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-number">4</div>
+          <div class="stage-content">
+            <div class="stage-title">Go deeper with condition report PDFs</div>
+            <p>For any listing you want a closer look at, import its condition report PDF and the engine will take a more detailed pass — flagging things a rep might miss when reviewing a listing manually.</p>
+          </div>
+        </div>
+        <p class="block-text">This is especially useful when comparing a large number of cars at once — instead of manually reviewing 20+ listings one at a time, the engine narrows the field for you fast.</p>
+      </div>
+
+      <!-- ADVANCED: OPENCLAW -->
+      <div class="content-block" style="border-top: 2px solid var(--gold-dim); padding-top: 1.25rem; margin-top: 1.5rem;">
+        <div class="bonus-tag" style="margin-bottom: 0.75rem;">Advanced</div>
+        <h3 class="block-title">Step 3 — OpenClaw</h3>
+        <p class="block-text"><strong>What it is:</strong> OpenClaw is a framework that lets Claude operate more like an autonomous assistant — running on a schedule, monitoring for new information, and taking actions on your behalf rather than only responding when you message it directly.</p>
+        <p class="block-text"><strong>Paired with Claude</strong>, OpenClaw turns Claude from "a chat you go to" into "an assistant working in the background" — drafting client messages, scanning new Manheim listings against your active clients' criteria, and keeping you updated without you having to manually check everything yourself.</p>
+        <p class="block-text"><strong>Why it matters for reps:</strong> the bottleneck on how many clients you can serve well is usually attention — staying on top of every client's search, every new listing, every follow-up. OpenClaw doesn't replace the rep relationship, but it handles the repetitive monitoring and drafting so you can spend your time on the calls and decisions that actually need a human.</p>
+
+        <p class="block-text"><strong>Ideas for how reps use it:</strong></p>
+        <ul class="info-list">
+          <li>Automatically scan new Manheim exports against every active client's criteria and flag matches</li>
+          <li>Draft follow-up messages for clients in "Searching" based on their CRM notes, ready for the rep to review and send</li>
+          <li>Send the rep a daily or twice-weekly summary of what's new for each client</li>
+          <li>Track auction dates for clients with signed BAFs and proactively remind the rep before bidding windows close</li>
+        </ul>
+
+        <div class="placeholder-notice">📋 Setting this up takes a while and will involve some troubleshooting — that's normal. The key skill here isn't memorizing steps, it's learning to follow Claude Code's instructions closely. If you can do that, you can figure out almost anything.</div>
+
+        <p class="block-text"><strong>To get started</strong>, open Claude Code in your terminal and paste the following prompt:</p>
+        <div class="script-block">
+          <div class="script-label">Copy & paste into Claude Code</div>
+          <p class="script-text" style="font-style: normal;">"I want to set up OpenClaw on my computer so I can run an autonomous Claude assistant for my work as a DealerKey Auto sales rep. Please walk me through the entire setup process from start to finish — installation, configuration, and getting a basic assistant running. Explain each step before we do it, and if something doesn't work, help me troubleshoot it before moving on. I'm comfortable using the terminal but may not know specific commands, so please be explicit about what to type and why."</p>
+        </div>
+
+        <p class="block-text" style="margin-top: 1rem;"><strong>On automated messaging:</strong> iMessage and most personal messaging platforms are locked down and don't allow automated/programmatic sending — so for client text messages to work with OpenClaw, you'll likely need a separate platform built for this, like <strong>OpenPhone (Quo)</strong>, for your work contacts.</p>
+
+        <p class="block-text"><strong>Once OpenClaw is running</strong>, the company has a Telegram bot called <strong>Butler</strong> that's a good starting point — it's pre-built with DealerKey's tone, narration style, and CRM logging behavior. Ask your team lead for Butler's <code style="background: var(--content-card); padding: 0.1rem 0.3rem; border-radius: 3px;">soul.md</code> file to get started with it.</p>
+      </div>
+
+      <ul class="checklist" id="checklist-bonus">
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Claude account created with DealerKey email, upgraded to Pro</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Claude Code installed and running in terminal</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>Arbitrage engine access requested from team lead, and run at least once</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>(Advanced) OpenClaw set up using the Claude Code prompt above</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>(Advanced) Messaging platform configured (e.g. OpenPhone) if using automated texts</span></li>
+        <li><input type="checkbox" onchange="updateProgress()"> <span>(Advanced) Butler soul.md requested from team lead and running on Telegram</span></li>
+      </ul>
+
+      <div class="resources">
+        <div class="resources-label">Resources</div>
+        <a href="https://claude.ai" class="resource-link" target="_blank">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          Claude
+        </a>
+        <a href="#" class="resource-link placeholder">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          Arbitrage Engine — ask team lead for access
+        </a>
+        <a href="#" class="resource-link placeholder">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2z"/></svg>
+          Butler soul.md — ask team lead
+        </a>
+      </div>
+
+      <div style="font-size:0.83rem; color: var(--gold-dim); padding: 0.75rem 0;">
+        No quiz for this track — completion means you've got the tools running. Show Kaden a working setup.
+      </div>
+    </section>
+
+  </main>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════════════════════
+  // ── PRODUCT MATCHING QUIZ ──
+  const makes = ['Honda', 'Toyota', 'Jeep', 'Ford', 'Chevrolet', 'Kia', 'Hyundai', 'Tesla'];
+  // Order shuffled to mix EVs, trucks, and sedans together — not grouped by make
+  const matchData = [
+    { model: 'Tacoma', make: 'Toyota' },
+    { model: 'EV6', make: 'Kia' },
+    { model: 'Maverick', make: 'Ford' },
+    { model: 'Sonata', make: 'Hyundai' },
+    { model: 'Silverado EV', make: 'Chevrolet' },
+    { model: 'Model Y', make: 'Tesla' },
+    { model: 'Cherokee', make: 'Jeep' },
+    { model: 'Telluride', make: 'Kia' },
+    { model: 'F-150 Lightning', make: 'Ford' },
+    { model: 'Tundra', make: 'Toyota' },
+    { model: 'EV9', make: 'Kia' },
+    { model: 'Expedition', make: 'Ford' },
+    { model: 'Palisade', make: 'Hyundai' },
+    { model: 'CR-V', make: 'Honda' },
+    { model: 'Colorado', make: 'Chevrolet' },
+    { model: 'Compass', make: 'Jeep' },
+    { model: 'Model X', make: 'Tesla' },
+    { model: 'Soul', make: 'Kia' },
+    { model: 'Santa Fe', make: 'Hyundai' },
+    { model: 'Pilot', make: 'Honda' }
+  ];
 
-const SECTIONS = [
-  {
-    id: "s1",
-    label: "Section 1",
-    sublabel: "What DealerKey Auto Is",
-    mindset: "You are an advisor, not a salesman. They came for a consultation. Confidence matters more than perfect wording. Don't rush.",
-    script: [
-      { type: "line",  speaker: "Rep", text: "Tell me about the car you're looking for. I see here you wrote [X] — is that still what you're thinking?" },
-      { type: "stage", text: "Listen. Make a genuine comment. Let them talk." },
-      { type: "line",  speaker: "Rep", text: "So you may have noticed we're not a traditional dealership — no lot, no inventory sitting around. What we do is work directly with you to find your specific car, and we don't charge you a thing unless we actually save you money. At least $3,000 worth, usually more." },
-      { type: "stage", text: "Pause. Let that land." },
-      { type: "line",  speaker: "Rep", text: "Here's how that's possible. You know how dealerships always seem to have endless inventory? There's a reason for that. Most of them aren't out hunting for individual cars — they're buying in bulk from a wholesale auction called Manheim. It's the largest vehicle auction in the world. Over 150,000 cars are available at any given moment, with over 8 million moving through every year. That's where their inventory comes from." },
-      { type: "line",  speaker: "Rep", text: "They buy a car at auction, mark it up $4,000 to $6,000, put it on the lot, and sell it to you. That markup is how they pay for their building, the salespeople, the financing department — all of it." },
-      { type: "line",  speaker: "Rep", text: "We have access to that same auction. So instead of going through a dealership and paying that markup, we go straight to the source and find your car there. We do everything for a flat advisory fee of $1,500 — and we only collect it if we save you at least $3,000, usually more." },
-      { type: "line",  speaker: "Rep", text: "Today I'm just going to show you what that actually looks like. At the end, you tell me if it makes sense for you." },
-    ],
-    outline: [
-      "Open with their specific car — reference what they wrote",
-      "Introduce DealerKey: no lot, flat fee, only collect if we save $3k+",
-      "Explain Manheim and the dealership markup model ($4k–$6k)",
-      "Anchor the $1,500 fee and savings guarantee",
-      "Frame today as show-don't-tell — no pressure",
-    ],
-  },
-  {
-    id: "s2",
-    label: "Section 2",
-    sublabel: "Framing & Expectations",
-    mindset: "This section is short on purpose. You've already planted the seed. Now you're just making sure they feel zero pressure before you show them the data. Say this slowly and genuinely — it does a lot of work.",
-    script: [
-      { type: "line",  speaker: "Rep", text: "Now, my job today isn't to sell you on a specific car or push you toward any decision. I just want to show you what the market actually looks like — both what you can see as a regular buyer, and what's actually happening behind the scenes." },
-      { type: "line",  speaker: "Rep", text: "We'll look at real numbers together. If at the end you feel like you'd rather keep searching on your own, totally fine. If it looks like we can save you real money, we'll talk about what that looks like." },
-    ],
-    outline: [
-      "No pressure framing — not here to push a decision",
-      "We'll look at real numbers together",
-      "Their choice at the end — keep searching solo or move with us",
-    ],
-  },
-  {
-    id: "s3",
-    label: "Section 3",
-    sublabel: "The Website Search",
-    mindset: "This part is where you can build a ton of credibility if you present it well. Don't be afraid to spend several minutes here. The goal is to give them a frame of reference so they can see the difference in value between the public market and buying through DealerKey Auto.",
-    script: [
-      { type: "line",  speaker: "Rep", text: "Rather than me telling you why this works, I'd rather just show you." },
-      { type: "line",  speaker: "Rep", text: "Let's start with our website. There are some fantastic tools on here that anyone can use, but not everyone knows about." },
-      { type: "stage", text: "Pull up the car the client is looking for. Include their budget." },
-      { type: "line",  speaker: "Rep", text: "Now if you've been looking at local dealerships, right away you can see that the average prices are significantly lower. These results are filtered to include only top condition cars, 4.0 or higher, all of them with clean titles and condition reports." },
-      { type: "stage", text: "Point out a few of the better ones." },
-      { type: "line",  speaker: "Rep", text: "We're an extremely data-driven company. Our AI has processed information from thousands of listings across the retail market — comparing across year, mileage, trim, title status, everything — and it's constantly updating. So every single car you see here is already being compared to what that exact car is selling for on the retail market right now." },
-      { type: "stage", text: "Point to the arbitrage number." },
-      { type: "line",  speaker: "Rep", text: "That number right there — that's the arbitrage. That's the gap between what this car would cost you at a dealership and what we can actually get it for. And if you bought it at auction today and sold it retail tomorrow, that's how much you would pocket." },
-      { type: "stage", text: "Let that land." },
-      { type: "line",  speaker: "Rep", text: "And we haven't even gone into Manheim yet. This is just the surface layer." },
-    ],
-    outline: [
-      "Lead with 'show don't tell' — pull up the website live",
-      "Search their exact car and budget",
-      "Highlight: filtered to 4.0+ condition, clean title only",
-      "Explain the AI and real-time retail comparison",
-      "Point to the arbitrage number — name what it means",
-      "Tease Manheim as the next layer",
-    ],
-  },
-  {
-    id: "s4",
-    label: "Section 4",
-    sublabel: "Tour of Manheim",
-    mindset: "Your familiarity with the platform is the point. Move confidently and narrate as you go. Full Manheim platform training is covered separately — this section is about how to present it to a client.",
-    script: [
-      { type: "stage", text: "Set parameters — make, model, year, mileage. Talk through it as you go." },
-      { type: "line",  speaker: "Rep", text: "I'm going to set the parameters based on exactly what you told me — make, model, year, mileage range. You can see right away how much inventory we're working with. This is live." },
-      { type: "stage", text: "Select a listing with a solid condition grade. Open the full listing." },
-      { type: "line",  speaker: "Rep", text: "Here's what I look at first — year, trim, mileage confirmed, condition grade right here. We typically stay at 4.0 or above." },
-      { type: "line",  speaker: "Rep", text: "Now here's the MMR — Manheim Market Report. No fixed price since it's an auction, but the MMR tells us what this car is most likely to sell for based on recent sales data. I always work in out-the-door numbers, so I'm taking the MMR, adding our $1,500 fee, plus Manheim's usage fee of $500–700 — so roughly $2,000 total on top. All in, you're looking at about [X]." },
-      { type: "stage", text: "Pull up the condition report. Point out a minor damage item." },
-      { type: "line",  speaker: "Rep", text: "See this dent? Probably barely noticeable in person, but it's still on the report. That's the standard they hold to, because dealerships buying these cars demand it. Works in your favor for the same reason." },
-      { type: "stage", text: "Show one or two more listings, then transition naturally into Section 5." },
-    ],
-    outline: [
-      "Set parameters live with client — narrate as you go",
-      "Open a strong listing: confirm year, trim, mileage, grade (4.0+)",
-      "Explain MMR and build the all-in number (MMR + $1,500 + $500–700)",
-      "Open condition report — point to a minor item to show thoroughness",
-      "Show one or two more, then transition to closing",
-    ],
-  },
-  {
-    id: "s5",
-    label: "Section 5",
-    sublabel: "Logistics & Closing",
-    mindset: "Don't let them leave thinking they've found just another resource. The goal is for them to voluntarily hand the search over to you completely. You're not hard closing — you're making it so obvious and easy that they'd feel silly not to.",
-    script: [
-      { type: "line",  speaker: "Rep", text: "So here's how this typically works. We'll take the next 2–3 weeks and handle the entire search for you. You'll hear from me at least twice a week. Every time a new batch comes in, I'll send you the top two or three options based on your parameters. If there's one I feel particularly strong about, I'll make sure to highlight it." },
-      { type: "line",  speaker: "Rep", text: "Does email or text work better for you?", techniques: ["Soft Close #1"] },
-      { type: "stage", text: "Wait for answer." },
-      { type: "line",  speaker: "Rep", text: "Now when a car comes along that you're seriously considering, we'll jump on a call together for a deeper look. We'll build our bidding strategy and set your ceiling bid ahead of time so we always stay within budget. You'll contribute 25% of the bid upfront and we cover the other 75%. If we win the bid, you pay the rest and we hand over the keys. If we don't win, your 25% comes straight back and we keep looking. Sometimes it takes a try or two — that's completely normal. And you'll have all of this in writing before any money moves." },
-      { type: "line",  speaker: "Rep", text: "One question for you — how much notice do you need before making a move? Let's say I find the perfect car and the auction runs two days from now, can you move within 48 hours? Or do you need more time than that?", techniques: ["Solidifying Close"] },
-      { type: "stage", text: "Wait for answer." },
-      { type: "line",  speaker: "Rep", text: "Perfect, I'll make sure to give you as much notice as I can." },
-      { type: "line",  speaker: "Rep", text: "And if you'd ever like to watch the auction live, I'd love to show you — it's actually really cool to see in real time." },
-      { type: "line",  speaker: "Rep", text: "Well [name], thanks so much for giving us a shot. So here's what we'll do — for the next 2–3 weeks, just let me handle it completely. You don't have to do a thing. If I haven't found the right one by then, no worries — we'll keep looking on our end and you can jump back in too. Sound good?", techniques: ["Strongest Close"] },
-      { type: "stage", text: "Do not rush. Their response tells you exactly how bought in they are." },
-      { type: "line",  speaker: "Rep", text: "Perfect. You can expect to hear from me in a day or two with a few of the best current options — just to start giving you a feel for what we're working with." },
-      { type: "stage", text: "Confirm all car details before ending the call." },
-    ],
-    outline: [
-      "Describe the 2–3 week search process: twice-a-week updates, top options",
-      "Ask email or text preference to get first micro-commitment",
-      "Explain 25% bid structure, ceiling bid, written agreement",
-      "Urgency check: can they move within 48 hours?",
-      "Offer live auction viewing — builds excitement",
-      "Hand-off close: 'just let me handle it completely'",
-      "Confirm car details before hanging up",
-    ],
-  },
-];
-
-const OBJECTIONS = [
-  {
-    id: "o1",
-    scenario: "You've explained the 25% bid deposit. Client hesitates.",
-    prompt: "\"I'm not sure I'm comfortable putting money down before we've actually found anything.\"",
-    answer: "That's fair, and I get it — it feels a little different than what most people are used to. The reason we do it that way is because we're putting our own money in right alongside yours. We're just as motivated as you are to get the right car at the right price. The 25% just makes sure we're both committed before we pull the trigger. And if we don't win, it comes straight back to you. You'll have all of this in writing before ANY money moves, so there's no guesswork.",
-    memorize: true,
-  },
-  {
-    id: "o2",
-    scenario: "Client heard the 25% structure but wants it clarified.",
-    prompt: "\"Can you walk me through how the 25% deposit actually works?\"",
-    answer: "Sure — so once we find a car you're serious about, you contribute 25% of the bid upfront and we cover the other 75%. Win the bid, you pay us the rest and we hand over the keys. Don't win, your money comes right back. Simple as that.",
-    memorize: false,
-  },
-  {
-    id: "o3",
-    scenario: "Client shares their frustration partway through the consultation.",
-    prompt: "\"Honestly, I've been searching for months and haven't found anything.\"",
-    answer: "I completely get that — and honestly, that's exactly the kind of situation we are here for. When you're searching on your own you're constantly trying to weigh price against mileage against condition against history, and every car is a different combination of all those variables. It's exhausting to compare objectively. That's where we really shine. First, Manheim gives us an unreal amount of data on each car — way more than anything you'd find on a public listing. And on top of that, our AI processes all of those variables simultaneously across hundreds of cars and gives you an ordered list of which options are actually saving you the most money. It takes the guesswork out completely.",
-    memorize: false,
-  },
-  {
-    id: "o4",
-    scenario: "You're describing the auction process and client raises this.",
-    prompt: "\"Wait — I can't test drive the car before we buy it?\"",
-    answer: "Great question, and that's exactly why Manheim is so incredibly thorough with their condition reports. Because you can't go in and test drive the cars, they are extensive with their condition reports. Dealerships are very particular and want to know every little detail about each car, because their livelihood depends on it. Every vehicle is inspected by a third party, and they include absolutely everything they find in their report. If for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back.",
-    memorize: false,
-  },
-  {
-    id: "o5",
-    scenario: "After you've described the condition report process, client pushes back.",
-    prompt: "\"What if we get the car and find something that wasn't in the report?\"",
-    answer: "Absolutely — I would be concerned about that too. Thankfully, every vehicle is inspected by a third party, not by Manheim itself, and they include absolutely everything they find in their report. That certainly limits the risk, but if for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back. That rarely happens, but on the occasion that we have had an issue with the vehicle we were able to successfully arbitrate.",
-    memorize: true,
-  },
-  {
-    id: "o6",
-    scenario: "Client is skeptical about inventory quality at auction.",
-    prompt: "\"Isn't most of what's available at Manheim salvage or branded title cars?\"",
-    answer: "Almost everything we work with is clean title — that's the standard for the vast majority of what moves through Manheim. Occasionally a client specifically wants a cheap work truck and we'll look at branded titles for that, but typically for a car like what you're looking for, we'd be staying firmly in clean title territory.",
-    memorize: false,
-  },
-];
-
-// ═══════════════════════════════════════════════════════
-//  MOBILE
-// ═══════════════════════════════════════════════════════
-
-function toggleSidebar() {
-  document.getElementById("sidebar").classList.toggle("open");
-  document.getElementById("overlay").classList.toggle("visible");
-}
-
-function closeSidebar() {
-  document.getElementById("sidebar").classList.remove("open");
-  document.getElementById("overlay").classList.remove("visible");
-}
-
-// ═══════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════
-
-let currentSection = "s1";
-let currentMode    = "learn";
-const ratings      = {}; // objId -> 'nailed'|'almost'|'missed'
-
-// ═══════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════
-
-function init() {
-  buildNav();
-  navigateTo("s1");
-}
-
-function buildNav() {
-  const nav = document.getElementById("nav");
-  nav.innerHTML = "";
-
-  SECTIONS.forEach(s => {
-    const btn = document.createElement("button");
-    btn.className = "nav-item";
-    btn.dataset.id = s.id;
-    btn.innerHTML = `<span class="nav-label">${s.label}</span><span class="nav-sub">${s.sublabel}</span>`;
-    btn.onclick = () => { navigateTo(s.id); closeSidebar(); };
-    nav.appendChild(btn);
-  });
-
-  const divider = document.createElement("div");
-  divider.className = "nav-divider";
-  nav.appendChild(divider);
-
-  const obj = document.createElement("button");
-  obj.className = "nav-item";
-  obj.dataset.id = "objections";
-  obj.innerHTML = `<span class="nav-label">Objections</span><span class="nav-sub">Quiz mode</span>`;
-  obj.onclick = () => { navigateTo("objections"); closeSidebar(); };
-  nav.appendChild(obj);
-}
-
-function navigateTo(id) {
-  currentSection = id;
-  document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.id === id));
-
-  const modeBar = document.getElementById("mode-bar");
-
-  if (id === "objections") {
-    modeBar.classList.add("hidden");
-    renderObjections();
-  } else {
-    modeBar.classList.remove("hidden");
-    renderSection(id, currentMode);
+  function buildMatchTable() {
+    const tbody = document.getElementById('match-rows');
+    if (!tbody) return;
+    matchData.forEach((row, i) => {
+      const tr = document.createElement('tr');
+      const tdModel = document.createElement('td');
+      tdModel.className = 'model-name';
+      tdModel.textContent = row.model;
+      const tdSelect = document.createElement('td');
+      const select = document.createElement('select');
+      select.id = 'match-' + i;
+      const blank = document.createElement('option');
+      blank.value = ''; blank.textContent = '— Select make —';
+      select.appendChild(blank);
+      makes.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m; opt.textContent = m;
+        select.appendChild(opt);
+      });
+      tdSelect.appendChild(select);
+      tr.appendChild(tdModel);
+      tr.appendChild(tdSelect);
+      tbody.appendChild(tr);
+    });
   }
-}
+  buildMatchTable();
 
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
-  renderSection(currentSection, mode);
-}
-
-// ═══════════════════════════════════════════════════════
-//  RENDER: SECTION
-// ═══════════════════════════════════════════════════════
-
-function renderSection(id, mode) {
-  const sec = SECTIONS.find(s => s.id === id);
-  const content = document.getElementById("content");
-
-  content.innerHTML = `
-    <div class="section-title">${sec.label}: ${sec.sublabel}</div>
-    <div class="section-subtitle">${mode === "learn" ? "Full script with stage directions" : "Key beats — for reps who know the material"}</div>
-    ${mode === "learn" ? renderLearn(sec) : renderOutline(sec)}
-  `;
-}
-
-function renderLearn(sec) {
-  let html = `<div class="mindset-box"><strong>Rep mindset:</strong> ${sec.mindset}</div>`;
-
-  let i = 0;
-  while (i < sec.script.length) {
-    const block = sec.script[i];
-    if (block.type === "stage") {
-      html += `<div class="script-block"><div class="stage-dir">${block.text}</div></div>`;
-      i++;
-    } else {
-      const lines = [];
-      while (i < sec.script.length && sec.script[i].type !== "stage") {
-        lines.push(sec.script[i]);
-        i++;
+  function gradeMatching() {
+    let score = 0;
+    matchData.forEach((row, i) => {
+      const select = document.getElementById('match-' + i);
+      select.classList.remove('correct', 'wrong');
+      if (select.value === row.make) {
+        select.classList.add('correct');
+        score++;
+      } else if (select.value !== '') {
+        select.classList.add('wrong');
       }
-      const linesHtml = lines.map(line => {
-        const badges = (line.techniques || []).map(t =>
-          `<span class="badge badge-technique">${t}</span>`
-        ).join("");
-        return `<p>${line.text}${badges}</p>`;
-      }).join("");
-      html += `
-        <div class="script-block">
-          <div class="script-line">
-            <div class="script-speaker">${lines[0].speaker}</div>
-            ${linesHtml}
-          </div>
-        </div>`;
+    });
+    const resultEl = document.getElementById('qresult-product');
+    const badge = document.getElementById('qbadge-product');
+    const total = matchData.length;
+    if (score === total) {
+      resultEl.textContent = `✓ ${score}/${total} — Track complete`;
+      resultEl.className = 'quiz-result pass';
+      badge.textContent = '✓ Passed';
+      badge.className = 'quiz-badge complete';
+      document.getElementById('dot-product').classList.add('complete');
+      updateProgress();
+    } else {
+      resultEl.textContent = `${score}/${total} correct — fix the highlighted rows and try again`;
+      resultEl.className = 'quiz-result fail';
     }
   }
 
-  return html;
-}
+  // ── QUIZ ANSWERS ──
+  const answers = {
+    business: { bq1: 'b', bq2: 'c', bq3: 'b', bq4: 'c', bq5: 'a', bq6: 'b', bq7: 'c', bq8: 'b', bq9: 'b', bq10: 'c', bq11: 'c', bq12: 'b', bq13: 'b', bq14: 'b', bq15: 'a', bq16: 'b' },
+    fundamentals: { fq1: 'b', fq2: 'c', fq3: 'c', fq4: 'b', fq5: 'c', fq6: 'b', fq7: 'b' },
+    manheim: { mq1: 'b', mq2: 'b', mq3: 'c', mq4: 'a', mq5: 'b', mq6: 'b', mq7: 'c', mq8: 'c', mq9: 'b', mq10: 'c', mq11: 'b' },
+    sales: { sq1: 'b', sq2: 'b', sq3: 'b', sq4: 'b', sq5: 'b', sq6: 'b', sq7: 'b', sq8: 'b', sq9: 'b', sq10: 'b', sq11: 'c', sq12: 'b' },
+    systems: { zq1: 'b', zq2: 'b', zq3: 'b', zq4: 'b', zq5: 'b', zq6: 'c' },
+    gwc: { gwq1: 'c', gwq2: 'b', gwq3: 'd', gwq4: 'd', gwq5: 'c' }
+  };
 
-function renderOutline(sec) {
-  const items = sec.outline.map(beat => `<li>${beat}</li>`).join("");
-  return `<ul class="outline-list">${items}</ul>`;
-}
+  // ── TOGGLE QUIZ ──
+  function toggleQuiz(track) {
+    const body = document.getElementById('qbody-' + track);
+    const chev = document.getElementById('qchev-' + track);
+    const header = body.previousElementSibling;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chev.classList.toggle('open', !isOpen);
+    header.classList.toggle('open', !isOpen);
+  }
 
-// ═══════════════════════════════════════════════════════
-//  RENDER: OBJECTIONS
-// ═══════════════════════════════════════════════════════
+  // ── GRADE QUIZ ──
+  function gradeQuiz(track) {
+    const correct = answers[track];
+    if (!correct) return;
+    let score = 0; let total = Object.keys(correct).length;
+    for (const [q, ans] of Object.entries(correct)) {
+      const selected = document.querySelector(`input[name="${q}"]:checked`);
+      const allLabels = document.querySelectorAll(`input[name="${q}"]`);
+      allLabels.forEach(inp => {
+        inp.parentElement.classList.remove('correct', 'wrong');
+        if (inp.value === ans) inp.parentElement.classList.add('correct');
+      });
+      if (selected) {
+        if (selected.value === ans) { score++; }
+        else { selected.parentElement.classList.add('wrong'); }
+      }
+    }
+    const resultEl = document.getElementById('qresult-' + track);
+    const badge = document.getElementById('qbadge-' + track);
+    if (score === total) {
+      resultEl.textContent = `✓ ${score}/${total} — Track complete`;
+      resultEl.className = 'quiz-result pass';
+      badge.textContent = '✓ Passed';
+      badge.className = 'quiz-badge complete';
+      const dotEl = document.getElementById('dot-' + track);
+      if (dotEl) dotEl.classList.add('complete');
+      updateProgress();
+    } else {
+      resultEl.textContent = `${score}/${total} — Review the content and try again`;
+      resultEl.className = 'quiz-result fail';
+    }
+  }
 
-function renderObjections() {
-  const content = document.getElementById("content");
+  // ── PROGRESS ──
+  function updateProgress() {
+    const allBoxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const checked = document.querySelectorAll('.checklist input[type="checkbox"]:checked');
+    const pct = Math.round((checked.length / allBoxes.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
 
-  const ratedCount = Object.keys(ratings).length;
-  const total = OBJECTIONS.length;
-
-  let cards = OBJECTIONS.map(obj => buildObjCard(obj)).join("");
-
-  content.innerHTML = `
-    <div class="section-title">Objections</div>
-    <div class="quiz-meta">Read each objection, recall your response, then reveal the ideal answer and rate yourself.</div>
-    ${cards}
-    ${buildSummary()}
-  `;
-}
-
-function buildObjCard(obj) {
-  const rated = ratings[obj.id];
-  const memorizeTag = obj.memorize
-    ? `<span class="badge badge-memorize">Memorize closely</span>`
-    : "";
-
-  return `
-    <div class="obj-card${rated ? ` done ${rated}` : ""}" id="card-${obj.id}">
-      <div class="obj-scenario">${obj.scenario}</div>
-      <div class="obj-prompt">${obj.prompt} ${memorizeTag}</div>
-      <button class="reveal-btn" onclick="revealAnswer('${obj.id}')" id="reveal-${obj.id}"
-        ${rated ? "style='display:none'" : ""}>
-        Reveal ideal response
-      </button>
-      <div class="obj-answer${rated ? " visible" : ""}" id="answer-${obj.id}">
-        <div class="answer-label">Ideal Response</div>
-        <div class="answer-text">${obj.answer}</div>
-        <div class="rating-row" id="rating-${obj.id}">
-          ${buildRatingBtns(obj.id, rated)}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function buildRatingBtns(id, selected) {
-  const ratings_map = [
-    { key: "nailed", label: "Nailed it", cls: "selected-nailed" },
-    { key: "almost", label: "Almost",    cls: "selected-almost" },
-    { key: "missed", label: "Missed it", cls: "selected-missed" },
-  ];
-
-  return ratings_map.map(r => {
-    const active = selected === r.key ? ` ${r.cls}` : "";
-    return `<button class="rating-btn${active}" onclick="rate('${id}','${r.key}')">${r.label}</button>`;
-  }).join("");
-}
-
-function buildSummary() {
-  const total  = OBJECTIONS.length;
-  const rated  = Object.keys(ratings).length;
-  if (rated === 0) return `<div id="quiz-summary"></div>`;
-
-  const rows = OBJECTIONS.map(obj => {
-    const r = ratings[obj.id];
-    const pill = r
-      ? `<span class="pill pill-${r === "nailed" ? "nailed" : r === "almost" ? "almost" : "missed"}">${r === "nailed" ? "Nailed it" : r === "almost" ? "Almost" : "Missed it"}</span>`
-      : `<span class="pill pill-none">Not rated</span>`;
-
-    const flag = (r === "almost" || r === "missed")
-      ? `<span class="needs-work">Review</span>` : "";
-
-    return `
-      <div class="summary-row">
-        <span>${obj.prompt.replace(/"/g, "")}</span>
-        <div class="summary-pills">${flag}${pill}</div>
-      </div>
-    `;
-  }).join("");
-
-  const needsWork = OBJECTIONS.filter(o => ratings[o.id] === "almost" || ratings[o.id] === "missed");
-
-  return `
-    <div id="quiz-summary" style="display:block;margin-top:32px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;">
-      <div class="summary-title">Session Summary — ${rated}/${total} rated</div>
-      ${rows}
-      ${needsWork.length > 0 ? `<p style="margin-top:14px;font-size:13px;color:var(--danger);">Focus: ${needsWork.map(o => o.id.replace("o","Handler ")).join(", ")}</p>` : `<p style="margin-top:14px;font-size:13px;color:var(--success);">All rated — solid session.</p>`}
-      <button class="reset-btn" onclick="resetQuiz()">Reset session</button>
-    </div>
-  `;
-}
-
-// ═══════════════════════════════════════════════════════
-//  ACTIONS
-// ═══════════════════════════════════════════════════════
-
-function revealAnswer(id) {
-  document.getElementById("reveal-" + id).style.display = "none";
-  document.getElementById("answer-" + id).classList.add("visible");
-}
-
-function rate(id, value) {
-  ratings[id] = value;
-  const row = document.getElementById("rating-" + id);
-  const obj = OBJECTIONS.find(o => o.id === id);
-  row.innerHTML = buildRatingBtns(id, value);
-  const card = document.getElementById("card-" + id);
-  card.classList.add("done");
-  card.classList.remove("nailed", "almost", "missed");
-  card.classList.add(value);
-
-  const summaryEl = document.getElementById("quiz-summary");
-  if (summaryEl) summaryEl.outerHTML = buildSummary();
-}
-
-function resetQuiz() {
-  Object.keys(ratings).forEach(k => delete ratings[k]);
-  renderObjections();
-}
-
-// ═══════════════════════════════════════════════════════
-init();
+  // ── SIDEBAR ACTIVE STATE ON SCROLL ──
+  const sections = document.querySelectorAll('.track');
+  const sidebarLinks = document.querySelectorAll('.sidebar nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    sidebarLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
 </script>
 </body>
 </html>
