@@ -424,6 +424,22 @@
   .quiz-result.pass { color: var(--green); }
   .quiz-result.fail { color: var(--red); }
 
+  .quiz-explanation {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    padding: 0.5rem 0.75rem;
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid var(--border);
+    border-radius: 0 4px 4px 0;
+  }
+  .track-time {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 0.2rem;
+  }
+
   /* ── BONUS TRACK ── */
   .track.bonus {
     border: 1px solid rgba(201,168,76,0.25);
@@ -893,9 +909,14 @@
         <div class="track-title-wrap">
           <div class="track-eyebrow">Track One</div>
           <div class="track-title">Business</div>
+          <div class="track-time">⏱ ~30 min</div>
         </div>
       </div>
       <p class="track-desc">Understand what DealerKey is, how the model works, how we make money, and what clients are agreeing to before we ever bid on their behalf.</p>
+
+      <div class="content-block" style="border-left: 3px solid var(--border); padding-left: 1rem; margin-bottom: 1.5rem;">
+        <p class="block-text"><strong>A quick note before you start:</strong> Several policies in this track — the deposit, the Total Purchase Obligation, the as-is purchase — are grounded in how the auction process works. The auction platform we use is called <strong>Manheim</strong>, the largest wholesale vehicle auction in the US, where dealers buy and sell cars outside the public market. You'll get a full walkthrough of Manheim in Track 2. For now, just know that when this track mentions "the auction" or "winning a bid," it's referring to a live Manheim auction event where DealerKey bids on a specific vehicle on the client's behalf — and the moment that bid wins, the commitment is real and binding.</p>
+      </div>
 
       <!-- WHAT IS DEALERKEY -->
       <div class="content-block">
@@ -1066,6 +1087,7 @@
               <li><label><input type="radio" name="bq1" value="c"> $2,250</label></li>
               <li><label><input type="radio" name="bq1" value="d"> It depends on the vehicle</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">DealerKey's flat advisory fee is $1,500. This is our cut — all other costs (buyer's fee, transport, tax, etc.) are pass-through.</div>
           </div>
           <div class="quiz-q" id="bq2">
             <div class="quiz-q-text">2. In addition to DealerKey's flat fee, what other costs does the client typically incur?</div>
@@ -1075,6 +1097,7 @@
               <li><label><input type="radio" name="bq2" value="c"> $750 Manheim fee + transport</label></li>
               <li><label><input type="radio" name="bq2" value="d"> No additional costs</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Total Purchase Obligation includes the hammer price + Manheim buyer's fee (~$750 range) + DealerKey's $1,500 + transport + tax + DMV fees.</div>
           </div>
           <div class="quiz-q" id="bq3">
             <div class="quiz-q-text">3. When does a client sign the required documentation?</div>
@@ -1084,6 +1107,7 @@
               <li><label><input type="radio" name="bq3" value="c"> At vehicle delivery</label></li>
               <li><label><input type="radio" name="bq3" value="d"> It's optional</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The 25% deposit is required before DealerKey bids on anything. It's the single most important policy point to communicate clearly and early.</div>
           </div>
           <div class="quiz-q" id="bq4">
             <div class="quiz-q-text">4. A client pays their 25% deposit, and DealerKey does not win a bid before the BAF expires. What happens to the deposit?</div>
@@ -1093,6 +1117,7 @@
               <li><label><input type="radio" name="bq4" value="c"> Fully refunded within 5 business days of BAF expiration</label></li>
               <li><label><input type="radio" name="bq4" value="d"> Half refunded</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">If no bid is won before the BAF expires, the deposit is fully refunded within 5 business days — no fees, no deductions.</div>
           </div>
           <div class="quiz-q" id="bq5">
             <div class="quiz-q-text">5. What happens to the deposit the moment DealerKey wins a bid?</div>
@@ -1102,6 +1127,7 @@
               <li><label><input type="radio" name="bq5" value="c"> It's split between DealerKey and the client</label></li>
               <li><label><input type="radio" name="bq5" value="d"> Nothing changes until delivery</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The moment the hammer falls and DealerKey wins, the deposit becomes non-refundable and applies toward the Total Purchase Obligation.</div>
           </div>
           <div class="quiz-q" id="bq6">
             <div class="quiz-q-text">6. What is the correct order of the client lifecycle?</div>
@@ -1111,6 +1137,7 @@
               <li><label><input type="radio" name="bq6" value="c"> Search → IAM → Bidding → BAM</label></li>
               <li><label><input type="radio" name="bq6" value="d"> Bidding → BAM → IAM → Search</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The correct lifecycle is: IAM → Search → BAM → Bidding → Delivery.</div>
           </div>
           <div class="quiz-q" id="bq7">
             <div class="quiz-q-text">7. A client asks "what if the car has a hidden problem the auction didn't catch?" What's the best response?</div>
@@ -1120,6 +1147,7 @@
               <li><label><input type="radio" name="bq7" value="c"> "These are as-is purchases, which is why we strongly recommend a post-sale inspection — it's a small cost that gives you real peace of mind."</label></li>
               <li><label><input type="radio" name="bq7" value="d"> "You should ask the auction directly."</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The correct response is to recommend a post-sale inspection. Every vehicle is as-is — a third-party inspection is the honest, practical answer for clients worried about undisclosed issues.</div>
           </div>
           <div class="quiz-q" id="bq8">
             <div class="quiz-q-text">8. Once a client signs the agreement and a max bid is agreed upon during the BAM, what should the rep do immediately?</div>
@@ -1129,6 +1157,7 @@
               <li><label><input type="radio" name="bq8" value="c"> Schedule the IAM</label></li>
               <li><label><input type="radio" name="bq8" value="d"> Refund the deposit</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The BAM (Bid Authorization Meeting) is where the client reviews photos/condition reports, agrees on a max bid, and signs the Vehicle Purchase Agreement.</div>
           </div>
           <div class="quiz-q" id="bq9">
             <div class="quiz-q-text">9. A client wants to back out of the deal the day after signing the BAF, before any auction run has happened. Is the deposit refundable?</div>
@@ -1138,6 +1167,7 @@
               <li><label><input type="radio" name="bq9" value="c"> Yes, but only 50% is refunded</label></li>
               <li><label><input type="radio" name="bq9" value="d"> Only if they haven't met with the rep yet</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">After the agreement is signed, immediately send Dallin the VIN, max bid, and auction date — no delay.</div>
           </div>
           <div class="quiz-q" id="bq10">
             <div class="quiz-q-text">10. What does the BAF (Bid Authorization Form) need to specify? (Select the option that is NOT actually required)</div>
@@ -1147,6 +1177,7 @@
               <li><label><input type="radio" name="bq10" value="c"> The client's preferred auction lane number</label></li>
               <li><label><input type="radio" name="bq10" value="d"> Delivery ZIP code</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Financing is entirely the client's responsibility and must be secured before the BAF is signed. DealerKey does not arrange financing.</div>
           </div>
           <div class="quiz-q" id="bq11">
             <div class="quiz-q-text">11. How long is a BAF valid before it expires by default?</div>
@@ -1156,6 +1187,7 @@
               <li><label><input type="radio" name="bq11" value="c"> 30 days</label></li>
               <li><label><input type="radio" name="bq11" value="d"> 60 days</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">DealerKey is the buyer's agent — we don't own the car, mark it up, or take kickbacks from sellers.</div>
           </div>
           <div class="quiz-q" id="bq12">
             <div class="quiz-q-text">12. DealerKey wins a bid for a client. How many business days does the client have to pay the remaining balance?</div>
@@ -1165,6 +1197,7 @@
               <li><label><input type="radio" name="bq12" value="c"> 5 business days</label></li>
               <li><label><input type="radio" name="bq12" value="d"> 7 business days</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The BAF (Bid Authorization Form) specifies the car, max bid, delivery ZIP, and expires in 30 days.</div>
           </div>
           <div class="quiz-q" id="bq13">
             <div class="quiz-q-text">13. A client wants to pay their balance with a personal check. What's the correct response?</div>
@@ -1174,6 +1207,7 @@
               <li><label><input type="radio" name="bq13" value="c"> Only accepted if it's a cosigned check</label></li>
               <li><label><input type="radio" name="bq13" value="d"> Personal checks are fine if under $5,000</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Balance is due within 3 business days of a winning bid, by wire, ACH, or cashier's check. Personal checks are not accepted.</div>
           </div>
           <div class="quiz-q" id="bq14">
             <div class="quiz-q-text">14. A client's financing falls through after DealerKey wins the bid. Does this release them from the Total Purchase Obligation?</div>
@@ -1183,6 +1217,7 @@
               <li><label><input type="radio" name="bq14" value="c"> Only the deposit is forfeited, the rest is waived</label></li>
               <li><label><input type="radio" name="bq14" value="d"> They get a 30-day extension automatically</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Total Purchase Obligation is unconditional. Financing falling through does not release the client from their commitment once a bid is won.</div>
           </div>
           <div class="quiz-q" id="bq15">
             <div class="quiz-q-text">15. A vehicle arrives with visible transport damage. What should the client do, and who handles the claim?</div>
@@ -1192,6 +1227,7 @@
               <li><label><input type="radio" name="bq15" value="c"> Refuse delivery and demand a refund from DealerKey</label></li>
               <li><label><input type="radio" name="bq15" value="d"> Nothing — transport damage is covered by the flat fee</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Transport damage claims go to the carrier, not DealerKey. The client must note any damage on the bill of lading at delivery.</div>
           </div>
           <div class="quiz-q" id="bq16">
             <div class="quiz-q-text">16. If DealerKey materially breaches the agreement (e.g. bids above the approved max without written approval) and can't cure it within 10 business days, what happens to the deposit?</div>
@@ -1201,6 +1237,7 @@
               <li><label><input type="radio" name="bq16" value="c"> Split 50/50 between client and DealerKey</label></li>
               <li><label><input type="radio" name="bq16" value="d"> Converted to credit toward a future search</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">If DealerKey materially breaches (e.g. bids above the approved max) and can't cure within 10 business days, the deposit is refundable in full on the client's written demand.</div>
           </div>
           <div class="quiz-submit-row">
             <button class="quiz-submit" onclick="gradeQuiz('business')">Submit</button>
@@ -1217,6 +1254,7 @@
         <div class="track-title-wrap">
           <div class="track-eyebrow">Track Two</div>
           <div class="track-title">Products</div>
+          <div class="track-time">⏱ ~45 min</div>
         </div>
       </div>
       <p class="track-desc">Know the cars. Know the auction. Know what to go after and what to walk away from.</p>
@@ -1441,6 +1479,7 @@
               <li><label><input type="radio" name="fq1" value="c"> RWD with snow tires</label></li>
               <li><label><input type="radio" name="fq1" value="d"> A PHEV</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">AWD is always-on and designed for everyday traction in rain/snow. 4WD is driver-engaged (or auto-engaging on newer trucks) and built for off-road/towing — found on trucks and body-on-frame SUVs.</div>
           </div>
           <div class="quiz-q" id="fq2">
             <div class="quiz-q-text">2. A client wants to tow a small camper occasionally and also do some light trail driving on weekends. Which drivetrain are they actually asking for?</div>
@@ -1450,6 +1489,7 @@
               <li><label><input type="radio" name="fq2" value="c"> 4WD</label></li>
               <li><label><input type="radio" name="fq2" value="d"> It doesn't matter, all drivetrains tow the same</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">A regular hybrid never plugs in. A PHEV (plug-in hybrid) has a larger battery that can charge from a wall outlet, giving 20–40 miles of electric range before behaving like a standard hybrid.</div>
           </div>
           <div class="quiz-q" id="fq3">
             <div class="quiz-q-text">3. A client says "I want to plug it in at home and do most of my commute on electricity, but still be able to take long road trips without worrying about charging stations." What are they describing?</div>
@@ -1459,6 +1499,7 @@
               <li><label><input type="radio" name="fq3" value="c"> A plug-in hybrid (PHEV)</label></li>
               <li><label><input type="radio" name="fq3" value="d"> A diesel</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Trim levels generally run base → mid → upper-mid → top, adding interior materials, tech, safety features, and sometimes engine/drivetrain options at each step.</div>
           </div>
           <div class="quiz-q" id="fq4">
             <div class="quiz-q-text">4. A client says "I don't need leather or fancy tech, but I really want heated seats and a sunroof for the winter." For a Honda CR-V, which trim logic applies?</div>
@@ -1468,6 +1509,7 @@
               <li><label><input type="radio" name="fq4" value="c"> Touring — it's the only trim with heated seats</label></li>
               <li><label><input type="radio" name="fq4" value="d"> Any trim — heated seats are standard on all CR-Vs</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">A CVT (Continuously Variable Transmission) has no fixed gears — it delivers smooth, gradual power and is common on Honda and Toyota compact/midsize models for fuel efficiency.</div>
           </div>
           <div class="quiz-q" id="fq5">
             <div class="quiz-q-text">5. A client looking at a Toyota Tacoma says "I want something that can handle rough dirt roads to my cabin, and I don't mind a firmer ride." Which trim direction fits best?</div>
@@ -1477,6 +1519,7 @@
               <li><label><input type="radio" name="fq5" value="c"> TRD Off-Road — off-road suspension, locking diff, skid plates</label></li>
               <li><label><input type="radio" name="fq5" value="d"> SR5 — it's identical to TRD trims, just cheaper</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The correct mental groupings are: sedans, compact/midsize SUVs, 3-row SUVs, trucks, and EVs.</div>
           </div>
           <div class="quiz-q" id="fq6">
             <div class="quiz-q-text">6. What's the core difference between how AWD and 4WD typically operate?</div>
@@ -1486,6 +1529,7 @@
               <li><label><input type="radio" name="fq6" value="c"> They are the same thing, just different marketing names</label></li>
               <li><label><input type="radio" name="fq6" value="d"> 4WD is only for electric vehicles</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">New tires are ~10–11/32". Tires in the 2–3/32" range are near end-of-life and likely need replacing soon — a real near-term cost the client should know about.</div>
           </div>
           <div class="quiz-q" id="fq7">
             <div class="quiz-q-text">7. A client test-driving a hybrid Camry asks "do I need to plug this in?" What's the correct answer?</div>
@@ -1495,6 +1539,7 @@
               <li><label><input type="radio" name="fq7" value="c"> Only on weekends</label></li>
               <li><label><input type="radio" name="fq7" value="d"> Only if they want AWD</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">A DCT (Dual-Clutch Transmission) uses two clutches for faster, sportier shifts. It's automated but not the same as a standard automatic torque-converter.</div>
           </div>
           <div class="quiz-submit-row">
             <button class="quiz-submit" onclick="gradeQuiz('fundamentals')">Submit</button>
@@ -1521,6 +1566,7 @@
               <li><label><input type="radio" name="mq1" value="c"> We bid red by default since it's usually cheaper</label></li>
               <li><label><input type="radio" name="mq1" value="d"> We only bid blue-light vehicles</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Green = full arbitration rights. This is the default we bid on. If something material is misrepresented, we can file arbitration after the sale.</div>
           </div>
           <div class="quiz-q" id="mq2">
             <div class="quiz-q-text">2. A client is set on a red-light vehicle. What MUST happen before the BAM?</div>
@@ -1530,6 +1576,7 @@
               <li><label><input type="radio" name="mq2" value="c"> DealerKey automatically upgrades it to a post-sale inspection at no cost</label></li>
               <li><label><input type="radio" name="mq2" value="d"> Red-light vehicles are simply not allowed under any circumstance</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Yellow = limited arbitration tied to a specific announced issue. Rights apply to everything except what was disclosed at sale.</div>
           </div>
           <div class="quiz-q" id="mq3">
             <div class="quiz-q-text">3. A yellow-light vehicle has an announced transmission issue. What does the yellow light mean in this case?</div>
@@ -1539,6 +1586,7 @@
               <li><label><input type="radio" name="mq3" value="c"> Arbitration rights apply to everything except the announced transmission issue</label></li>
               <li><label><input type="radio" name="mq3" value="d"> The vehicle cannot be bid on at all</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Red = sold as-is, essentially zero arbitration rights. We only bid red if the client explicitly understands and accepts there is no recourse.</div>
           </div>
           <div class="quiz-q" id="mq4">
             <div class="quiz-q-text">4. A client is buying a vehicle that will be shipped out of state. What should the rep strongly encourage, and roughly what does it cost?</div>
@@ -1548,6 +1596,7 @@
               <li><label><input type="radio" name="mq4" value="c"> An extended warranty, roughly $1,000</label></li>
               <li><label><input type="radio" name="mq4" value="d"> Nothing extra is needed for out-of-state vehicles</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Blue typically indicates a vehicle with specific certification or program backing, with its own separate guarantee terms. Always check the specific terms — don't treat it like a standard green.</div>
           </div>
           <div class="quiz-q" id="mq5">
             <div class="quiz-q-text">5. A client asks "is CarFax better than AutoCheck?" What's the most accurate answer?</div>
@@ -1557,6 +1606,7 @@
               <li><label><input type="radio" name="mq5" value="c"> No, AutoCheck is always more accurate</label></li>
               <li><label><input type="radio" name="mq5" value="d"> CarFax only covers trucks and AutoCheck only covers cars</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The default rule is: bid green. Red is only on the table when the client has clearly understood the zero-recourse risk before the BAM.</div>
           </div>
           <div class="quiz-q" id="mq6">
             <div class="quiz-q-text">6. A condition report shows tire tread at 3/32" on all four tires. What should the rep do with that information?</div>
@@ -1566,6 +1616,7 @@
               <li><label><input type="radio" name="mq6" value="c"> Assume the tires are brand new since 3/32" is the new-tire standard</label></li>
               <li><label><input type="radio" name="mq6" value="d"> Automatically disqualify the vehicle from bidding</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">For out-of-state vehicles, always strongly encourage the post-sale inspection (~$150). The client can't see the car, transport adds risk, and $150 is cheap insurance.</div>
           </div>
           <div class="quiz-q" id="mq7">
             <div class="quiz-q-text">7. A client says "I love how a manual feels but I want something that shifts gears on its own — fast and sporty." Which transmission type are they actually describing?</div>
@@ -1575,6 +1626,7 @@
               <li><label><input type="radio" name="mq7" value="c"> DCT — automated dual-clutch for faster, sportier shifts</label></li>
               <li><label><input type="radio" name="mq7" value="d"> A true manual transmission</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">CarFax and AutoCheck pull from overlapping but not identical data sources. Neither is "better" — having both gives a fuller picture. A clean report from one doesn't guarantee the other is clean.</div>
           </div>
           <div class="quiz-q" id="mq8">
             <div class="quiz-q-text">8. Which of the following is the LEAST accurate description of how Manheim arbitration works?</div>
@@ -1584,6 +1636,7 @@
               <li><label><input type="radio" name="mq8" value="c"> Arbitration guarantees the buyer always gets a full refund regardless of the issue</label></li>
               <li><label><input type="radio" name="mq8" value="d"> Possible outcomes include a price adjustment, the seller taking the vehicle back, or denial</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">MMR (Manheim Market Report) reflects what similar vehicles have recently sold for at auction — it's the benchmark for market value, not a fixed price.</div>
           </div>
           <div class="quiz-q" id="mq9">
             <div class="quiz-q-text">9. A listing has a "Buy Now" price of $24,500. What does clicking that actually do?</div>
@@ -1593,6 +1646,7 @@
               <li><label><input type="radio" name="mq9" value="c"> Reserves the vehicle for 24 hours at that price</label></li>
               <li><label><input type="radio" name="mq9" value="d"> Sets the reserve price but bidding continues below it</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Simulcast Live is a real-time live auction where vehicles run one at a time through a lane. Timed sales are open-window online bidding, often at a premium. We favor Simulcast Live for better price discovery.</div>
           </div>
           <div class="quiz-q" id="mq10">
             <div class="quiz-q-text">10. Why does DealerKey favor Simulcast Live over timed sales as a default?</div>
@@ -1602,6 +1656,7 @@
               <li><label><input type="radio" name="mq10" value="c"> Timed sales (especially Buy Now) tend to run at a premium for convenience; Simulcast Live is where real competitive price discovery happens and the spread to MMR is usually better</label></li>
               <li><label><input type="radio" name="mq10" value="d"> Simulcast Live sales have no auction fees</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Buy Now price is set by the seller and ends the auction immediately for whoever clicks first. It typically runs higher than competitive bidding because the seller is charging for certainty and speed.</div>
           </div>
           <div class="quiz-q" id="mq11">
             <div class="quiz-q-text">11. What best describes a Simulcast Live sale?</div>
@@ -1611,6 +1666,7 @@
               <li><label><input type="radio" name="mq11" value="c"> An automated bidding system with no live component</label></li>
               <li><label><input type="radio" name="mq11" value="d"> The same thing as a timed sale, just renamed</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Arbitration must be filed within Manheim's specified window after the sale (a short number of days/mileage driven). It covers undisclosed issues — not things already announced. Outcomes include price adjustment, seller taking the car back, or claim denial.</div>
           </div>
           <div class="quiz-submit-row">
             <button class="quiz-submit" onclick="gradeQuiz('manheim')">Submit</button>
@@ -1756,6 +1812,7 @@
               <li><label><input type="radio" name="gwq1" value="c"> Essential</label></li>
               <li><label><input type="radio" name="gwq1" value="d"> Powertrain Plus</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">A VSC is a service agreement covering parts and labor for mechanical breakdowns — not insurance. GWC pays the repair facility directly; the client only pays their deductible.</div>
           </div>
           <div class="quiz-q" id="gwq2">
             <div class="quiz-q-text">2. A client says the Exclusionary plan at $2,495 is too expensive. What do you do?</div>
@@ -1765,6 +1822,7 @@
               <li><label><input type="radio" name="gwq2" value="c"> Tell them the price is firm and move on</label></li>
               <li><label><input type="radio" name="gwq2" value="d"> Skip the warranty entirely</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Powertrain Plus ($1,195) covers engine, transmission, drive axle, and basic electrical. It does NOT include A/C, full brakes, hi-tech electrical, fuel system, or sensors.</div>
           </div>
           <div class="quiz-q" id="gwq3">
             <div class="quiz-q-text">3. Which tier is always recommended for EVs?</div>
@@ -1774,6 +1832,7 @@
               <li><label><input type="radio" name="gwq3" value="c"> Powertrain Plus</label></li>
               <li><label><input type="radio" name="gwq3" value="d"> Exclusionary</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Exclusionary tier is the default recommendation for vehicles under 120K miles, all EVs, and all luxury vehicles. It covers everything listed under the factory warranty except specifically excluded wear items.</div>
           </div>
           <div class="quiz-q" id="gwq4">
             <div class="quiz-q-text">4. When can a client add a GWC VSC after they've taken delivery of the vehicle?</div>
@@ -1783,6 +1842,7 @@
               <li><label><input type="radio" name="gwq4" value="c"> Any time before their first service appointment</label></li>
               <li><label><input type="radio" name="gwq4" value="d"> They can't — it must be attached at time of purchase</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">All four GWC tier prices are fixed and non-negotiable. If a client pushes back on price, step them down to the next tier — never lower the price within a tier. Discounts require manager approval.</div>
           </div>
           <div class="quiz-q" id="gwq5">
             <div class="quiz-q-text">5. A client wants the warranty but says "let me think about it and I'll call you back." What's the most important thing to communicate?</div>
@@ -1792,6 +1852,7 @@
               <li><label><input type="radio" name="gwq5" value="c"> That the VSC must be attached at purchase and can't be added after the deal closes</label></li>
               <li><label><input type="radio" name="gwq5" value="d"> That you'll follow up in a week</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The warranty must be attached at the time of vehicle purchase. It cannot be added after the fact.</div>
           </div>
           <div class="quiz-submit-row">
             <button class="quiz-submit" onclick="gradeQuiz('gwc')">Submit</button>
@@ -1808,6 +1869,7 @@
         <div class="track-title-wrap">
           <div class="track-eyebrow">Track Three</div>
           <div class="track-title">Sales</div>
+          <div class="track-time">⏱ ~40 min</div>
         </div>
       </div>
       <p class="track-desc">Learn the presentation flow, internalize the closes, and know how to handle the objections that come up every time.</p>
@@ -1995,6 +2057,7 @@
               <li><label><input type="radio" name="sq1" value="c"> A percentage of the vehicle's sale price</label></li>
               <li><label><input type="radio" name="sq1" value="d"> A monthly subscription fee for search access</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The rep's mindset is advisor, not salesman. Clients came for a consultation — you're not there to sell them. Confidence matters more than perfect wording.</div>
           </div>
           <div class="quiz-q" id="sq2">
             <div class="quiz-q-text">2. What does MMR stand for, and what does it represent?</div>
@@ -2004,6 +2067,7 @@
               <li><label><input type="radio" name="sq2" value="c"> Manheim Maximum Reserve — the highest price an auction will accept</label></li>
               <li><label><input type="radio" name="sq2" value="d"> Manheim Monthly Rate — a subscription cost for dealers</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The IAM (Initial Advisory Meeting) is always a brief Google Meet. A client's willingness to show up is itself a signal of their commitment level.</div>
           </div>
           <div class="quiz-q" id="sq3">
             <div class="quiz-q-text">3. Why is Section 2 (Framing & Expectations) deliberately kept short?</div>
@@ -2013,6 +2077,7 @@
               <li><label><input type="radio" name="sq3" value="c"> Because it's the least important part of the consultation</label></li>
               <li><label><input type="radio" name="sq3" value="d"> Because it's only used for clients who are already fully decided</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The $3,000 threshold is the stated minimum savings — DealerKey only collects its fee if the client saves at least $3,000 vs. retail.</div>
           </div>
           <div class="quiz-q" id="sq4">
             <div class="quiz-q-text">4. In Section 4 (Tour of Manheim), what's the out-the-door cost formula a rep should use when quoting an example price?</div>
@@ -2022,6 +2087,7 @@
               <li><label><input type="radio" name="sq4" value="c"> Hammer price minus the arbitrage discount</label></li>
               <li><label><input type="radio" name="sq4" value="d"> Sticker price as shown on the auction listing</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Soft Close #1 is "Does email or text work better for you?" — it gets the client engaged and picturing the ongoing process without pressure.</div>
           </div>
           <div class="quiz-q" id="sq5">
             <div class="quiz-q-text">5. In Section 3 (Website Search), what does the "arbitrage number" represent when shown to a client?</div>
@@ -2031,6 +2097,7 @@
               <li><label><input type="radio" name="sq5" value="c"> The estimated transport cost to the client's location</label></li>
               <li><label><input type="radio" name="sq5" value="d"> The client's maximum approved bid</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Solidifying Close is "Can you move within 48 hours if the right car comes up?" — it gets a commitment to their own readiness.</div>
           </div>
           <div class="quiz-q" id="sq6">
             <div class="quiz-q-text">6. A client says "this feels like it could be a scam — why would I send money before I have the car?" What's the FIRST thing the rep should do?</div>
@@ -2040,6 +2107,7 @@
               <li><label><input type="radio" name="sq6" value="c"> Explain the BAF and arbitration policy in detail</label></li>
               <li><label><input type="radio" name="sq6" value="d"> Tell them no one else has ever asked that</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Strongest Close is "Let me handle it completely for the next 2–3 weeks, sound good?" — it hands the search fully over to the rep. Don't rush it.</div>
           </div>
           <div class="quiz-q" id="sq7">
             <div class="quiz-q-text">7. According to the scam-concern script, WHY does this process feel unfamiliar to clients?</div>
@@ -2049,6 +2117,7 @@
               <li><label><input type="radio" name="sq7" value="c"> Because most car purchases require a deposit anyway, so this is no different</label></li>
               <li><label><input type="radio" name="sq7" value="d"> Because the client hasn't met Dallin yet</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">For the deposit hesitation objection, the key framing is: we put our money in right alongside yours, it's refundable if we don't win, and everything is in writing before any money moves.</div>
           </div>
           <div class="quiz-q" id="sq8">
             <div class="quiz-q-text">8. What is "Soft Close #1," and what is it actually testing?</div>
@@ -2058,6 +2127,7 @@
               <li><label><input type="radio" name="sq8" value="c"> "Sound good?" — the final handoff of the search</label></li>
               <li><label><input type="radio" name="sq8" value="d"> "Would you like to watch a live auction?" — testing their interest level</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">For the "can't test drive" objection, the answer centers on Manheim's thorough third-party condition reports and the arbitration safety net for undisclosed issues.</div>
           </div>
           <div class="quiz-q" id="sq9">
             <div class="quiz-q-text">9. What's the correct order of the three closes as they appear in Section 5?</div>
@@ -2067,6 +2137,7 @@
               <li><label><input type="radio" name="sq9" value="c"> Solidifying Close → Soft Close #1 → Strongest Close</label></li>
               <li><label><input type="radio" name="sq9" value="d"> Strongest Close → Soft Close #1 → Solidifying Close</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">For the "is this a scam?" objection: validate the concern, explain that Manheim access is genuinely new for the public, and offer the dealer license number for independent verification — no pressure.</div>
           </div>
           <div class="quiz-q" id="sq10">
             <div class="quiz-q-text">10. A client hesitates after hearing about the 25% bid deposit. What's the key reason given in the "memorize closely" response for why DealerKey structures it this way?</div>
@@ -2076,6 +2147,7 @@
               <li><label><input type="radio" name="sq10" value="c"> It covers DealerKey's advisory fee upfront in case the client backs out</label></li>
               <li><label><input type="radio" name="sq10" value="d"> It's a non-negotiable Manheim auction requirement</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The Advisory Slideshow is an optional visual aid for the consultation — helpful early on to stay on track, but not required.</div>
           </div>
           <div class="quiz-q" id="sq11">
             <div class="quiz-q-text">11. A client asks "what if we find something wrong that wasn't in the condition report?" What does the script say happens in that case?</div>
@@ -2085,6 +2157,7 @@
               <li><label><input type="radio" name="sq11" value="c"> If found within the first few weeks and not on the report, DealerKey can arbitrate and get the money back</label></li>
               <li><label><input type="radio" name="sq11" value="d"> The client must file the claim directly with Manheim themselves</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">For the "searched for months" objection: acknowledge the frustration, then explain that the AI + Manheim data combination removes the guesswork of comparing price/mileage/condition/history simultaneously.</div>
           </div>
           <div class="quiz-q" id="sq12">
             <div class="quiz-q-text">12. A client asks if most Manheim inventory is salvage or branded title. What's the accurate response?</div>
@@ -2094,6 +2167,7 @@
               <li><label><input type="radio" name="sq12" value="c"> Title status doesn't matter since everything is sold as-is anyway</label></li>
               <li><label><input type="radio" name="sq12" value="d"> Only luxury vehicles at Manheim have clean titles</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">During the BAM, the rep reviews photos and condition reports with the client, agrees on a max bid, sends the Vehicle Purchase Agreement, walks through it together, and ideally gets it signed on the call.</div>
           </div>
           <div class="quiz-submit-row">
             <button class="quiz-submit" onclick="gradeQuiz('sales')">Submit</button>
@@ -2110,6 +2184,7 @@
         <div class="track-title-wrap">
           <div class="track-eyebrow">Track Four</div>
           <div class="track-title">Systems</div>
+          <div class="track-time">⏱ ~15 min</div>
         </div>
       </div>
       <p class="track-desc">Get comfortable in the tools you'll use every day — the CRM, Trello as backup, and the communication standards that keep everything consistent.</p>
@@ -2120,6 +2195,7 @@
         <p class="block-text">Get familiar with the CRM — it's where all client notes live. Every client interaction should be logged. The level of detail matters less than whether it helps you (or another rep) find the client the right vehicle — don't over-engineer notes, just capture what's useful.</p>
         <p class="block-text"><strong>Update the CRM whenever you learn new info</strong> about what a client is looking for — preferences, budget changes, timeline shifts. The CRM is only as useful as it is current.</p>
         <p class="block-text"><strong>Login</strong> — use your DealerKey email, and only use that email for all client communication. Keeps everything traceable and professional.</p>
+        <p class="block-text"><strong>Before completing this track, schedule a walkthrough with your manager.</strong> They will walk you through the CRM interface, the Trello board, and any other day-to-day tools in person. Don't mark this track complete until that walkthrough has happened.</p>
       </div>
 
       <!-- PIPELINE STAGES -->
@@ -2179,6 +2255,7 @@
               <li><label><input type="radio" name="zq1" value="c"> It moves to "Qualifying, Needs Time"</label></li>
               <li><label><input type="radio" name="zq1" value="d"> The rep must manually move it regardless of outcome</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">A "New" lead is one that hasn't been successfully contacted yet. The stage moves to "Contacted" only after an actual successful contact — not just an attempt.</div>
           </div>
           <div class="quiz-q" id="zq2">
             <div class="quiz-q-text">2. How much detail should go into CRM notes?</div>
@@ -2188,6 +2265,7 @@
               <li><label><input type="radio" name="zq2" value="c"> Minimal — just a checkmark that contact occurred</label></li>
               <li><label><input type="radio" name="zq2" value="d"> Notes are optional and only required for "Closed" clients</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">A client moves to "Searching" when they are ready and actively being sent listings. "Qualifying/Needs Time" is for clients waiting on financing or other life circumstances.</div>
           </div>
           <div class="quiz-q" id="zq3">
             <div class="quiz-q-text">3. A client mentions they're now open to a different trim than originally discussed. What should the rep do?</div>
@@ -2197,6 +2275,7 @@
               <li><label><input type="radio" name="zq3" value="c"> Move the client to a new pipeline stage</label></li>
               <li><label><input type="radio" name="zq3" value="d"> Log it in Trello instead of the CRM</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Automatic follow-up reminders are defaults, not rules. You should edit the timing based on what's appropriate for each client, especially for "Qualifying/Needs Time" clients.</div>
           </div>
           <div class="quiz-q" id="zq4">
             <div class="quiz-q-text">4. The CRM automatically assigns a follow-up reminder for a "Qualifying, Needs Time" client at a default interval. The rep knows this particular client won't be ready for another two months. What should they do?</div>
@@ -2206,6 +2285,7 @@
               <li><label><input type="radio" name="zq4" value="c"> Move the client to "Closed" until they're ready</label></li>
               <li><label><input type="radio" name="zq4" value="d"> Delete the follow-up reminder entirely</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">Trello is the backup CRM. Use it specifically when a client has incomplete contact info in the CRM, or if the CRM goes down entirely.</div>
           </div>
           <div class="quiz-q" id="zq5">
             <div class="quiz-q-text">5. When should a rep check Trello instead of the CRM?</div>
@@ -2215,6 +2295,7 @@
               <li><label><input type="radio" name="zq5" value="c"> Only when a client is in the "Closed" stage</label></li>
               <li><label><input type="radio" name="zq5" value="d"> Trello replaces the CRM entirely for "Searching" clients</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">All client communication should use your DealerKey email only — not a personal email. This keeps everything traceable and professional.</div>
           </div>
           <div class="quiz-q" id="zq6">
             <div class="quiz-q-text">6. What email should a rep use for all client communication?</div>
@@ -2224,6 +2305,7 @@
               <li><label><input type="radio" name="zq6" value="c"> Their DealerKey email, exclusively</label></li>
               <li><label><input type="radio" name="zq6" value="d"> A shared team inbox</label></li>
             </ul>
+            <div class="quiz-explanation" style="display:none;">The CRM is the primary system for day-to-day use. Leave Trello alone unless you need it for the specific situations it's designed for (incomplete contact info or CRM downtime).</div>
           </div>
           <div class="quiz-submit-row">
             <button class="quiz-submit" onclick="gradeQuiz('systems')">Submit</button>
@@ -2240,6 +2322,7 @@
         <div class="track-title-wrap">
           <div class="track-eyebrow">Track Five</div>
           <div class="track-title">My Commissions</div>
+          <div class="track-time">⏱ ~10 min</div>
         </div>
       </div>
       <p class="track-desc">This section exists for one reason: to show you exactly what you can earn — and how fast it compounds when you work all the products on every deal. The difference between a rep who only closes the sourcing fee and a rep who closes the full stack isn't hustle — it's habit. Read this section, understand the numbers, and let them motivate you.</p>
@@ -2398,9 +2481,20 @@
         <div class="track-title-wrap">
           <div class="track-eyebrow gold">Bonus Track</div>
           <div class="track-title">AI Tools</div>
+          <div class="track-time">⏱ ~60–90 min</div>
         </div>
       </div>
       <p class="track-desc">The reps who set this up manage more clients, move faster, and close more deals. Not required — but don't leave it on the table. Once Claude is set up on your computer, you can walk yourself through almost everything below — Claude is genuinely good at guiding you through its own setup.</p>
+
+      <div class="content-block" style="border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+        <p class="block-text" style="margin-bottom: 0.5rem;"><strong>Before you start — what you'll need:</strong></p>
+        <ul style="margin: 0; padding-left: 1.25rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">
+          <li>A <strong>Mac or Windows computer</strong> with terminal access (Steps 2 and 3 require running commands in a terminal). Chromebooks and most company-locked devices will not work for Claude Code or OpenClaw.</li>
+          <li>A <strong>DealerKey email address</strong> — use this for your Claude account, not a personal email.</li>
+          <li>Willingness to follow terminal instructions step-by-step. You don't need prior experience — Claude Code will walk you through each step. The key skill is reading carefully and following instructions one at a time.</li>
+        </ul>
+        <p class="block-text" style="margin-top: 0.75rem; margin-bottom: 0;"><em>If you're on a Chromebook or a company-managed device that restricts software installation, check with your manager before starting Steps 2 or 3.</em></p>
+      </div>
 
       <!-- CLAUDE SETUP -->
       <div class="content-block">
@@ -2600,7 +2694,7 @@
     const resultEl = document.getElementById('qresult-product');
     const badge = document.getElementById('qbadge-product');
     const total = matchData.length;
-    if (score === total) {
+    if (score / total >= 0.7) {
       resultEl.textContent = `✓ ${score}/${total} — Track complete`;
       resultEl.className = 'quiz-result pass';
       badge.textContent = '✓ Passed';
@@ -2651,9 +2745,14 @@
         else { selected.parentElement.classList.add('wrong'); }
       }
     }
+    // Show all explanations after grading
+    const quizBody = document.getElementById('qbody-' + track);
+    if (quizBody) {
+      quizBody.querySelectorAll('.quiz-explanation').forEach(el => el.style.display = 'block');
+    }
     const resultEl = document.getElementById('qresult-' + track);
     const badge = document.getElementById('qbadge-' + track);
-    if (score === total) {
+    if (score / total >= 0.7) {
       resultEl.textContent = `✓ ${score}/${total} — Track complete`;
       resultEl.className = 'quiz-result pass';
       badge.textContent = '✓ Passed';
@@ -2664,6 +2763,7 @@
     } else {
       resultEl.textContent = `${score}/${total} — Review the content and try again`;
       resultEl.className = 'quiz-result fail';
+      badge.classList.remove('complete');
     }
   }
 
@@ -2674,6 +2774,37 @@
     const pct = Math.round((checked.length / allBoxes.length) * 100);
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent = pct + '%';
+
+    // Update sidebar dot completion per track
+    ['business', 'product', 'sales', 'systems', 'commissions', 'bonus'].forEach(track => {
+      const list = document.getElementById('checklist-' + track);
+      const dot = document.getElementById('dot-' + track);
+      if (!list || !dot) return;
+      const trackBoxes = list.querySelectorAll('input[type="checkbox"]');
+      const trackChecked = list.querySelectorAll('input[type="checkbox"]:checked');
+      if (trackBoxes.length > 0 && trackChecked.length === trackBoxes.length) {
+        dot.classList.add('complete');
+      } else {
+        dot.classList.remove('complete');
+      }
+    });
+
+    // Save checkbox states to localStorage
+    const state = {};
+    allBoxes.forEach((box, i) => { state[i] = box.checked; });
+    localStorage.setItem('dk_checklist', JSON.stringify(state));
+  }
+
+  // ── LOAD SAVED PROGRESS ──
+  function loadProgress() {
+    const saved = localStorage.getItem('dk_checklist');
+    if (!saved) return;
+    const state = JSON.parse(saved);
+    const allBoxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    allBoxes.forEach((box, i) => {
+      if (state[i] === true) box.checked = true;
+    });
+    updateProgress();
   }
 
   // ── SIDEBAR ACTIVE STATE ON SCROLL ──
@@ -2689,6 +2820,9 @@
       if (a.getAttribute('href') === '#' + current) a.classList.add('active');
     });
   });
+
+  // ── INIT ──
+  loadProgress();
 </script>
 </body>
 </html>
