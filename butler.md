@@ -228,7 +228,7 @@ Kaden is on iPhone. Every text goes through the native Messages app. The goal is
 3. Output ONLY this:
 
 ```
-[📱 Tap to send to [First Name]](https://d2t4dp7g4sf5wpvlvjy6qc5es40ikmpm.lambda-url.us-east-2.on.aws/sms?to=PHONEDIGITSONLY&body=URL_ENCODED_MESSAGE)
+[📱 Tap to send to [First Name]](https://YOUR_LAMBDA_BASE_URL/sms?to=PHONEDIGITSONLY&body=URL_ENCODED_MESSAGE)
 
 Reply LOGGED when sent, or SKIP to skip.
 ```
@@ -271,8 +271,8 @@ When done reply:
 
 ## API Reference
 
-- **Base URL:** `https://d2t4dp7g4sf5wpvlvjy6qc5es40ikmpm.lambda-url.us-east-2.on.aws`
-- **Auth header:** `x-api-key: dk_live_butler_f9k2m7p4x8r3`
+- **Base URL:** *(get from your team lead — not stored in this document)*
+- **Auth header:** `x-api-key: <your-api-key>` *(get from your team lead — not stored in this document)*
 - **Pipeline stages:** New → Contacted → Call Booked → Qualifying → Searching → Targeting → Won at Auction → Closed
 
 Key endpoints:
