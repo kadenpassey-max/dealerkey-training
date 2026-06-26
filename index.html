@@ -687,6 +687,30 @@
   .scenario-amount.engaged { color: var(--green); }
   .scenario-amount.elite { color: var(--gold); }
 
+  /* ── TABLE GROUP ROWS (warranty tier grouping) ── */
+  .table-group-header td {
+    background: rgba(215,38,61,0.05);
+    font-weight: 600;
+    color: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border) !important;
+    padding-top: 0.55rem;
+    padding-bottom: 0.45rem;
+  }
+  .group-note {
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.76rem;
+    margin-left: 0.3rem;
+  }
+  .table-tier-row td { background: rgba(255,255,255,0.018); }
+  .table-tier-row td:first-child { padding-left: 1.5rem; color: var(--text-dim); }
+  .content .table-group-header td { background: rgba(215,38,61,0.04); color: var(--content-text); border-color: var(--content-border) !important; }
+  .content .group-note { color: var(--content-text-faint); }
+  .content .table-tier-row td { background: rgba(0,0,0,0.018); }
+  .content .table-tier-row td:first-child { color: var(--content-text-dim); }
+
   /* ── CALLOUT BLOCK ── */
   .callout-block {
     border: 2px solid var(--red);
@@ -2229,10 +2253,11 @@
           </thead>
           <tbody>
             <tr><td>Vehicle Acquisition Service Fee</td><td>$500 per vehicle</td></tr>
-            <tr><td>GWC Warranty – Powertrain Plus ($1,195)</td><td>$125</td></tr>
-            <tr><td>GWC Warranty – Essential ($1,595)</td><td>$175</td></tr>
-            <tr><td>GWC Warranty – Comprehensive ($1,995)</td><td>$250</td></tr>
-            <tr><td>GWC Warranty – Exclusionary ($2,495)</td><td>$350</td></tr>
+            <tr class="table-group-header"><td colspan="2">GWC Warranty <span class="group-note">— choose one tier —</span></td></tr>
+            <tr class="table-tier-row"><td>→ Powertrain Plus ($1,195)</td><td>$125</td></tr>
+            <tr class="table-tier-row"><td>→ Essential ($1,595)</td><td>$175</td></tr>
+            <tr class="table-tier-row"><td>→ Comprehensive ($1,995)</td><td>$250</td></tr>
+            <tr class="table-tier-row"><td>→ Exclusionary ($2,495)</td><td>$350</td></tr>
             <tr><td>Financing Participation</td><td>$100</td></tr>
             <tr><td>GAP Insurance</td><td>$75</td></tr>
             <tr><td>Auto Insurance (First Year Only)</td><td>$75</td></tr>
@@ -2251,10 +2276,11 @@
           </thead>
           <tbody>
             <tr><td>Service Fee</td><td>$500</td><td>$550</td><td>$600</td></tr>
-            <tr><td>Warranty – Powertrain Plus</td><td>$125</td><td>$150</td><td>$175</td></tr>
-            <tr><td>Warranty – Essential</td><td>$175</td><td>$225</td><td>$275</td></tr>
-            <tr><td>Warranty – Comprehensive</td><td>$250</td><td>$265</td><td>$375</td></tr>
-            <tr><td>Warranty – Exclusionary</td><td>$350</td><td>$425</td><td>$500</td></tr>
+            <tr class="table-group-header"><td colspan="4">GWC Warranty <span class="group-note">— choose one tier —</span></td></tr>
+            <tr class="table-tier-row"><td>→ Powertrain Plus</td><td>$125</td><td>$150</td><td>$175</td></tr>
+            <tr class="table-tier-row"><td>→ Essential</td><td>$175</td><td>$225</td><td>$275</td></tr>
+            <tr class="table-tier-row"><td>→ Comprehensive</td><td>$250</td><td>$265</td><td>$375</td></tr>
+            <tr class="table-tier-row"><td>→ Exclusionary</td><td>$350</td><td>$425</td><td>$500</td></tr>
             <tr><td>Financing</td><td>$100</td><td>$125</td><td>$150</td></tr>
             <tr><td>GAP Insurance</td><td>$75</td><td>$75</td><td>$100</td></tr>
             <tr><td>Auto Insurance</td><td>$75</td><td>$75</td><td>$100</td></tr>
