@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealerKey Auto — Sales Training</title>
+<style>
+:root{--navy:#1B3A6B;--navy-dark:#122850;--navy-mid:#2E5FA3;--gold:#C9A84C;--surface:#F7F8FA;--white:#FFFFFF;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--border-d:#D1D5DB;--success:#16A34A;--sbg:#F0FDF4;--sbd:#BBF7D0;--wbg:#FFFBEB;--wbd:#FCD34D;--wtx:#92400E;--abg:#EFF6FF;--abd:#BFDBFE;--atx:#1E40AF;--dbg:#FEF2F2;--dbd:#FECACA;--dtx:#991B1B;--sw:260px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface);color:var(--text);min-height:100vh;display:flex}
+.sidebar{width:var(--sw);background:var(--navy);min-height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-wm{font-size:15px;font-weight:700;color:#fff;letter-spacing:.04em;text-transform:uppercase}
+.sb-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;letter-spacing:.07em;text-transform:uppercase}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.1)}
+.ring-lbl{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.07em;text-transform:uppercase;margin-top:8px}
+.phase-nav{padding:14px 0 8px}
+.ph-head{padding:5px 20px;font-size:10px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
+.ph-head:first-child{margin-top:0}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 20px;font-size:13px;color:rgba(255,255,255,.65);cursor:pointer;transition:background .15s,color .15s;border-left:3px solid transparent;user-select:none}
+.ni:hover{background:rgba(255,255,255,.07);color:#fff}
+.ni.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--gold)}
+.ni-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0}
+.ni.active .ni-dot{background:var(--gold)}
+.main{margin-left:var(--sw);flex:1;min-height:100vh}
+.panel{display:none;max-width:760px;padding:38px 48px 80px}
+.panel.active{display:block}
+.eyebrow{font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:26px;font-weight:700;color:var(--navy);margin-bottom:6px}
+h2{font-size:18px;font-weight:700;color:var(--navy);margin:28px 0 10px}
+h2:first-of-type{margin-top:16px}
+h3{font-size:14px;font-weight:600;color:var(--text);margin:18px 0 6px}
+p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px}
+.pdesc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;max-width:540px}
+hr{border:none;border-top:1px solid var(--border);margin:26px 0}
+.script{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:14px 18px;margin:8px 0 12px;font-size:13.5px;line-height:1.9;color:#374151;font-style:italic}
+.script strong{color:var(--navy);font-style:normal;font-weight:600}
+.script .sd{color:var(--muted);font-style:normal;font-size:12px;display:block;margin:3px 0}
+.box{padding:10px 14px;border-radius:6px;font-size:13px;line-height:1.6;margin:8px 0;border-left:3px solid}
+.tip{background:var(--wbg);border-color:var(--wbd);color:var(--wtx)}
+.note{background:var(--abg);border-color:var(--abd);color:var(--atx)}
+.ok{background:var(--sbg);border-color:var(--sbd);color:var(--success)}
+.bad{background:var(--dbg);border-color:var(--dbd);color:var(--dtx)}
+.col{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:8px 0}
+.col-h{padding:12px 16px;background:var(--white);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--text);user-select:none;transition:background .15s}
+.col-h:hover{background:var(--surface)}
+.col-h .ch{font-size:18px;color:var(--muted);transition:transform .2s;line-height:1}
+.col-h.open .ch{transform:rotate(180deg)}
+.col-b{display:none;padding:16px;border-top:1px solid var(--border);background:#FAFBFC}
+.col-b.open{display:block}
+.steps{display:flex;flex-direction:column}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.sn{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;margin-top:1px}
+.st{font-size:14px;font-weight:600;margin-bottom:3px}
+.sb2{font-size:13px;color:var(--muted);line-height:1.6}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tc{border:1px solid var(--border);border-radius:8px;padding:14px;background:var(--white)}
+.tc.rec{border:2px solid var(--navy-mid)}
+.tbadge{font-size:10px;font-weight:600;color:var(--navy-mid);background:var(--abg);padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.tn{font-size:14px;font-weight:700;margin-bottom:2px}
+.tp{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.tc2{font-size:11px;color:var(--muted);background:var(--surface);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:8px}
+.td{font-size:12px;color:var(--muted);line-height:1.5}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:12px 0}
+.si{padding:12px 8px;text-align:center;border-right:1px solid var(--border);background:var(--white)}
+.si:last-child{border-right:none}
+.sd2{font-size:10px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.sa{font-size:12px;font-weight:600;color:var(--text)}
+.ss{font-size:11px;color:var(--muted);margin-top:2px}
+.cl{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:12px 0}
+.csh{padding:7px 14px;font-size:10px;font-weight:600;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border);letter-spacing:.07em;text-transform:uppercase}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;transition:background .1s;background:var(--white)}
+.ci:last-child{border-bottom:none}
+.ci:hover{background:var(--surface)}
+.ci.done{background:var(--sbg)}
+.ci.done .clabel{color:var(--success);text-decoration:line-through;text-decoration-color:#86EFAC}
+.cb{width:18px;height:18px;border:1.5px solid var(--border-d);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;background:var(--white);transition:all .15s}
+.ci.done .cb{background:var(--success);border-color:var(--success)}
+.clabel{line-height:1.5;color:var(--text)}
+.ck{color:#fff;font-size:12px;display:none}
+.ci.done .ck{display:block}
+.scr{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--muted)}
+.str{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.sf{height:100%;background:var(--success);border-radius:3px;transition:width .3s}
+.rbtn{padding:6px 14px;border:1px solid var(--border-d);border-radius:6px;background:none;cursor:pointer;font-size:12px;color:var(--muted);margin-top:8px}
+.rbtn:hover{background:var(--surface)}
+.etpl{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:18px 20px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.85;color:#374151;white-space:pre-wrap;margin:10px 0}
+.ef{color:var(--navy-mid);font-weight:600}
+ul.bl{list-style:none;display:flex;flex-direction:column;gap:6px;margin:6px 0 12px}
+ul.bl li{font-size:13px;color:var(--muted);line-height:1.6;padding-left:16px;position:relative}
+ul.bl li::before{content:"—";position:absolute;left:0;color:#D1D5DB}
+.pill{display:inline-block;background:var(--navy);color:#fff;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin:18px 0 8px}
+.fl{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin:14px 0 5px}
+.cc{padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--white);margin-bottom:10px}
+.cc.feat{border:2px solid var(--navy)}
+.cl2{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.oc{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--white);margin-bottom:8px}
+.on{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.ot{font-size:13px;font-weight:600;margin-bottom:2px}
+.od{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:680px){.sidebar{width:100%;min-height:auto;position:relative}.main{margin-left:0}.panel{padding:24px 18px 60px}.tg{grid-template-columns:1fr}.sg{grid-template-columns:repeat(2,1fr)}body{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-wm">DealerKey Auto</div>
+    <div class="sb-sub">Sales Training Hub</div>
+  </div>
+  <div class="ring-wrap">
+    <svg width="72" height="72" viewBox="0 0 72 72">
+      <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+      <circle id="rf" cx="36" cy="36" r="28" fill="none" stroke="#C9A84C" stroke-width="6" stroke-dasharray="175.93" stroke-dashoffset="175.93" stroke-linecap="round" transform="rotate(-90 36 36)" style="transition:stroke-dashoffset .4s ease"/>
+      <text x="36" y="41" text-anchor="middle" font-size="15" font-weight="700" fill="white" font-family="-apple-system,sans-serif" id="rt">0%</text>
+    </svg>
+    <div class="ring-lbl">Training progress</div>
+  </div>
+  <div class="phase-nav">
+    <div class="ph-head">Phase 1 — First Contact</div>
+    <div class="ni active" onclick="show('p1a',this)"><div class="ni-dot"></div>Live call script</div>
+    <div class="ni" onclick="show('p1b',this)"><div class="ni-dot"></div>Text sequence</div>
+    <div class="ni" onclick="show('p1c',this)"><div class="ni-dot"></div>Common situations</div>
+    <div class="ni" onclick="show('p1d',this)"><div class="ni-dot"></div>Checklist</div>
+    <div class="ph-head">Phase 2 — IAM + Search</div>
+    <div class="ni" onclick="show('p2a',this)"><div class="ni-dot"></div>IAM overview</div>
+    <div class="ni" onclick="show('p2b',this)"><div class="ni-dot"></div>Full script</div>
+    <div class="ni" onclick="show('p2c',this)"><div class="ni-dot"></div>Between IAM and BAM</div>
+    <div class="ni" onclick="show('p2d',this)"><div class="ni-dot"></div>Objections</div>
+    <div class="ni" onclick="show('p2e',this)"><div class="ni-dot"></div>The three closes</div>
+    <div class="ni" onclick="show('p2f',this)"><div class="ni-dot"></div>Checklist</div>
+    <div class="ph-head">Phase 3 — BAM</div>
+    <div class="ni" onclick="show('p3a',this)"><div class="ni-dot"></div>BAM flow</div>
+    <div class="ni" onclick="show('p3b',this)"><div class="ni-dot"></div>Warranty preview</div>
+    <div class="ni" onclick="show('p3c',this)"><div class="ni-dot"></div>Insurance intro</div>
+    <div class="ni" onclick="show('p3d',this)"><div class="ni-dot"></div>Post-win close</div>
+    <div class="ni" onclick="show('p3e',this)"><div class="ni-dot"></div>Checklist</div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- P1A: LIVE CALL -->
+<div class="panel active" id="p1a">
+  <div class="eyebrow">Phase 1 — First Contact</div>
+  <h1>Live call script</h1>
+  <p class="pdesc">Call every new lead within 5 minutes. Response time is your biggest variable — within 5 minutes your chances of reaching them double or triple.</p>
+  <h2>Tips</h2>
+  <ul class="bl">
+    <li>Practice talking to them like an old friend you haven't seen in a while</li>
+    <li>Be personable — do anything but sound like a robot</li>
+    <li>The first ten seconds are so important</li>
+    <li>Plan for a short call, but don't be afraid to talk more if there is more to talk about</li>
+    <li>If you can build any kind of rapport, laugh with them, and help them feel good while talking to you, they are much more likely to be communicative in the future and want to work with you again</li>
+  </ul>
+  <h2>The script</h2>
+  <h3>Opener</h3>
+  <div class="script"><strong>"Hey [name], this is [rep name] — how's it going?"</strong><span class="sd">Let them respond. If they ask who it is:</span><strong>"My name is [rep] — I just got your request that you were looking for a [make/model]. Is that right?"</strong><span class="sd">Wait for them to confirm. Then:</span><strong>"Awesome, I'm with DealerKey, and we've seen several of these come through the auction just recently."</strong></div>
+  <h3>Get them talking</h3>
+  <div class="script"><strong>"Tell me a bit more about this — when are you hoping to find one by?"</strong><span class="sd">Listen. Follow up with one or two natural questions — year range, mileage, budget, what's driving the purchase.</span></div>
+  <h3>Explain what you do</h3>
+  <div class="script"><strong>"Thanks for reaching out. I'm not sure if you've seen our website, but basically what we do is source cars for our clients off wholesale auctions — the same places dealerships buy from. We just charge a flat fee, and that typically saves our clients around $3,000–$4,000 compared to buying off a dealer's lot."</strong></div>
+  <h3>Schedule the IAM</h3>
+  <div class="script"><strong>"What I'll do is pull some listings for you that match exactly what you're looking for, so you can see the auction inventory for yourself and understand what I'm talking about. When's a good time tomorrow — or later this week — where we could have a quick call?"</strong><span class="sd">Get a specific time. Confirm before you hang up.</span></div>
+</div>
+
+<!-- P1B: TEXT SEQUENCE -->
+<div class="panel" id="p1b">
+  <div class="eyebrow">Phase 1 — First Contact</div>
+  <h1>Text and follow-up sequence</h1>
+  <p class="pdesc">If they don't answer the call, work this sequence. Four attempts over seven days, then move on.</p>
+  <div class="sg">
+    <div class="si"><div class="sd2">Day 1</div><div class="sa">Call + voicemail</div><div class="ss">+ first text</div></div>
+    <div class="si"><div class="sd2">Day 2</div><div class="sa">Call again</div><div class="ss">+ text if no answer</div></div>
+    <div class="si"><div class="sd2">Day 3</div><div class="sa">Call again</div><div class="ss">+ text if no answer</div></div>
+    <div class="si"><div class="sd2">Day 7</div><div class="sa">Final call</div><div class="ss">+ drop text</div></div>
+  </div>
+  <h3>Day 1 — Voicemail</h3>
+  <div class="script"><strong>"Hey [name], this is [rep] from DealerKey Auto. I just got your request about the [make/model] — we've actually seen several of those come through the auction recently. Give me a call back at [number] and I can pull some listings for you. Talk soon."</strong></div>
+  <div class="box tip">Under 30 seconds. Leave them curious, not fully informed.</div>
+  <h3>Day 1 — First text</h3>
+  <div class="script"><strong>"Hey [name], this is [rep] with DealerKey Auto — saw you were looking for a [make/model]. We've seen several come through the auction just recently! When are you hoping to find one by?"</strong></div>
+  <h3>If they respond to the text</h3>
+  <div class="script"><strong>"So basically what we do is source cars off wholesale auctions — same places dealerships buy from. We charge a flat fee and it usually saves our clients $3,000–$4,000. I'd love to pull some listings for you so you can actually see what I'm talking about. When's a good time for a quick call this week?"</strong></div>
+  <h3>Day 2 — Call + text if no answer</h3>
+  <div class="script"><strong>"[Rep name] again — just wanted to circle back. You still looking for a [make/model]?"</strong></div>
+  <h3>Day 3 — Call + text if no answer</h3>
+  <div class="script"><strong>"Hey [name] — [rep] from DealerKey. Still happy to pull some auction listings for that [make/model] whenever you're ready. Just let me know."</strong></div>
+  <h3>Day 7 — Final call + drop text</h3>
+  <div class="script"><strong>"Hey [name] — [rep] from DealerKey. Haven't heard back from you, so this will probably be the last time I'm reaching out. If you're still in the market for a [make/model] down the road, I'm happy to pull some auction listings whenever you're ready. The price gap is usually pretty significant. Take care."</strong></div>
+  <div class="box ok">No ask, no pressure. Ball is in their court. Done after this.</div>
+  <hr>
+  <h3>IAM confirmation (night before or morning of)</h3>
+  <div class="script"><strong>"Hey [name], just confirming our call tomorrow at [time]. I'll pull up some live auction listings for [make/model] so you can see exactly what we're working with. Talk soon."</strong></div>
+</div>
+
+<!-- P1C: SITUATIONS -->
+<div class="panel" id="p1c">
+  <div class="eyebrow">Phase 1 — First Contact</div>
+  <h1>Common situations</h1>
+  <p class="pdesc">How to handle the questions and pushback you'll run into before getting them to the IAM.</p>
+  <div class="col"><div class="col-h" onclick="tc(this)">"What exactly is DealerKey?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"We source cars straight from Manheim — the largest wholesale auto auction in the country, where dealerships buy their inventory. We have access to the same cars and charge a flat fee instead of a markup. Most clients save $3,000–$4,000. It's a lot easier to show you than explain — I can pull up real listings on a call and you'll see exactly what I mean in about 10–15 minutes. When works for you?"</strong></div><div class="box tip">Goal is always the IAM. Phone call can substitute if they're hesitant, but only to build confidence toward a real Google Meet — you can't do the full consultation without screen share.</div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"Can you just send me more info?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"I could, but honestly it makes a lot more sense when I can walk you through the live data — we pull up real cars in real time and compare the prices side by side. Takes about 10–15 minutes. When are you free?"</strong></div><div class="box tip">If they still won't get on a call, send one strong listing and follow up: "That's an example — there are more. Worth a quick call to see the full picture?"</div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"Is this legit? How do I know this is real?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"Totally fair question — we're a licensed Utah dealer and I'm happy to send you our dealer license number so you can look us up yourself. But honestly the easiest way to see that it's real is to get on a call and look at the auction inventory together. You'll see exactly what's available and what it costs — no pitch, just data."</strong></div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"I'm already talking to a dealership / found something I like"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"Totally fine — what I'll do is just show you a few options to compare with what you're looking at now. The price gap is real, and it'll help you know if you're overpaying. Mind if I found a listing or two for you to look at?"</strong></div><p style="margin-top:8px">If they say yes, pull one strong listing and send it. Then: <em>"There are a couple more like this — worth jumping on a quick call to see the full picture?"</em></p></div></div>
+</div>
+
+<!-- P1D: CHECKLIST -->
+<div class="panel" id="p1d">
+  <div class="eyebrow">Phase 1 — First Contact</div>
+  <h1>Post first-contact checklist</h1>
+  <p class="pdesc">Run through this after every first contact attempt. Progress is saved in your browser.</p>
+  <div class="cl" id="cl1">
+    <div class="csh">Speed</div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Called within 5 minutes of the lead coming in</span></div>
+    <div class="csh">Call quality</div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Opened warm — didn't sound like a script</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Asked about the car and actually listened to the answer</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Built some rapport — found something real to connect on</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Explained DealerKey clearly without over-explaining</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Asked for the IAM confidently and got a time confirmed</span></div>
+    <div class="csh">Follow-up</div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Sent confirmation text the night before or morning of the IAM</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">If no answer: voicemail left and first text sent same day</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Day 2 follow-up attempt completed</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Day 3 follow-up attempt completed</span></div>
+    <div class="ci" onclick="ck(this,'cl1')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Day 7 drop text sent if still no response</span></div>
+  </div>
+  <div class="scr"><span id="s1">0 / 11</span><div class="str"><div class="sf" id="b1" style="width:0%"></div></div></div>
+  <button class="rbtn" onclick="reset('cl1','s1','b1',11)">Reset checklist</button>
+</div>
+
+<!-- P2A: IAM OVERVIEW -->
+<div class="panel" id="p2a">
+  <div class="eyebrow">Phase 2 — IAM + Search</div>
+  <h1>IAM overview</h1>
+  <div class="box note"><strong>Mindset:</strong> You are an advisor, not a salesman. They came for a consultation. Confidence matters more than perfect wording. Don't rush.</div>
+  <h2>The four sections</h2>
+  <div class="oc"><div class="on">1</div><div><div class="ot">What DealerKey is</div><div class="od">Confirm their car. Explain the model — no lot, flat fee, Manheim access. Show the arbitrage on the website. Land the number. Transition to Manheim.</div></div></div>
+  <div class="oc"><div class="on">2</div><div><div class="ot">Website search</div><div class="od">Pull up their car at their budget. Show condition filters and the arbitrage number. Let it land. "We haven't even gone into Manheim yet."</div></div></div>
+  <div class="oc"><div class="on">3</div><div><div class="ot">Tour of Manheim</div><div class="od">Set parameters live. Pull a real listing with a strong condition grade. Explain MMR and out-the-door numbers. Walk the condition report.</div></div></div>
+  <div class="oc"><div class="on">4</div><div><div class="ot">Logistics and closing</div><div class="od">Explain the process, bid structure, and deposit. Hit all three closes. Plant the warranty seed. Confirm car details before ending.</div></div></div>
+  <div class="box tip" style="margin-top:16px"><strong>Warranty seed — plant it in Section 4:</strong> "And on top of the arbitration window, almost all of our clients also add a vehicle service contract that covers them from day one — that way if anything happens to the car, like a transmission issue, engine problems, or something else we couldn't have anticipated, they won't have to worry about paying out of their own pocket. But we'll walk through that once we've actually won the car."</div>
+</div>
+
+<!-- P2B: FULL SCRIPT -->
+<div class="panel" id="p2b">
+  <div class="eyebrow">Phase 2 — IAM + Search</div>
+  <h1>IAM full script</h1>
+  <div class="pill">Section 1 — What DealerKey is</div>
+  <div class="script"><strong>"Tell me about the car you're looking for. I see here you wrote [X] — is that still what you're thinking?"</strong><span class="sd">(Listen. Make a genuine comment. Let them talk.)</span><strong>"So you may have noticed we're not a traditional dealership — no lot, no inventory sitting around. What we do is work directly with you to find your specific car, and we don't charge you a thing unless we actually save you money. At least $3,000 worth."</strong><span class="sd">(Pause. Let that land.)</span><strong>"Here's how that's possible. Most car dealerships are buying their cars in bulk from a wholesale auction called Manheim. It's the largest vehicle auction in the world. Over 150,000 cars are available at any given moment, with over 8 million moving through every year. That's where their inventory comes from."</strong><br><br><strong>"They buy a car at auction, mark it up $4,000 to $6,000, put it on the lot, and sell it to you. That markup is how they pay for their building, the salespeople, the financing department — all of it."</strong><br><br><strong>"We have access to that same auction. So instead of buying cars first, marking them up, and trying to sell them to you, we take clients like you, and go straight to the source and find your car there. We do everything for a flat advisory fee of $1,500 — and you only pay us if we save you at least $3,000, usually more."</strong></div>
+  <hr>
+  <div class="pill">Section 2 — Website search</div>
+  <div class="script"><strong>"Rather than me telling you why this works, I'd rather just show you."</strong><br><br><strong>"Let's start with our website. There are some fantastic tools on here that anyone can use, but not everyone knows about."</strong><span class="sd">(Pull up the car the client is looking for. Include their budget.)</span><strong>"Now if you've been looking at local dealerships, right away you can see that the average prices are significantly lower. These results are filtered to include only top condition cars, 4.0 or higher, all of them with clean titles and condition reports."</strong><span class="sd">(Point out a few of the better ones.)</span><strong>"However, the most important thing I want to show you is this."</strong><span class="sd">(Run arbitrage analysis.)</span><strong>"We're an extremely data-driven company. Our AI has processed information from thousands of listings across the retail market — comparing across year, mileage, trim, title status, everything — and it's constantly updating. So every single car you see here is already being compared to what that exact car is selling for on the retail market right now."</strong><span class="sd">(Point to the number.)</span><strong>"That number right there — that's the arbitrage. That's the gap between what this car would cost you at a dealership and what we can actually get it for. And if you bought it at auction today and sold it retail tomorrow, that's how much you would pocket."</strong><span class="sd">(Let that land.)</span><strong>"And we haven't even gone into Manheim yet. This is just the surface layer."</strong></div>
+  <hr>
+  <div class="pill">Section 3 — Tour of Manheim</div>
+  <div class="script"><span class="sd">(Talk through what you're doing as you set make, model, year, and mileage. Pick one with a good condition grade. Once you open the listing:)</span><strong>"We'll use this one as an example. When I'm pulling up a listing, here is what I see right away. Year, trim, mileage confirmed, condition grade right here. We typically stay at 4.0 or above."</strong><span class="sd">(Walk through the page. Point out condition grade, tires, a couple of positive things.)</span><strong>"Important — right here is the MMR. Obviously because it's an auction and they take the highest bidder, there is no set price listed. This range is best understood as what this car is most likely to go for, based on recent sales data. One thing for you to know — I always work in out-the-door numbers, so I'm taking the MMR, adding our $1,500 fee, plus Manheim's usage fee of $500–700 — so roughly $2,000 total on top. So, if we're taking this car as an example, you're looking at about [X]."</strong><span class="sd">(Move to condition items. Pick a minor damage item and a major item if applicable. Show pictures.)</span><strong>"See this dent? It's probably barely noticeable in person, but it's still on the report. That's the standard they hold to, because dealerships buying these cars demand it. Works in your favor for the same reason."</strong><span class="sd">(Show another listing or two, then transition naturally into Section 4.)</span></div>
+  <hr>
+  <div class="pill">Section 4 — Logistics and closing</div>
+  <div class="box note">Goal: help the client voluntarily choose DealerKey as their advocate. Don't hard close — soft close in a way that builds complete trust.</div>
+  <div class="script"><strong>"So here's how this typically works. We'll take the next 2–3 weeks and handle the entire search for you. You'll hear from me at least twice a week. Every time a new batch comes in, I'll send you the top two or three options based on your parameters. If there's one I feel particularly strong about, I'll make sure to highlight it."</strong><br><br><strong>"Does email or text work better for you?"</strong><span class="sd">(Wait for an answer. This is your first soft close.)</span><strong>"Now when a car comes along that you're seriously considering, we'll jump on a call together for a deeper look. We'll build our bidding strategy and set your ceiling bid ahead of time so we always stay within budget. You'll contribute 25% of the bid upfront and we cover the other 75%. If we win the bid, you pay the rest and we hand over the keys. If we don't win, your 25% comes straight back and we keep looking for the next car. Sometimes it takes a try or two — that's completely normal. And you'll have all of this in writing before any money moves."</strong><br><br><strong>"One question for you — how much notice do you need before making a move? Let's say I find the perfect car and the auction runs two days from now, can you move within 48 hours? Or do you need more time than that?"</strong><span class="sd">(Wait for an answer. This is your solidifying close.)</span><strong>"Perfect, I'll make sure to give you as much notice as I can."</strong><br><br><strong>"And if you'd ever like to watch the auction live, I'd love to show you — it's actually really cool to see in real time."</strong><br><br><strong>"Well [name], thanks so much for giving us a shot. So here's what we'll do — for the next 2-3 weeks, just let me handle it completely. You don't have to do a thing. If I haven't found the right one by then, no worries—we'll keep looking on our end and you can jump back in too. Sound good?"</strong><span class="sd">(This is your strongest close. Do not rush it.)</span><strong>"Perfect. You can expect to hear from me in a day or two with a few of the best current options — just to start giving you a feel for what we're working with."</strong><span class="sd">(Confirm all their car details before ending the call.)</span></div>
+  <div class="box tip"><strong>Warranty seed — plant it here:</strong> "And on top of the arbitration window, almost all of our clients also add a vehicle service contract that covers them from day one — that way if anything happens to the car, like a transmission issue, engine problems, or something else we couldn't have anticipated, they won't have to worry about paying out of their own pocket. But we'll walk through that once we've actually won the car."</div>
+</div>
+
+<!-- P2C: BETWEEN IAM AND BAM -->
+<div class="panel" id="p2c">
+  <div class="eyebrow">Phase 2 — IAM + Search</div>
+  <h1>Between IAM and BAM</h1>
+  <p class="pdesc">After the IAM closes, you own the search. For the next 2–3 weeks your job is to keep the client warm, keep them informed, and surface the right car at the right moment so the BAM feels like a natural next step.</p>
+  <h2>Cadence</h2>
+  <ul class="bl">
+    <li>Check in at least twice a week — even if there's nothing new worth sending, a quick "nothing that meets your criteria yet, still on it" keeps trust alive</li>
+    <li>When a new batch comes in, send the top 2–3 options. If one stands out, say so explicitly</li>
+    <li>Don't send everything — curate. Sending five mediocre options is worse than sending one great one</li>
+    <li>When you find a car worth bidding on, move fast — good inventory moves quickly</li>
+  </ul>
+  <h2>When a car is worth moving on</h2>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div><div class="st">Text or call first</div><div class="sb2">"Found something worth looking at for you. Sending details now." Prime them before the email lands.</div></div></div>
+    <div class="step"><div class="sn">2</div><div><div class="st">Send the auction update email</div><div class="sb2">Full details, out-the-door numbers, photos. Use the template below.</div></div></div>
+    <div class="step"><div class="sn">3</div><div><div class="st">Follow up if no response within a few hours</div><div class="sb2">Auction windows are short. A good car at a good price won't wait.</div></div></div>
+    <div class="step"><div class="sn">4</div><div><div class="st">Schedule the BAM immediately once they show interest</div><div class="sb2">Don't let momentum die between "I like this one" and the bid call.</div></div></div>
+  </div>
+  <h2>Auction update email template</h2>
+  <div class="col">
+    <div class="col-h" onclick="tc(this)">✉ View email template + setup instructions<span class="ch">⌄</span></div>
+    <div class="col-b">
+      <div class="box note"><strong>Save this as a template in your email client</strong> so you can fill it in and send in under 2 minutes.</div>
+      <div class="etpl">Hi <span class="ef">[CLIENT NAME]</span>,
+
+I found some great options for the <span class="ef">[YEAR MAKE MODEL]</span> you're looking for. Here's a quick breakdown:
+
+OPTION 1 — <span class="ef">[YEAR] [MAKE MODEL TRIM]</span>
+Mileage: <span class="ef">[X,XXX]</span> miles
+Title: Clean
+Auction Win Bid: ~$<span class="ef">[XX,XXX]</span> - $<span class="ef">[XX,XXX]</span>
+Drive-Out Cost (all-in, incl. our fee + shipping): ~$<span class="ef">[XX,XXX]</span> - $<span class="ef">[XX,XXX]</span>
+Est. Savings vs. Retail: ~$<span class="ef">[X,XXX]</span> - $<span class="ef">[X,XXX]</span>
+
+<span class="ef">[ADD AUCTION SCREENSHOT / PHOTO HERE]</span>
+
+---
+
+OPTION 2 — <span class="ef">[YEAR] [MAKE MODEL TRIM]</span>
+Mileage: <span class="ef">[X,XXX]</span> miles
+Title: Clean
+Auction Win Bid: ~$<span class="ef">[XX,XXX]</span> - $<span class="ef">[XX,XXX]</span>
+Drive-Out Cost (all-in, incl. our fee + shipping): ~$<span class="ef">[XX,XXX]</span> - $<span class="ef">[XX,XXX]</span>
+Est. Savings vs. Retail: ~$<span class="ef">[X,XXX]</span> - $<span class="ef">[X,XXX]</span>
+
+<span class="ef">[ADD AUCTION SCREENSHOT / PHOTO HERE]</span>
+
+---
+
+NOTE
+<span class="ef">[ADD NOTES — e.g. EV range, condition highlights, market context, why this is a great deal, etc.]</span>
+
+These are moving fast — clean-titled options are selling well above these prices at retail right now. Happy to jump on a call and walk you through more photos and details on whichever one stands out.
+
+Let me know your thoughts!
+
+Thanks,
+Kaden
+Dealer Key Auto</div>
+      <h3>How to save this as a template</h3>
+      <div class="col" style="margin-top:8px"><div class="col-h" onclick="tc(this)">Gmail<span class="ch">⌄</span></div><div class="col-b"><ul class="bl"><li>Open Gmail and click Compose</li><li>Paste the full template into the body and add a subject line like "DealerKey — Auction Update for [Name]"</li><li>Click the three-dot menu (More options) at the bottom of the compose window</li><li>Select Templates → Save draft as template → Save as new template</li><li>Name it "Auction Update Email" and save</li><li>Next time: Compose → three-dot menu → Templates → select your template → fill in the fields and send</li></ul></div></div>
+      <div class="col" style="margin-top:6px"><div class="col-h" onclick="tc(this)">Outlook<span class="ch">⌄</span></div><div class="col-b"><ul class="bl"><li>Create a new email with the full template content</li><li>Go to File → Save As → change the file type to "Outlook Template (.oft)"</li><li>Save it to your Desktop or a Templates folder</li><li>Next time: open the .oft file, fill in the fields, and send</li></ul></div></div>
+      <div class="col" style="margin-top:6px"><div class="col-h" onclick="tc(this)">Apple Mail<span class="ch">⌄</span></div><div class="col-b"><ul class="bl"><li>Compose a new message with the full template</li><li>Simplest method: save it as a draft, duplicate it each time you need it, fill in the fields, and send</li></ul></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- P2D: OBJECTIONS -->
+<div class="panel" id="p2d">
+  <div class="eyebrow">Phase 2 — IAM + Search</div>
+  <h1>IAM objection handling</h1>
+  <p class="pdesc">Every objection has a scripted response. Know these cold.</p>
+  <div class="col"><div class="col-h" onclick="tc(this)">"I'm not sure I'm comfortable putting money down before we've found anything."<span class="ch">⌄</span></div><div class="col-b"><div class="box note">Memorize this one — comes up right after explaining the 25% bid deposit.</div><div class="script"><strong>"That's fair, and I get it — it feels a little different than what most people are used to. The reason we do it that way is because we're putting our own money in right alongside yours. We're just as motivated as you are to get the right car at the right price. The 25% just makes sure we're both committed before we pull the trigger. And if we don't win, it comes straight back to you. You'll have all of this in writing before ANY money moves, so there's no guesswork."</strong></div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"Can you walk me through how the 25% deposit actually works?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"Sure — so once we find a car you're serious about, you contribute 25% of the bid upfront and we cover the other 75%. Win the bid, you pay us the rest and we hand over the keys. Don't win, your money comes right back. Simple as that."</strong></div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"I've been searching for months and haven't found anything."<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"I completely get that — and honestly, that's exactly the kind of situation we're here for. When you're searching on your own you're constantly trying to weigh price against mileage against condition against history, and every car is a different combination of all those variables. It's exhausting to compare objectively. That's where we really shine. First, Manheim gives us an unreal amount of data on each car — way more than anything you'd find on a public listing. And on top of that, our AI processes all of those variables simultaneously across hundreds of cars and gives you an ordered list of which options are actually saving you the most money. It takes the guesswork out completely."</strong></div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"Wait — I can't test drive the car before we buy it?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"Great question, and that's exactly why Manheim is so incredibly thorough with their condition reports. Because you can't go in and test drive the cars, they are extensive with their reports. Dealerships are very particular and want to know every little detail, because their livelihood depends on it. Every vehicle is inspected by a third party, and they include absolutely everything they find. If for whatever reason we find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back."</strong></div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"What if we get the car and find something that wasn't in the report?"<span class="ch">⌄</span></div><div class="col-b"><div class="box note">Memorize this one — common follow-up after the condition report explanation.</div><div class="script"><strong>"Absolutely — I would be concerned about that too. Thankfully, every vehicle is inspected by a third party, not by Manheim itself, and they include absolutely everything they find. That limits the risk significantly, but if we do find an issue in the first few weeks that was NOT on the report, we can arbitrate and get our money back. That rarely happens, but when it has, we've been able to successfully arbitrate."</strong></div><div class="box tip">Natural moment to reinforce the warranty seed: "And beyond that arbitration window, the vehicle service contract we offer covers them for mechanical issues going forward — so they're protected on both ends."</div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"Isn't most of what's available at Manheim salvage or branded title?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"Almost everything we work with is clean title — that's the standard for the vast majority of what moves through Manheim. Occasionally a client specifically wants a cheap work truck and we'll look at branded titles for that, but typically for a car like what you're looking for, we'd be staying firmly in clean title territory."</strong></div></div></div>
+  <div class="col"><div class="col-h" onclick="tc(this)">"How do I know this isn't a scam?"<span class="ch">⌄</span></div><div class="col-b"><div class="script"><strong>"Totally fair question, and honestly I'd be asking the same thing if I were in your shoes. Here's the thing — what we're doing is pretty new. Manheim's wholesale auctions have been dealer-only for decades, and DealerKey is one of the first ways for regular people to actually get access to that, through a licensed dealership. So it makes sense it doesn't feel like a 'normal' car-buying experience yet, because it isn't one. That said, we're a fully licensed Utah dealer, and I'm happy to send you our dealer license number and business registration right now so you can look us up on your own time — no rush, no pressure. A lot of our clients do exactly that before moving forward, and honestly, we'd rather you feel 100% solid about it than just take our word for it."</strong></div></div></div>
+</div>
+
+<!-- P2E: THREE CLOSES -->
+<div class="panel" id="p2e">
+  <div class="eyebrow">Phase 2 — IAM + Search</div>
+  <h1>The three closes</h1>
+  <p class="pdesc">These happen in Section 4 of the IAM, in this order. Don't skip or reorder them.</p>
+  <div class="cc"><div class="cl2">Close 1 — Soft close</div><div class="script">"Does email or text work better for you?"</div><p>Gets the client engaged and picturing the ongoing process. The assumption of forward motion is built in. Wait for their answer before moving on.</p></div>
+  <div class="cc"><div class="cl2">Close 2 — Solidifying close</div><div class="script">"How much notice do you need before making a move? Let's say I find the perfect car and the auction runs two days from now — can you move within 48 hours?"</div><p>Gets a commitment to their readiness, not just the process. Their answer tells you exactly how serious they are. If they hesitate, address it before Close 3.</p></div>
+  <div class="cc feat"><div class="cl2">Close 3 — Strongest close</div><div class="script">"Well [name], thanks so much for giving us a shot. So here's what we'll do — for the next 2-3 weeks, just let me handle it completely. You don't have to do a thing. If I haven't found the right one by then, no worries—we'll keep looking on our end and you can jump back in too. Sound good?"</div><div class="box bad" style="margin-top:8px">Do not rush this. Say it, then stop talking. Their response tells you exactly how bought-in they are.</div></div>
+</div>
+
+<!-- P2F: CHECKLIST -->
+<div class="panel" id="p2f">
+  <div class="eyebrow">Phase 2 — IAM + Search</div>
+  <h1>Post-IAM and search checklist</h1>
+  <p class="pdesc">Progress is saved in your browser.</p>
+  <div class="cl" id="cl2">
+    <div class="csh">IAM flow</div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Opened by confirming their car details — didn't assume</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Spent meaningful time on the website search — didn't rush past the arbitrage number</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Navigated Manheim confidently — pulled a real listing with condition report</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Explained MMR and out-the-door numbers clearly</span></div>
+    <div class="csh">Closes and products</div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Hit all three closes in order — didn't skip or rush them</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Planted the warranty seed naturally in Section 4</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Explained the bid structure and deposit clearly</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Confirmed all car details before ending the call</span></div>
+    <div class="csh">Search phase</div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Checked in at least twice this week — even when nothing new to send</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Used the auction update email template when sending options</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Curated options — sent 2–3 strong ones, not everything available</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Called or texted before sending the email when a strong car came up</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Scheduled the BAM immediately once the client showed interest</span></div>
+    <div class="csh">Tone</div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Stayed consultative throughout — never switched into sales mode</span></div>
+    <div class="ci" onclick="ck(this,'cl2')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Handled any objections calmly and without defensiveness</span></div>
+  </div>
+  <div class="scr"><span id="s2">0 / 15</span><div class="str"><div class="sf" id="b2" style="width:0%"></div></div></div>
+  <button class="rbtn" onclick="reset('cl2','s2','b2',15)">Reset checklist</button>
+</div>
+
+<!-- P3A: BAM FLOW -->
+<div class="panel" id="p3a">
+  <div class="eyebrow">Phase 3 — BAM</div>
+  <h1>BAM flow</h1>
+  <div class="box note">Schedule the BAM the moment the client expresses interest in a specific car. Goal: review the vehicle, agree on a max bid, sign the VPA, preview the warranty, mention insurance, and schedule the post-win call.</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div><div class="st">Open with the car — get them excited</div><div class="sb2">Dive straight in. Share your genuine read on the vehicle — condition grade, why it stood out, what you like about this listing. Help them feel good about what they're about to bid on.</div></div></div>
+    <div class="step"><div class="sn">2</div><div><div class="st">Vehicle review together</div><div class="sb2">Walk through photos, condition report, and auction listing. Narrate what you see. Your confidence here is the credibility moment.</div></div></div>
+    <div class="step"><div class="sn">3</div><div><div class="st">The numbers</div><div class="sb2">MMR + $1,500 fee + Manheim usage fee (~$500–700) = all-in number. Build the bid ceiling together. Confirm it out loud.</div></div></div>
+    <div class="step"><div class="sn">4</div><div><div class="st">Warranty preview — not a close</div><div class="sb2">Brief walk through the four tiers. Make a specific recommendation. End with: "We'll finalize this right after we win the bid." Schedule the post-win call explicitly.</div></div></div>
+    <div class="step"><div class="sn">5</div><div><div class="st">Insurance mention — one line only</div><div class="sb2">"The moment we win the bid, you'll need the car insured. I'll get you set up with the most competitive rates right after the win." That's it. Move on.</div></div></div>
+    <div class="step"><div class="sn">6</div><div><div class="st">Vehicle Purchase Agreement</div><div class="sb2">Send to their email. Walk through it via screen share. Soft goal: signed on this call. If they need time, that's fine.</div></div></div>
+    <div class="step"><div class="sn">7</div><div><div class="st">Schedule the post-win call</div><div class="sb2">"Let's get a call on the calendar for right after the auction closes — we'll finalize the warranty, get your insurance set up, and walk through next steps." Get a specific time.</div></div></div>
+  </div>
+</div>
+
+<!-- P3B: WARRANTY PREVIEW -->
+<div class="panel" id="p3b">
+  <div class="eyebrow">Phase 3 — BAM</div>
+  <h1>Warranty preview</h1>
+  <div class="box tip"><strong>This is a preview, not a close.</strong> Their head is in bid mode. Make it feel like a natural part of the process.</div>
+  <h2>How to introduce it</h2>
+  <div class="script"><strong>"One thing we walk through with every client is a vehicle service contract — basically protection against mechanical breakdown once the car is in your hands. GWC is who we use. They cover everything from engine and transmission all the way up to full exclusionary coverage depending on what makes sense for your car. Let me show you the four tiers real quick so you have a sense of what we're working with."</strong></div>
+  <h2>The four tiers</h2>
+  <div class="tg">
+    <div class="tc"><div class="tn">Powertrain Plus</div><div class="tp">$1,195</div><div class="tc2">Commission: $125 / $150 / $175</div><div class="td">Engine, transmission, drive axle, basic electrical. Best for 120K+ miles or budget-conscious clients.</div></div>
+    <div class="tc"><div class="tn">Essential</div><div class="tp">$1,595</div><div class="tc2">Commission: $175 / $225 / $275</div><div class="td">Adds A/C, fuel system, ABS. Best for reliable makes (Toyota, Honda, Mazda) at 90K–120K miles.</div></div>
+    <div class="tc"><div class="tn">Comprehensive</div><div class="tp">$1,995</div><div class="tc2">Commission: $250 / $265 / $375</div><div class="td">Adds full electrical and steering. Best for European/luxury vehicles or any car 60K–90K miles.</div></div>
+    <div class="tc rec"><div class="tbadge">Default rec</div><div class="tn">Exclusionary</div><div class="tp">$2,495</div><div class="tc2">Commission: $350 / $425 / $500</div><div class="td">Covers everything except listed wear items. Default for any vehicle under 120K miles, all EVs, all luxury vehicles.</div></div>
+  </div>
+  <h2>Make your recommendation</h2>
+  <div class="script"><strong>"Based on this car — [mileage, make, age] — I'd point you toward the [tier]. [One sentence on why.] We'll go through it in detail right after the bid and get you locked in then."</strong></div>
+  <div class="box ok">Make a specific recommendation. Don't hand them a menu with no guidance. Then close the topic and move on.</div>
+</div>
+
+<!-- P3C: INSURANCE -->
+<div class="panel" id="p3c">
+  <div class="eyebrow">Phase 3 — BAM</div>
+  <h1>Insurance intro</h1>
+  <h2>BAM mention (one line only)</h2>
+  <div class="script"><strong>"One more thing — the moment we win the bid, you're going to need the car insured. I work with a platform called Polly that pulls competing quotes from 40+ carriers in about two minutes. I'll get you set up right after the win so you have the most competitive rate possible before you drive off."</strong></div>
+  <div class="box tip">That is the full insurance conversation in the BAM. One line. Move on.</div>
+  <h2>Post-win — Polly setup</h2>
+  <div class="script"><strong>"Alright — before we wrap up, let's get your insurance sorted. I'm going to send you a link right now — it takes about two minutes on your phone, compares quotes from over 40 carriers, and their agents can help you pick the right one. Just click it when it comes through."</strong></div>
+  <p>Send the Polly link from the app. While they're looking:</p>
+  <div class="script"><strong>"If you already have insurance on another car, Polly can actually bundle everything together — that's usually where people find the biggest savings."</strong></div>
+  <div class="box note">Your job ends when you send the link. Polly's licensed agents handle the close. Never quote prices, recommend specific carriers, or advise on coverage levels.</div>
+  <h3>If they say they already have insurance</h3>
+  <div class="script"><strong>"When did you last shop it around? Insurance rates have gone up a lot in the last couple years — Polly pulls from 40+ carriers so even if you love your current company, it takes two minutes to see if you're getting the best deal. Worst case you confirm you're already good."</strong></div>
+  <h3>If they push back</h3>
+  <div class="script"><strong>"Totally fine — just keep in mind most lenders need proof of coverage before you can drive off. I'll send the link now so you have it ready. No obligation to switch — just quotes."</strong></div>
+</div>
+
+<!-- P3D: POST-WIN -->
+<div class="panel" id="p3d">
+  <div class="eyebrow">Phase 3 — BAM</div>
+  <h1>Post-win close</h1>
+  <div class="box ok"><strong>This is the money moment.</strong> Bid is won. Client is at peak positive emotion. Close the warranty first, set up insurance immediately after.</div>
+  <h2>Warranty close</h2>
+  <div class="script"><strong>"One more thing I wanted to get you set up with is a warranty. Engine and transmission issues cost upwards of $3,000–$5,000 to fix these days, and we've got the most competitive rates on GWC warranties in the area. They've got options to fit almost any vehicle — it's super customizable. Out of their four levels of coverage I'd recommend [tier], just because [mention some details about the car and why that fits best] — it's the one that most of our clients go for. How long are you planning on keeping this car?"</strong><span class="sd">(Wait for their answer.)</span></div>
+  <p>Do a quick 30-second walk through the four tiers, then ask:</p>
+  <div class="script"><strong>"Would you like to move forward with the [recommended tier]?"</strong></div>
+  <div class="fl">If they say yes</div>
+  <div class="box ok">Sign them up. Move to insurance.</div>
+  <div class="fl">If they say it's too pricey</div>
+  <div class="script"><strong>"Totally — the [tier below] might actually be a better fit then. It covers [key components for that tier], so you're still protected on the things most likely to be a problem. Want to go that route?"</strong></div>
+  <div class="box tip">Step down one tier. Emphasize what it covers, not what it loses. Never discount within a tier.</div>
+  <div class="fl">If they say they don't want it</div>
+  <div class="script"><strong>"Totally. I'll bet you've never used a GWC warranty before, right?"</strong><span class="sd">(They'll agree.)</span><strong>"For sure — first time for a lot of people. The reason why most people who buy through us also hop on board with the warranty is because there's a coverage plan for every kind of car and budget. GWC is the most customizable coverage that we've found, and we just want to make sure this new car will last you a long time without you having to pay for any repairs out of your own pocket. GWC will directly cover all the included repairs, at any known mechanic's shop."</strong><span class="sd">(Then either:)</span><strong>"Are you on board with that?"</strong><span class="sd">(Or, if they seemed firmer about saying no:)</span><strong>"If you just want to have the most costly repairs covered, like a transmission or engine issue, I'd recommend [go down a tier or two, gauging their interest]. That way if something major happens that we can't control, you get to keep the $2,000–$4,000 that repairs might cost back in your pocket. What do you think?"</strong></div>
+  <div class="box bad"><strong>Never discount within a tier. Step down only. Discounts require manager approval.</strong></div>
+  <h2 style="margin-top:24px">After warranty is closed — insurance</h2>
+  <p>Move directly into the Polly flow. See the Insurance intro tab for the full post-win script.</p>
+</div>
+
+<!-- P3E: CHECKLIST -->
+<div class="panel" id="p3e">
+  <div class="eyebrow">Phase 3 — BAM</div>
+  <h1>Post-BAM checklist</h1>
+  <p class="pdesc">Progress is saved in your browser.</p>
+  <div class="cl" id="cl3">
+    <div class="csh">BAM flow</div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Opened by sharing genuine thoughts on the car — helped client get excited</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Walked through photos and condition report together with confidence</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Explained MMR and all-in numbers clearly</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Built bid ceiling together — confirmed the number out loud</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Walked through VPA — answered questions, soft closed on signing</span></div>
+    <div class="csh">Products</div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Previewed all four warranty tiers — made a specific tier recommendation</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Framed warranty as educational — did NOT try to close it during the BAM</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Mentioned Polly in one line — did NOT go further during the BAM</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Scheduled the post-win call before ending the BAM</span></div>
+    <div class="csh">Post-win call</div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Opened warranty conversation immediately after the win</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Asked how long they plan to keep the car before the tier breakdown</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Did a 30-second tier breakdown and made a specific recommendation</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Stepped down tier if needed — did not discount within a tier</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Used the "never used GWC before" re-engage if they declined</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Sent Polly link immediately after warranty was resolved</span></div>
+    <div class="ci" onclick="ck(this,'cl3')"><div class="cb"><span class="ck">✓</span></div><span class="clabel">Followed up on Polly when client viewed quotes but hadn't connected</span></div>
+  </div>
+  <div class="scr"><span id="s3">0 / 16</span><div class="str"><div class="sf" id="b3" style="width:0%"></div></div></div>
+  <button class="rbtn" onclick="reset('cl3','s3','b3',16)">Reset checklist</button>
+</div>
+
+</main>
+
+<script>
+const GT=42;
+function show(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+}
+function tc(h){
+  h.classList.toggle('open');
+  h.nextElementSibling.classList.toggle('open');
+}
+function ck(el,lid){
+  el.classList.toggle('done');
+  save();
+  upScore(lid);
+  upRing();
+}
+function upScore(lid){
+  const l=document.getElementById(lid);
+  const all=l.querySelectorAll('.ci').length;
+  const done=l.querySelectorAll('.ci.done').length;
+  const n=lid==='cl1'?'s1':lid==='cl2'?'s2':'s3';
+  const b=lid==='cl1'?'b1':lid==='cl2'?'b2':'b3';
+  document.getElementById(n).textContent=done+' / '+all;
+  document.getElementById(b).style.width=Math.round(done/all*100)+'%';
+}
+function upRing(){
+  let d=0;
+  ['cl1','cl2','cl3'].forEach(id=>{const l=document.getElementById(id);if(l)d+=l.querySelectorAll('.ci.done').length;});
+  const p=Math.round(d/GT*100);
+  const c=175.93;
+  document.getElementById('rf').style.strokeDashoffset=c-(p/100)*c;
+  document.getElementById('rt').textContent=p+'%';
+}
+function reset(lid,sid,bid,tot){
+  document.getElementById(lid).querySelectorAll('.ci').forEach(el=>el.classList.remove('done'));
+  document.getElementById(sid).textContent='0 / '+tot;
+  document.getElementById(bid).style.width='0%';
+  save();upRing();
+}
+function save(){
+  const s={};
+  ['cl1','cl2','cl3'].forEach(id=>{
+    const l=document.getElementById(id);
+    s[id]=Array.from(l.querySelectorAll('.ci')).map(el=>el.classList.contains('done'));
+  });
+  try{localStorage.setItem('dk_v1',JSON.stringify(s));}catch(e){}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem('dk_v1');
+    if(!raw)return;
+    const s=JSON.parse(raw);
+    ['cl1','cl2','cl3'].forEach(id=>{
+      if(!s[id])return;
+      const items=document.getElementById(id).querySelectorAll('.ci');
+      items.forEach((el,i)=>{if(s[id][i])el.classList.add('done');});
+      upScore(id);
+    });
+    upRing();
+  }catch(e){}
+}
+load();
+</script>
+</body>
+</html>
